@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-dotenv
+httpx
+pydantic
+yfinance
+websockets
+transformers
+torch
+peft

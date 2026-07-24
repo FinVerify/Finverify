@@ -105,39 +105,70 @@ if RATE_LIMITING_AVAILABLE and _limiter is not None:
         )
 
 # ---------------------------------------------------------------------------
-# HuggingFace Inference
+# LLM Inference — Provider-agnostic (OpenAI-compatible Chat Completions)
+# ---------------------------------------------------------------------------
+# Supports any OpenAI-compatible API: Groq, OpenRouter, Mistral, Cerebras,
+# HF Inference Providers, self-hosted vLLM/TGI. Switch by env var only.
 # ---------------------------------------------------------------------------
 
-HF_MODEL = "aadi2026/finverify-lora"
-HF_API_URL = f"https://api-inference.huggingface.co/models/{HF_MODEL}"
-_raw_token = os.getenv("HF_TOKEN", None)
-HF_TOKEN: str | None = _raw_token if _raw_token else None
-LLM_AVAILABLE: bool = HF_TOKEN is not None
+INFERENCE_URL = os.getenv("INFERENCE_URL", "")
+INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "")
+INFERENCE_API_KEY = os.getenv("INFERENCE_API_KEY", "")
+LLM_AVAILABLE: bool = bool(INFERENCE_API_KEY and INFERENCE_URL)
+
+_SYSTEM_PROMPT = (
+    "You are a financial data extraction assistant. "
+    "Given a financial question, respond with ONLY the numerical answer. "
+    "Do not explain. Do not add units unless they are part of the number. "
+    "Just the number."
+)
 
 if LLM_AVAILABLE:
-    logger.info("HF_TOKEN detected — LLM mode: full (model: %s)", HF_MODEL)
+    logger.info(
+        "LLM inference configured — provider: %s, model: %s",
+        INFERENCE_URL, INFERENCE_MODEL,
+    )
 else:
     logger.warning(
-        "⚠ LLM_AVAILABLE=False — HF_TOKEN env var is missing or empty. "
+        "LLM_AVAILABLE=False — INFERENCE_URL or INFERENCE_API_KEY is missing. "
         "All /query requests will return LLM-offline response. "
-        "Set HF_TOKEN as a Space secret to enable inference."
+        "Set INFERENCE_URL, INFERENCE_MODEL, and INFERENCE_API_KEY to enable."
     )
 
 
 async def call_hf_inference(question: str) -> str:
-    """Call HuggingFace Inference API and return raw text."""
-    headers = {"Authorization": f"Bearer {HF_TOKEN}"}
-    payload = {
-        "inputs": f"Question: {question}\nAnswer:",
-        "parameters": {
-            "max_new_tokens": 50,
-            "do_sample": False,
-        },
+    """Call an OpenAI-compatible inference API and return raw text.
+
+    Function name kept for backward compatibility with callers.
+    The implementation is provider-agnostic — any OpenAI-compatible
+    endpoint (Groq, Mistral, vLLM, etc.) works via env vars.
+    """
+    headers = {
+        "Authorization": f"Bearer {INFERENCE_API_KEY}",
+        "Content-Type": "application/json",
     }
+    payload = {
+        "model": INFERENCE_MODEL,
+        "messages": [
+            {"role": "system", "content": _SYSTEM_PROMPT},
+            {"role": "user", "content": question},
+        ],
+        "max_tokens": 50,
+        "temperature": 0.3,
+    }
+
+    logger.info(
+        "call_hf_inference REQUEST model='%s' question='%s'",
+        INFERENCE_MODEL, question[:120],
+    )
 
     try:
         async with httpx.AsyncClient(timeout=60.0) as client:
-            resp = await client.post(HF_API_URL, json=payload, headers=headers)
+            resp = await client.post(
+                f"{INFERENCE_URL}/chat/completions",
+                json=payload,
+                headers=headers,
+            )
     except Exception as e:
         logger.error(
             "call_hf_inference NETWORK ERROR for question='%s': %s (type: %s)",
@@ -145,39 +176,24 @@ async def call_hf_inference(question: str) -> str:
         )
         raise
 
-    if resp.status_code == 401:
+    if resp.status_code != 200:
         logger.error(
-            "call_hf_inference AUTH ERROR (401): HF_TOKEN is invalid or lacks "
-            "inference permissions. Check https://huggingface.co/settings/tokens"
-        )
-    elif resp.status_code == 404:
-        logger.error(
-            "call_hf_inference MODEL NOT FOUND (404): %s is not available via "
-            "serverless Inference API. LoRA adapters require a merged model or "
-            "dedicated Inference Endpoint.", HF_MODEL,
-        )
-    elif resp.status_code == 503:
-        logger.warning(
-            "call_hf_inference COLD START (503): model %s is loading. "
-            "Response: %s", HF_MODEL, resp.text[:200],
-        )
-    elif resp.status_code != 200:
-        logger.error(
-            "call_hf_inference UNEXPECTED ERROR (%d) for question='%s': %s",
+            "call_hf_inference ERROR (%d) for question='%s': %s",
             resp.status_code, question[:80], resp.text[:300],
         )
-
-    if resp.status_code != 200:
         raise HTTPException(
             status_code=resp.status_code,
-            detail=f"HuggingFace API error ({resp.status_code}): {resp.text[:200]}",
+            detail=f"Inference API error ({resp.status_code}): {resp.text[:200]}",
         )
 
     data = resp.json()
-    # HF returns a list of dicts: [{"generated_text": "..."}]
-    if isinstance(data, list) and len(data) > 0:
-        return data[0].get("generated_text", "")
-    return str(data)
+    generated_text = data["choices"][0]["message"]["content"]
+
+    logger.info(
+        "call_hf_inference RESPONSE question='%s' generated_text='%s'",
+        question[:80], generated_text[:200],
+    )
+    return generated_text
 
 
 # ---------------------------------------------------------------------------
@@ -269,7 +285,7 @@ async def health():
             "status": "ok",
             "dvl": "online",
             "llm": "online",
-            "model": HF_MODEL,
+            "model": INFERENCE_MODEL,
         }
     return {
         "status": "ok",
