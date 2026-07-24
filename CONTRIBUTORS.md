@@ -35,6 +35,15 @@ Contributions include:
 - API documentation updates
 - CI workflow optimization and path filtering
 
+
+## @bheemrzz07-bit
+
+Contributions include:
+
+- Secure CORS configuration
+- Environment-based origin allowlisting
+- Backend security improvements
+
 Thank you for helping improve FinVerify. 🚀
 
 ---
