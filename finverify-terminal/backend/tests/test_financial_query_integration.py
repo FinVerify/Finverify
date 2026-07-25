@@ -2,10 +2,12 @@
 
 from pathlib import Path
 
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 import pytest
 
 from app import main as app_main
+from app.financial import handle_financial_reasoning
 from core.financial.company import resolve_company
 from core.financial.concepts import ConceptRegistry
 from core.financial.mapper import StatementMapper
@@ -149,3 +151,30 @@ def test_query_endpoint_routes_financial_reasoning(monkeypatch):
     assert data["verified"] is True
     assert data["verified_number"] == pytest.approx(2_000_000.0)
     assert data["trust_score"] == "HIGH"
+
+
+def test_handle_financial_reasoning_logs_and_raises_on_document_load_failure(monkeypatch, caplog):
+    def _load_document(_ticker: str, *, max_periods: int = 2):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(app_main.financial_document_service, "load_document", _load_document)
+
+    with caplog.at_level("ERROR"):
+        with pytest.raises(HTTPException) as exc_info:
+            handle_financial_reasoning("What was Microsoft's revenue?", app_main.financial_document_service)
+
+    assert exc_info.value.status_code == 502
+    assert "document load failed" in caplog.text
+
+
+def test_query_endpoint_returns_http_error_for_financial_reasoning_failure(monkeypatch):
+    def _load_document(_ticker: str, *, max_periods: int = 2):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(app_main.financial_document_service, "load_document", _load_document)
+    client = TestClient(app_main.app)
+
+    response = client.post("/query", json={"question": "What was Microsoft's revenue?"})
+
+    assert response.status_code == 502
+    assert "Unable to load SEC filing data" in response.json()["detail"]

@@ -1,73 +1,67 @@
 """Financial reasoning query handling for the shared /query endpoint."""
 
+import logging
+
+from fastapi import HTTPException
+
 from app.models import QueryResponse
 from app.parser import format_number_display
 from core.financial import FinancialDocumentService, ReasoningEngine, TaskParser, resolve_company
 
+logger = logging.getLogger(__name__)
 
-def build_financial_query_response(question: str, document_service: FinancialDocumentService) -> QueryResponse:
+
+def handle_financial_reasoning(question: str, document_service: FinancialDocumentService) -> QueryResponse:
     company = resolve_company(question)
     if company is None:
-        return QueryResponse(
-            question=question,
-            raw_text="Financial reasoning requires a supported company or ticker in the question.",
-            raw_number=None,
-            verified_number=None,
-            correction_log=[],
-            trust_score="LOW",
-            trust_color="#f87171",
-            display_value="Company not resolved",
-            mode="financial_reasoning",
-            verified=False,
+        raise HTTPException(
+            status_code=400,
+            detail="Financial reasoning requires a supported company or ticker in the question.",
         )
 
     task = TaskParser.parse(question)
     if task.metric is None:
-        return QueryResponse(
-            question=question,
-            raw_text="The financial reasoning engine could not determine which supported metric to answer.",
-            raw_number=None,
-            verified_number=None,
-            correction_log=[],
-            trust_score="LOW",
-            trust_color="#f87171",
-            display_value="Unsupported financial task",
-            mode="financial_reasoning",
-            verified=False,
+        raise HTTPException(
+            status_code=422,
+            detail="The financial reasoning engine could not determine which supported metric to answer.",
         )
 
     try:
         document = document_service.load_document(company.ticker)
     except Exception as exc:
-        return QueryResponse(
-            question=question,
-            raw_text=f"Unable to load SEC filing data for {company.ticker}: {exc}",
-            raw_number=None,
-            verified_number=None,
-            correction_log=[],
-            trust_score="LOW",
-            trust_color="#f87171",
-            display_value="SEC data unavailable",
-            mode="financial_reasoning",
-            verified=False,
+        logger.exception(
+            "Financial reasoning document load failed for question='%s' ticker='%s'",
+            question[:120],
+            company.ticker,
         )
+        raise HTTPException(
+            status_code=502,
+            detail=f"Unable to load SEC filing data for {company.ticker}: {exc}",
+        ) from exc
 
-    engine = ReasoningEngine(document_service.registry)
-    result = engine.answer(task, document)
+    try:
+        engine = ReasoningEngine(document_service.registry)
+        result = engine.answer(task, document)
+    except Exception as exc:
+        logger.exception(
+            "Financial reasoning execution failed for question='%s' ticker='%s' metric='%s'",
+            question[:120],
+            company.ticker,
+            task.metric,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail=f"Financial reasoning execution failed for {company.ticker}.",
+        ) from exc
+
     if result["status"] != "complete" or result["computed_value"] is None or result["trust"] is None:
         missing = ", ".join(result.get("missing", []))
-        missing_text = f" Missing evidence: {missing}." if missing else ""
-        return QueryResponse(
-            question=question,
-            raw_text=result["explanation"] + missing_text,
-            raw_number=None,
-            verified_number=None,
-            correction_log=[],
-            trust_score="LOW",
-            trust_color="#f87171",
-            display_value="Incomplete filing evidence",
-            mode="financial_reasoning",
-            verified=False,
+        detail = result["explanation"]
+        if missing:
+            detail = f"{detail} Missing evidence: {missing}."
+        raise HTTPException(
+            status_code=422,
+            detail=detail,
         )
 
     citations = result.get("citations", [])
@@ -93,3 +87,6 @@ def build_financial_query_response(question: str, document_service: FinancialDoc
         mode="financial_reasoning",
         verified=True,
     )
+
+
+build_financial_query_response = handle_financial_reasoning

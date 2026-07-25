@@ -55,7 +55,7 @@ from .parser import clean_llm_output
 from core.engine import verify
 from core.models import Claim
 from .evaluator import build_query_response
-from .financial import build_financial_query_response
+from .financial import handle_financial_reasoning
 from .router import classify_query
 from .market import (
     get_quotes,
@@ -211,7 +211,19 @@ async def query_endpoint(req: QueryRequest):
     mode = classify_query(req.question)
 
     if mode == "financial_reasoning":
-        return build_financial_query_response(req.question, financial_document_service)
+        try:
+            return handle_financial_reasoning(req.question, financial_document_service)
+        except HTTPException:
+            raise
+        except Exception as exc:
+            logger.exception(
+                "Unhandled exception in /query financial reasoning path for question='%s'",
+                req.question[:120],
+            )
+            raise HTTPException(
+                status_code=500,
+                detail="Unhandled financial reasoning error.",
+            ) from exc
 
     # --- If no HF token, return graceful offline response ---------------
     if not LLM_AVAILABLE:
