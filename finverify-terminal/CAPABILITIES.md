@@ -5,6 +5,7 @@
 | Scale          | ✅     | ✅    | ⏳    | ✅    | Stable |
 | Sign           | ✅     | ✅    | ⏳    | ✅    |       |
 | Magnitude      | ✅     | ✅    | ⏳    | ✅    |       |
+| Profitability: Gross Margin | ✅ | ✅ | ⏳ | ✅ | Milestone 1 |
 | Percentage     | ⏳     | ❌    | ❌    | ❌    | Planned |
 | Basis Points   | ⏳     | ❌    | ❌    | ❌    | Planned |
 | EPS            | ⏳     | ❌    | ❌    | ❌    | Planned |

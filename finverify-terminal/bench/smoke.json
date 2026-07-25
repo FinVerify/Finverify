@@ -42,6 +42,93 @@
       "expected_verified": 18.4,
       "expected_corrections": [],
       "expected_label": "LOW"
+    },
+    {
+      "id": "gross_margin_001",
+      "category": "profitability",
+      "reason": "Gross margin computation from filing evidence",
+      "workflow": "financial_reasoning",
+      "question": "What is the gross margin for this filing?",
+      "raw_value": 0.0,
+      "expected_verified": 0.4690516410716045,
+      "expected_corrections": [],
+      "expected_label": "HIGH",
+      "financial_document": {
+        "company_name": "Apple Inc.",
+        "ticker": "AAPL",
+        "cik": "0000320193",
+        "filing_type": "10-K",
+        "filing_date": "2025-10-31",
+        "periods": [
+          {
+            "start_date": "2024-09-29",
+            "end_date": "2025-09-27",
+            "fiscal_year": 2025,
+            "fiscal_quarter": null
+          }
+        ],
+        "statements": {
+          "IncomeStatement": {
+            "name": "IncomeStatement",
+            "period": {
+              "start_date": "2024-09-29",
+              "end_date": "2025-09-27",
+              "fiscal_year": 2025,
+              "fiscal_quarter": null
+            },
+            "currency": "USD",
+            "items": [
+              {
+                "concept": "Revenue",
+                "value": 416161000000.0,
+                "unit": "USD",
+                "period": {
+                  "start_date": "2024-09-29",
+                  "end_date": "2025-09-27",
+                  "fiscal_year": 2025,
+                  "fiscal_quarter": null
+                },
+                "source_ref": "10-K filed 2025-10-31 accn 0000320193-25-000079",
+                "xbrl_tag": "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+                "confidence": 1.0
+              },
+              {
+                "concept": "CostOfGoodsSold",
+                "value": 220960000000.0,
+                "unit": "USD",
+                "period": {
+                  "start_date": "2024-09-29",
+                  "end_date": "2025-09-27",
+                  "fiscal_year": 2025,
+                  "fiscal_quarter": null
+                },
+                "source_ref": "10-K filed 2025-10-31 accn 0000320193-25-000079",
+                "xbrl_tag": "us-gaap:CostOfGoodsAndServicesSold",
+                "confidence": 1.0
+              },
+              {
+                "concept": "GrossProfit",
+                "value": 195201000000.0,
+                "unit": "USD",
+                "period": {
+                  "start_date": "2024-09-29",
+                  "end_date": "2025-09-27",
+                  "fiscal_year": 2025,
+                  "fiscal_quarter": null
+                },
+                "source_ref": "10-K filed 2025-10-31 accn 0000320193-25-000079",
+                "xbrl_tag": "us-gaap:GrossProfit",
+                "confidence": 1.0
+              }
+            ]
+          }
+        },
+        "footnotes": {},
+        "metadata": {
+          "source": "smoke_fixture"
+        },
+        "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/"
+      }
     }
   ]
 }

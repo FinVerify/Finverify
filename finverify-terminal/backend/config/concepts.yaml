@@ -1,0 +1,43 @@
+{
+  "concepts": {
+    "Revenue": {
+      "aliases": ["Net Sales", "Turnover", "Sales"],
+      "xbrl_tags": [
+        "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+        "us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax",
+        "us-gaap:Revenues"
+      ],
+      "unit": "USD",
+      "statement": "IncomeStatement",
+      "period_rules": "FiscalYear",
+      "currency_rules": "USD",
+      "validation": "Must be > 0"
+    },
+    "CostOfGoodsSold": {
+      "aliases": ["COGS", "Cost of Sales", "Cost of Revenue"],
+      "xbrl_tags": [
+        "us-gaap:CostOfGoodsSold",
+        "us-gaap:CostOfGoodsAndServicesSold",
+        "us-gaap:CostOfSales"
+      ],
+      "unit": "USD",
+      "statement": "IncomeStatement",
+      "period_rules": "FiscalYear",
+      "currency_rules": "USD",
+      "validation": "Must be > 0"
+    },
+    "GrossProfit": {
+      "aliases": ["Gross Profit"],
+      "xbrl_tags": ["us-gaap:GrossProfit"],
+      "unit": "USD",
+      "statement": "IncomeStatement"
+    },
+    "GrossMargin": {
+      "aliases": ["Gross Profit Margin"],
+      "formula": "(Revenue - CostOfGoodsSold) / Revenue",
+      "unit": "percentage",
+      "statement": "IncomeStatement",
+      "requires": ["Revenue", "CostOfGoodsSold"]
+    }
+  }
+}

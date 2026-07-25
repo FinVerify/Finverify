@@ -14,6 +14,10 @@ from datetime import datetime
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "backend"))
+from core.financial.concepts import ConceptRegistry
+from core.financial.document import FinancialDocument
+from core.financial.parser import TaskParser
+from core.financial.reasoning import ReasoningEngine
 from core.engine import verify
 from core.models import Claim
 
@@ -35,6 +39,9 @@ def get_environment() -> dict[str, str]:
 
 
 def run_single_case(case: dict[str, Any], check_labels: bool = False) -> dict[str, Any]:
+    if case.get("workflow") == "financial_reasoning":
+        return run_financial_case(case, check_labels=check_labels)
+
     claim = Claim(
         question=case["question"],
         raw_value=case["raw_value"],
@@ -68,8 +75,49 @@ def run_single_case(case: dict[str, Any], check_labels: bool = False) -> dict[st
         "expected": expected,
         "label": result.trust_score.label,
         "expected_label": case.get("expected_label"),
-        "corrections": actual_rules,
-        "expected_corrections": expected_rules,
+        "corrections": sorted(actual_rules),
+        "expected_corrections": sorted(expected_rules),
+        "runtime_ms": elapsed,
+    }
+
+
+def run_financial_case(case: dict[str, Any], check_labels: bool = False) -> dict[str, Any]:
+    registry = ConceptRegistry(Path(__file__).parent.parent / "backend" / "config" / "concepts.yaml")
+    engine = ReasoningEngine(registry)
+    task = TaskParser.parse(case["question"])
+    document = FinancialDocument.model_validate(case["financial_document"])
+
+    start = time.perf_counter()
+    result = engine.answer(task, document)
+    elapsed = (time.perf_counter() - start) * 1000
+
+    expected = case["expected_verified"]
+    actual = result.get("computed_value")
+    value_ok = actual is not None and math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-9)
+    actual_rules: set[str] = set()
+    expected_rules = set(case.get("expected_corrections", []))
+    corrections_ok = actual_rules == expected_rules
+
+    label = result["trust"].label if result.get("trust") is not None else None
+    label_ok = True
+    if check_labels and "expected_label" in case:
+        label_ok = label == case["expected_label"]
+
+    passed = value_ok and corrections_ok and label_ok and result.get("status") == "complete"
+
+    return {
+        "id": case["id"],
+        "category": case.get("category", "uncategorized"),
+        "passed": passed,
+        "value_ok": value_ok,
+        "corrections_ok": corrections_ok,
+        "label_ok": label_ok,
+        "verified": actual,
+        "expected": expected,
+        "label": label,
+        "expected_label": case.get("expected_label"),
+        "corrections": sorted(actual_rules),
+        "expected_corrections": sorted(expected_rules),
         "runtime_ms": elapsed,
     }
 
@@ -147,6 +195,7 @@ def print_summary(report: dict[str, Any]) -> None:
 
 
 def export_report(report: dict[str, Any], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
         json.dump(report, f, indent=2)
     print(f"\n📄 Report exported to {path}")

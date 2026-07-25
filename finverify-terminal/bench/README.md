@@ -23,6 +23,7 @@ Each case includes:
 - A `reason` explaining why the case exists.
 - The question and raw LLM value.
 - The **expected verified value** (frozen) and the **expected correction rule names** (stable identifiers like `scale`, `sign`, `magnitude`).
+- Optional `workflow` metadata for non-DVL regression paths such as filing-based financial reasoning.
 
 ## Usage
 
@@ -35,3 +36,6 @@ python bench/runner.py --check-labels
 
 # Export results for historical tracking
 python bench/runner.py --export results/latest.json
+```
+
+The export command creates the parent `results/` directory automatically when needed.

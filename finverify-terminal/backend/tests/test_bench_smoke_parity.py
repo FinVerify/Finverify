@@ -15,6 +15,8 @@ def test_smoke_benchmark_cases_match_legacy_dvl_and_core_engine():
     data = json.loads(SMOKE_DATASET.read_text(encoding="utf-8"))
 
     for case in data["cases"]:
+        if case.get("workflow") == "financial_reasoning":
+            continue
         legacy_value, legacy_log, _legacy_label, _legacy_color = full_verify(
             case["question"],
             case["raw_value"],
