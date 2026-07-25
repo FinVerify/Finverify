@@ -8,7 +8,7 @@ from .math_engine import MathEngine
 from .models import Claim, VerificationContext, VerificationResult
 from .output import build_result
 from .resolvers import resolve_entity, resolve_metric, resolve_time
-from .trust import score
+from .trust_engine import compute_trust
 
 
 def verify(claim: Claim | dict, *, evidence_retriever: Optional[EvidenceRetriever] = None) -> VerificationResult:
@@ -30,6 +30,9 @@ def verify(claim: Claim | dict, *, evidence_retriever: Optional[EvidenceRetrieve
     evidence = evidence_retriever.retrieve(compiled, context=context)
     math_engine = MathEngine()
     math_result = math_engine.run(compiled, context)
-    verified, corrections, label, color = math_engine.to_legacy_tuple(math_result, compiled, context)
-    trust = score(label, color, corrections, evidence, context=context)
-    return build_result(compiled, verified, corrections, trust, evidence, context=context)
+    corrections = [
+        {"rule": correction.rule, "before": correction.before, "after": correction.after}
+        for correction in math_result.corrections
+    ]
+    trust = compute_trust(context, math_result, evidence)
+    return build_result(compiled, math_result.verified_value, corrections, trust, evidence, context=context)

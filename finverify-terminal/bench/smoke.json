@@ -10,7 +10,8 @@
       "question": "What was the CET1 ratio in Q4 2022?",
       "raw_value": 0.10935,
       "expected_verified": 10.935,
-      "expected_corrections": ["scale_mul100"]
+      "expected_corrections": ["scale_mul100"],
+      "expected_label": "LOW"
     },
     {
       "id": "sign_001",
@@ -19,7 +20,8 @@
       "question": "What is the net income change?",
       "raw_value": -0.152,
       "expected_verified": -15.2,
-      "expected_corrections": ["scale_mul100"]
+      "expected_corrections": ["scale_mul100"],
+      "expected_label": "LOW"
     },
     {
       "id": "magnitude_001",
@@ -28,7 +30,8 @@
       "question": "Revenue in millions?",
       "raw_value": 104.0,
       "expected_verified": 104.0,
-      "expected_corrections": []
+      "expected_corrections": [],
+      "expected_label": "LOW"
     },
     {
       "id": "noop_001",
@@ -37,7 +40,8 @@
       "question": "What is the net profit margin?",
       "raw_value": 18.4,
       "expected_verified": 18.4,
-      "expected_corrections": []
+      "expected_corrections": [],
+      "expected_label": "LOW"
     }
   ]
 }

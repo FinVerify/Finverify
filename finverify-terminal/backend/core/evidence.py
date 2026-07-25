@@ -18,14 +18,21 @@ class EvidenceRetriever:
         context: VerificationContext | None = None,
     ) -> list[Evidence]:
         if self.registry is not None:
+            provider = None
             try:
-                evidence = self.registry.retrieve(claim)
+                provider = self.registry.resolve(claim)
+                evidence = provider.retrieve(claim) if provider is not None else []
             except Exception as exc:
                 logger.warning("Evidence retrieval failed for %r: %s", claim.question, exc)
                 evidence = []
             if evidence:
                 if context is not None:
-                    context.provider = evidence[0].source.name
+                    context.provider = provider.name if provider is not None else evidence[0].source.name
+                    context.provider_metadata = (
+                        dict(getattr(provider, "metadata", {}) or {})
+                        if provider is not None
+                        else {}
+                    )
                     context.evidence_mode = "retrieved"
                 return evidence
 
@@ -34,6 +41,7 @@ class EvidenceRetriever:
         if claim.raw_value is not None:
             if context is not None:
                 context.provider = claim.model_source or "model_input"
+                context.provider_metadata = {"tier": "model"}
                 context.evidence_mode = "model_input"
             return [Evidence(
                 source=Source(

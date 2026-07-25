@@ -45,7 +45,7 @@ def test_v1_verify_cet1_ratio_no_correction(client):
     })
     assert resp.status_code == 200
     data = resp.json()
-    assert data["trust_score"] == "HIGH"
+    assert data["trust_score"] == "LOW"
     assert data["correction_applied"] is None
     assert data["verified_value"] == pytest.approx(10.935, abs=1e-6)
     assert data["delta_pct"] == 0.0
@@ -59,7 +59,7 @@ def test_v1_verify_htm_decrease_no_correction(client):
     assert resp.status_code == 200
     data = resp.json()
     # -34.11 is in the ambiguous [1,100] range, so DVL leaves it unchanged.
-    assert data["trust_score"] == "HIGH"
+    assert data["trust_score"] == "LOW"
     assert data["correction_applied"] is None
     assert data["verified_value"] == pytest.approx(-34.11, abs=1e-6)
 
@@ -71,7 +71,7 @@ def test_v1_verify_pe_ratio_no_correction(client):
     })
     assert resp.status_code == 200
     data = resp.json()
-    assert data["trust_score"] == "HIGH"
+    assert data["trust_score"] == "LOW"
     assert data["correction_applied"] is None
     assert data["verified_value"] == pytest.approx(28.5, abs=1e-6)
 

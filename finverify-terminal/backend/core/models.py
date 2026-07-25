@@ -1,5 +1,6 @@
 """Shared domain contracts for all FinVerify consumers."""
 
+from enum import Enum
 from typing import Any, Optional
 
 from pydantic import BaseModel, Field
@@ -44,11 +45,58 @@ class Calculation(BaseModel):
     details: Optional[str] = None
 
 
+class EvidenceTier(str, Enum):
+    PRIMARY = "primary"
+    SECONDARY = "secondary"
+    MODEL = "model"
+    USER = "user"
+
+
+class CorrectionSeverity(str, Enum):
+    NONE = "none"
+    SCALE_ONLY = "scale_only"
+    SIGN_ONLY = "sign_only"
+    MAGNITUDE_ONLY = "magnitude_only"
+    MULTIPLE = "multiple"
+
+
+class Ambiguity(str, Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
+
+class Consistency(str, Enum):
+    PASS = "pass"
+    PARTIAL = "partial"
+    FAIL = "fail"
+
+
+class RuleEvidence(str, Enum):
+    NONE = "none"
+    SINGLE = "single_rule"
+    MULTIPLE_AGREE = "multiple_agree"
+    CONFLICTING = "conflicting"
+
+
+class TrustFindings(BaseModel):
+    evidence_tier: EvidenceTier
+    correction_severity: CorrectionSeverity
+    ambiguity: Ambiguity
+    consistency: Consistency
+    rule_evidence: RuleEvidence
+
+
 class TrustScore(BaseModel):
     label: str = "LOW"
     score: float = Field(0.0, ge=0.0, le=1.0)
     color: str = "#f87171"
     reasons: list[str] = Field(default_factory=list)
+    findings: Optional[TrustFindings] = Field(default=None, exclude=True)
+
+    @property
+    def colour(self) -> str:
+        return self.color
 
 
 class Claim(BaseModel):
@@ -71,6 +119,7 @@ class VerificationContext(BaseModel):
     metric: Optional[Metric] = None
     period: Optional[str] = None
     provider: Optional[str] = None
+    provider_metadata: dict[str, Any] = Field(default_factory=dict)
     evidence_mode: Optional[str] = None
     metadata: dict[str, Any] = Field(default_factory=dict)
     current_value: Optional[float] = None

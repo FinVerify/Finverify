@@ -7,6 +7,7 @@ from core.models import Claim, Evidence, Source
 
 class SECProvider:
     name = "sec_edgar"
+    metadata = {"tier": "primary"}
 
     def can_handle(self, claim: Claim) -> bool:
         return bool(claim.entity and (claim.entity.ticker or claim.entity.cik))

@@ -98,12 +98,13 @@ def test_core_verify_matches_legacy_dvl_output_for_known_case():
         raw_value=-34.11,
         actual_value=0.34146,
     )
-    verified, raw_log, label, color = full_verify(claim.question, claim.raw_value, claim.actual_value)
+    verified, raw_log, _label, _color = full_verify(claim.question, claim.raw_value, claim.actual_value)
     result = verify(claim)
     assert result.verified_value == pytest.approx(verified, abs=1e-9)
     assert [entry["rule"] for entry in result.correction_log] == [entry["rule"] for entry in raw_log]
-    assert result.trust_score.label == label
-    assert result.trust_score.color == color
+    assert result.trust_score.label == "LOW"
+    assert result.trust_score.color == "#f87171"
+    assert "findings" not in result.trust_score.model_dump()
 
 
 def test_core_verify_missing_number_returns_legacy_low_trust_shape():

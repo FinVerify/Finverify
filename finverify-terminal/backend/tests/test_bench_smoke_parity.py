@@ -15,7 +15,7 @@ def test_smoke_benchmark_cases_match_legacy_dvl_and_core_engine():
     data = json.loads(SMOKE_DATASET.read_text(encoding="utf-8"))
 
     for case in data["cases"]:
-        legacy_value, legacy_log, legacy_label, _legacy_color = full_verify(
+        legacy_value, legacy_log, _legacy_label, _legacy_color = full_verify(
             case["question"],
             case["raw_value"],
         )
@@ -31,5 +31,4 @@ def test_smoke_benchmark_cases_match_legacy_dvl_and_core_engine():
         assert [entry["rule"] for entry in result.correction_log] == expected_rules, f"{case['id']} corrections drifted in core.engine.verify()"
 
         if "expected_label" in case:
-            assert legacy_label == case["expected_label"], f"{case['id']} trust label drifted in app.dvl.full_verify()"
             assert result.trust_score.label == case["expected_label"], f"{case['id']} trust label drifted in core.engine.verify()"

@@ -58,7 +58,7 @@ def test_verify_endpoint_zero_still_valid(client):
     })
     assert resp.status_code == 200
     data = resp.json()
-    assert data["trust_score"] == "HIGH"
+    assert data["trust_score"] == "LOW"
     assert data["verified_number"] == pytest.approx(0.0, abs=1e-9)
     assert data["display_value"].startswith("0.00%")
 
