@@ -1,6 +1,6 @@
 {
   "benchmark": "FinVerify Smoke",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "created_from": "tests/test_dvl.py and manually verified regressions",
   "cases": [
     {
@@ -128,6 +128,251 @@
           "source": "smoke_fixture"
         },
         "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/"
+      }
+    },
+    {
+      "id": "revenue_001",
+      "category": "direct_metric",
+      "reason": "Direct revenue retrieval from filing evidence",
+      "workflow": "financial_reasoning",
+      "question": "What was Microsoft's revenue?",
+      "raw_value": 0.0,
+      "expected_verified": 2000000.0,
+      "expected_corrections": [],
+      "expected_label": "HIGH",
+      "financial_document": {
+        "company_name": "Microsoft Corporation",
+        "ticker": "MSFT",
+        "cik": "0000789019",
+        "filing_type": "10-K",
+        "filing_date": "2024-07-30",
+        "periods": [
+          {
+            "start_date": "2023-07-01",
+            "end_date": "2024-06-30",
+            "fiscal_year": 2024,
+            "fiscal_quarter": null
+          },
+          {
+            "start_date": "2022-07-01",
+            "end_date": "2023-06-30",
+            "fiscal_year": 2023,
+            "fiscal_quarter": null
+          }
+        ],
+        "statements": {
+          "IncomeStatement": {
+            "name": "IncomeStatement",
+            "period": {
+              "start_date": "2023-07-01",
+              "end_date": "2024-06-30",
+              "fiscal_year": 2024,
+              "fiscal_quarter": null
+            },
+            "currency": "USD",
+            "items": [
+              {
+                "concept": "Revenue",
+                "value": 2000000.0,
+                "unit": "USD",
+                "period": {
+                  "start_date": "2023-07-01",
+                  "end_date": "2024-06-30",
+                  "fiscal_year": 2024,
+                  "fiscal_quarter": null
+                },
+                "source_ref": "10-K filed 2024-07-30 accn 0000789019-24-000001",
+                "xbrl_tag": "us-gaap:Revenues",
+                "confidence": 1.0
+              },
+              {
+                "concept": "OperatingIncome",
+                "value": 500000.0,
+                "unit": "USD",
+                "period": {
+                  "start_date": "2023-07-01",
+                  "end_date": "2024-06-30",
+                  "fiscal_year": 2024,
+                  "fiscal_quarter": null
+                },
+                "source_ref": "10-K filed 2024-07-30 accn 0000789019-24-000001",
+                "xbrl_tag": "us-gaap:OperatingIncomeLoss",
+                "confidence": 1.0
+              },
+              {
+                "concept": "Revenue",
+                "value": 1500000.0,
+                "unit": "USD",
+                "period": {
+                  "start_date": "2022-07-01",
+                  "end_date": "2023-06-30",
+                  "fiscal_year": 2023,
+                  "fiscal_quarter": null
+                },
+                "source_ref": "10-K filed 2023-07-27 accn 0000789019-23-000001",
+                "xbrl_tag": "us-gaap:Revenues",
+                "confidence": 1.0
+              }
+            ]
+          }
+        },
+        "footnotes": {},
+        "metadata": {
+          "source": "smoke_fixture"
+        },
+        "source_url": "https://www.sec.gov/Archives/edgar/data/789019/000078901924000001/"
+      }
+    },
+    {
+      "id": "operating_margin_001",
+      "category": "profitability",
+      "reason": "Operating margin computation from filing evidence",
+      "workflow": "financial_reasoning",
+      "question": "What is Microsoft's operating margin?",
+      "raw_value": 0.0,
+      "expected_verified": 0.25,
+      "expected_corrections": [],
+      "expected_label": "HIGH",
+      "financial_document": {
+        "company_name": "Microsoft Corporation",
+        "ticker": "MSFT",
+        "cik": "0000789019",
+        "filing_type": "10-K",
+        "filing_date": "2024-07-30",
+        "periods": [
+          {
+            "start_date": "2023-07-01",
+            "end_date": "2024-06-30",
+            "fiscal_year": 2024,
+            "fiscal_quarter": null
+          }
+        ],
+        "statements": {
+          "IncomeStatement": {
+            "name": "IncomeStatement",
+            "period": {
+              "start_date": "2023-07-01",
+              "end_date": "2024-06-30",
+              "fiscal_year": 2024,
+              "fiscal_quarter": null
+            },
+            "currency": "USD",
+            "items": [
+              {
+                "concept": "Revenue",
+                "value": 2000000.0,
+                "unit": "USD",
+                "period": {
+                  "start_date": "2023-07-01",
+                  "end_date": "2024-06-30",
+                  "fiscal_year": 2024,
+                  "fiscal_quarter": null
+                },
+                "source_ref": "10-K filed 2024-07-30 accn 0000789019-24-000001",
+                "xbrl_tag": "us-gaap:Revenues",
+                "confidence": 1.0
+              },
+              {
+                "concept": "OperatingIncome",
+                "value": 500000.0,
+                "unit": "USD",
+                "period": {
+                  "start_date": "2023-07-01",
+                  "end_date": "2024-06-30",
+                  "fiscal_year": 2024,
+                  "fiscal_quarter": null
+                },
+                "source_ref": "10-K filed 2024-07-30 accn 0000789019-24-000001",
+                "xbrl_tag": "us-gaap:OperatingIncomeLoss",
+                "confidence": 1.0
+              }
+            ]
+          }
+        },
+        "footnotes": {},
+        "metadata": {
+          "source": "smoke_fixture"
+        },
+        "source_url": "https://www.sec.gov/Archives/edgar/data/789019/000078901924000001/"
+      }
+    },
+    {
+      "id": "revenue_yoy_001",
+      "category": "growth",
+      "reason": "Revenue year-over-year growth computation from two filing periods",
+      "workflow": "financial_reasoning",
+      "question": "Compare revenue YoY for Microsoft",
+      "raw_value": 0.0,
+      "expected_verified": 0.3333333333333333,
+      "expected_corrections": [],
+      "expected_label": "HIGH",
+      "financial_document": {
+        "company_name": "Microsoft Corporation",
+        "ticker": "MSFT",
+        "cik": "0000789019",
+        "filing_type": "10-K",
+        "filing_date": "2024-07-30",
+        "periods": [
+          {
+            "start_date": "2023-07-01",
+            "end_date": "2024-06-30",
+            "fiscal_year": 2024,
+            "fiscal_quarter": null
+          },
+          {
+            "start_date": "2022-07-01",
+            "end_date": "2023-06-30",
+            "fiscal_year": 2023,
+            "fiscal_quarter": null
+          }
+        ],
+        "statements": {
+          "IncomeStatement": {
+            "name": "IncomeStatement",
+            "period": {
+              "start_date": "2023-07-01",
+              "end_date": "2024-06-30",
+              "fiscal_year": 2024,
+              "fiscal_quarter": null
+            },
+            "currency": "USD",
+            "items": [
+              {
+                "concept": "Revenue",
+                "value": 2000000.0,
+                "unit": "USD",
+                "period": {
+                  "start_date": "2023-07-01",
+                  "end_date": "2024-06-30",
+                  "fiscal_year": 2024,
+                  "fiscal_quarter": null
+                },
+                "source_ref": "10-K filed 2024-07-30 accn 0000789019-24-000001",
+                "xbrl_tag": "us-gaap:Revenues",
+                "confidence": 1.0
+              },
+              {
+                "concept": "Revenue",
+                "value": 1500000.0,
+                "unit": "USD",
+                "period": {
+                  "start_date": "2022-07-01",
+                  "end_date": "2023-06-30",
+                  "fiscal_year": 2023,
+                  "fiscal_quarter": null
+                },
+                "source_ref": "10-K filed 2023-07-27 accn 0000789019-23-000001",
+                "xbrl_tag": "us-gaap:Revenues",
+                "confidence": 1.0
+              }
+            ]
+          }
+        },
+        "footnotes": {},
+        "metadata": {
+          "source": "smoke_fixture"
+        },
+        "source_url": "https://www.sec.gov/Archives/edgar/data/789019/000078901924000001/"
       }
     }
   ]

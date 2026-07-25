@@ -14,7 +14,7 @@ class ExecutionPlanner:
         del doc
         if task.type == TaskType.ANSWER_METRIC and task.metric and self.task_registry.supports(task):
             spec = self.registry.get_concept(task.metric)
-            required = spec.get("requires", [])
+            required = spec.get("requires", []) or [task.metric]
             formula = spec.get("formula", "")
             return [
                 {"action": "retrieve", "params": {"concepts": required}},

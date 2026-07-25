@@ -32,12 +32,44 @@
       "unit": "USD",
       "statement": "IncomeStatement"
     },
+    "OperatingIncome": {
+      "aliases": ["Operating Profit", "EBIT"],
+      "xbrl_tags": ["us-gaap:OperatingIncomeLoss"],
+      "unit": "USD",
+      "statement": "IncomeStatement"
+    },
+    "NetIncome": {
+      "aliases": ["Net Income Loss", "Net Earnings", "Earnings"],
+      "xbrl_tags": ["us-gaap:NetIncomeLoss", "us-gaap:ProfitLoss"],
+      "unit": "USD",
+      "statement": "IncomeStatement"
+    },
+    "OperatingCashFlow": {
+      "aliases": ["Cash Flow From Operations", "Operating Cash Flow"],
+      "xbrl_tags": ["us-gaap:NetCashProvidedByUsedInOperatingActivities"],
+      "unit": "USD",
+      "statement": "CashFlowStatement"
+    },
     "GrossMargin": {
       "aliases": ["Gross Profit Margin"],
       "formula": "(Revenue - CostOfGoodsSold) / Revenue",
       "unit": "percentage",
       "statement": "IncomeStatement",
       "requires": ["Revenue", "CostOfGoodsSold"]
+    },
+    "OperatingMargin": {
+      "aliases": ["Operating Profit Margin"],
+      "formula": "OperatingIncome / Revenue",
+      "unit": "percentage",
+      "statement": "IncomeStatement",
+      "requires": ["OperatingIncome", "Revenue"]
+    },
+    "RevenueYoYGrowth": {
+      "aliases": ["Revenue Growth", "Revenue YoY", "Year over Year Revenue Growth"],
+      "formula": "(Revenue - Revenue_prior) / Revenue_prior",
+      "unit": "percentage",
+      "statement": "IncomeStatement",
+      "requires": ["Revenue", "Revenue_prior"]
     }
   }
 }

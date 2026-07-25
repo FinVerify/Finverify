@@ -11,29 +11,47 @@ class StatementMapper:
     def __init__(self, registry: ConceptRegistry):
         self.registry = registry
 
-    def map_xbrl_to_document(self, facts: dict, metadata: dict | None = None) -> FinancialDocument:
+    def map_xbrl_to_document(
+        self,
+        facts: dict,
+        metadata: dict | None = None,
+        *,
+        max_periods: int = 1,
+    ) -> FinancialDocument:
         metadata = metadata or {}
         candidates = self._collect_candidates(facts, metadata)
-        selected_period = self._select_period_key(candidates, metadata.get("filing_type"))
+        selected_periods = self._select_period_keys(candidates, metadata.get("filing_type"), max_periods=max_periods)
         statement_items: dict[str, list[FinancialStatementItem]] = defaultdict(list)
         periods: dict[tuple[str, str, int, int | None], FinancialPeriod] = {}
 
-        if selected_period is not None:
-            for candidate in candidates:
-                if self._period_key(candidate["period"]) != selected_period:
+        if selected_periods:
+            selected_period_set = set(selected_periods)
+            sorted_candidates = sorted(
+                candidates,
+                key=lambda candidate: (
+                    candidate["filed"],
+                    candidate["period"].end_date,
+                    candidate["statement"],
+                    candidate["concept"],
+                ),
+                reverse=True,
+            )
+            for candidate in sorted_candidates:
+                period_key = self._period_key(candidate["period"])
+                if period_key not in selected_period_set:
                     continue
                 statement_items[candidate["statement"]].append(candidate["item"])
-                periods[selected_period] = candidate["period"]
+                periods[period_key] = candidate["period"]
 
         filing_date = self._parse_date(
             metadata.get("filing_date"),
-            default=(periods[selected_period].end_date if selected_period is not None else date.today()),
+            default=(periods[selected_periods[0]].end_date if selected_periods else date.today()),
         )
         filing_type = str(metadata.get("filing_type") or (next(iter(statement_items.values()))[0].source_ref.split()[0] if statement_items else "10-K"))
         statements = {
             name: FinancialStatement(
                 name=name,
-                items=items,
+                items=sorted(items, key=lambda item: (item.period.end_date, item.concept), reverse=True),
                 period=items[0].period,
                 currency=self._currency_for(items),
             )
@@ -45,7 +63,7 @@ class StatementMapper:
             cik=str(metadata.get("cik") or facts.get("cik") or "") or None,
             filing_type=filing_type,
             filing_date=filing_date,
-            periods=list(periods.values()),
+            periods=sorted(periods.values(), key=lambda period: period.end_date, reverse=True),
             statements=statements,
             metadata={str(key): str(value) for key, value in metadata.items() if value is not None},
             source_url=metadata.get("source_url"),
@@ -91,9 +109,15 @@ class StatementMapper:
                     )
         return candidates
 
-    def _select_period_key(self, candidates: list[dict], desired_form: str | None) -> tuple[str, str, int, int | None] | None:
+    def _select_period_keys(
+        self,
+        candidates: list[dict],
+        desired_form: str | None,
+        *,
+        max_periods: int,
+    ) -> list[tuple[str, str, int, int | None]]:
         if not candidates:
-            return None
+            return []
         sorted_candidates = sorted(
             candidates,
             key=lambda candidate: (
@@ -103,7 +127,15 @@ class StatementMapper:
             ),
             reverse=True,
         )
-        return self._period_key(sorted_candidates[0]["period"])
+        selected: list[tuple[str, str, int, int | None]] = []
+        for candidate in sorted_candidates:
+            period_key = self._period_key(candidate["period"])
+            if period_key in selected:
+                continue
+            selected.append(period_key)
+            if len(selected) >= max_periods:
+                break
+        return selected
 
     @staticmethod
     def _build_period(entry: dict) -> FinancialPeriod:

@@ -5,7 +5,7 @@ from core.trust_engine import compute_trust
 from core.engine import verify
 
 from .concepts import ConceptRegistry
-from .contract import EvidenceContractBuilder, EvidenceItem
+from .contract import EvidenceContract, EvidenceItem
 from .document import FinancialDocument, FinancialStatementItem
 from .formula import FormulaEngine
 from .planner import ExecutionPlanner
@@ -34,16 +34,9 @@ class ReasoningEngine:
                 "missing": [],
             }
 
-        values: dict[str, float] = {}
-        contract = None
-        for step in plan:
-            if step["action"] == "retrieve":
-                required = step["params"]["concepts"]
-                contract = EvidenceContractBuilder.build(doc, required)
-                for item in contract.provided:
-                    values[item.concept] = item.value
-
-        assert contract is not None
+        spec = self.registry.get_concept(task.metric)
+        required = spec.get("requires", []) or [task.metric]
+        values, contract = self._resolve_required_values(doc, required)
         citations = [self._build_citation(item, doc) for item in contract.provided]
         if contract.missing:
             return {
@@ -58,9 +51,8 @@ class ReasoningEngine:
                 "missing": contract.missing,
             }
 
-        spec = self.registry.get_concept(task.metric)
         formula = spec.get("formula")
-        computed_value = self.formula_engine.evaluate(formula, values) if formula else None
+        computed_value = self.formula_engine.evaluate(formula, values) if formula else values.get(task.metric)
 
         reported_item = self._find_concept_item(doc, task.metric)
         verification = None
@@ -88,6 +80,60 @@ class ReasoningEngine:
             "status": "complete",
             "missing": [],
         }
+
+    def _resolve_required_values(self, doc: FinancialDocument, required_tokens: list[str]) -> tuple[dict[str, float], EvidenceContract]:
+        values: dict[str, float] = {}
+        provided: list[EvidenceItem] = []
+        optional: list[EvidenceItem] = []
+        missing: list[str] = []
+        required_set = set(required_tokens)
+
+        for token in required_tokens:
+            resolved = self._resolve_required_item(doc, token)
+            if resolved is None:
+                missing.append(token)
+                continue
+            values[token] = resolved.value
+            provided.append(
+                EvidenceItem(
+                    concept=token,
+                    value=resolved.value,
+                    unit=resolved.unit,
+                    statement=self._statement_name_for_item(doc, resolved),
+                    source_ref=resolved.source_ref,
+                    xbrl_tag=resolved.xbrl_tag,
+                )
+            )
+
+        for statement in doc.statements.values():
+            for item in statement.items:
+                if item.concept in required_set:
+                    continue
+                optional.append(
+                    EvidenceItem(
+                        concept=item.concept,
+                        value=item.value,
+                        unit=item.unit,
+                        statement=statement.name,
+                        source_ref=item.source_ref,
+                        xbrl_tag=item.xbrl_tag,
+                    )
+                )
+
+        return values, EvidenceContract(
+            required=required_tokens,
+            provided=provided,
+            missing=missing,
+            optional=optional,
+        )
+
+    def _resolve_required_item(self, doc: FinancialDocument, token: str) -> FinancialStatementItem | None:
+        if token.endswith("_prior"):
+            base_concept = token[: -len("_prior")]
+            matches = self._find_concept_items(doc, base_concept)
+            return matches[1] if len(matches) > 1 else None
+        matches = self._find_concept_items(doc, token)
+        return matches[0] if matches else None
 
     def _compute_primary_trust(
         self,
@@ -128,11 +174,25 @@ class ReasoningEngine:
 
     @staticmethod
     def _find_concept_item(doc: FinancialDocument, concept: str) -> FinancialStatementItem | None:
+        matches = ReasoningEngine._find_concept_items(doc, concept)
+        return matches[0] if matches else None
+
+    @staticmethod
+    def _find_concept_items(doc: FinancialDocument, concept: str) -> list[FinancialStatementItem]:
+        matches: list[FinancialStatementItem] = []
         for statement in doc.statements.values():
             for item in statement.items:
                 if item.concept == concept:
-                    return item
-        return None
+                    matches.append(item)
+        return sorted(matches, key=lambda item: item.period.end_date, reverse=True)
+
+    @staticmethod
+    def _statement_name_for_item(doc: FinancialDocument, target: FinancialStatementItem) -> str:
+        for statement in doc.statements.values():
+            for item in statement.items:
+                if item is target:
+                    return statement.name
+        return "UnknownStatement"
 
     @staticmethod
     def _build_citation(item: EvidenceItem, doc: FinancialDocument) -> dict:
@@ -151,12 +211,18 @@ class ReasoningEngine:
 
     @staticmethod
     def _build_incomplete_explanation(metric: str, missing: list[str]) -> str:
-        missing_text = ", ".join(missing)
+        missing_text = ", ".join(ReasoningEngine._label_for_token(token) for token in missing)
         return f"Unable to compute {metric} because required evidence is missing: {missing_text}."
 
     @staticmethod
     def _build_complete_explanation(metric: str, computed_value: float | None, evidence_items: list[EvidenceItem]) -> str:
-        evidence_names = ", ".join(item.concept for item in evidence_items)
+        evidence_names = ", ".join(ReasoningEngine._label_for_token(item.concept) for item in evidence_items)
         if computed_value is None:
             return f"No computed value was produced for {metric}."
         return f"Computed {metric} deterministically from {evidence_names}; result={computed_value:.6f}."
+
+    @staticmethod
+    def _label_for_token(token: str) -> str:
+        if token.endswith("_prior"):
+            return f"{token[: -len('_prior')]} (prior period)"
+        return token

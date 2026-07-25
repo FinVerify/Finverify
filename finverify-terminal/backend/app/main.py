@@ -55,6 +55,7 @@ from .parser import clean_llm_output
 from core.engine import verify
 from core.models import Claim
 from .evaluator import build_query_response
+from .financial import build_financial_query_response
 from .router import classify_query
 from .market import (
     get_quotes,
@@ -63,9 +64,11 @@ from .market import (
     get_all_metrics,
     DEFAULT_WATCHLIST,
 )
+from core.financial import FinancialDocumentService
 
 load_dotenv()
 logger = logging.getLogger(__name__)
+financial_document_service = FinancialDocumentService()
 
 # ---------------------------------------------------------------------------
 # App
@@ -205,6 +208,10 @@ async def call_hf_inference(question: str) -> str:
 @app.post("/query", response_model=QueryResponse)
 async def query_endpoint(req: QueryRequest):
     """Full pipeline: classify -> LLM -> parse -> DVL -> response."""
+    mode = classify_query(req.question)
+
+    if mode == "financial_reasoning":
+        return build_financial_query_response(req.question, financial_document_service)
 
     # --- If no HF token, return graceful offline response ---------------
     if not LLM_AVAILABLE:
@@ -222,8 +229,6 @@ async def query_endpoint(req: QueryRequest):
             mode="dvl_only",
             verified=False,
         )
-
-    mode = classify_query(req.question)
 
     # Advisory queries — skip DVL entirely
     if mode == "advisory":

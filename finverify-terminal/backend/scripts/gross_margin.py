@@ -11,53 +11,16 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from core.financial.concepts import ConceptRegistry
-from core.financial.mapper import StatementMapper
-from core.financial.parser import TaskParser
-from core.financial.reasoning import ReasoningEngine
-from ingestion.sec_edgar import (
-    TICKER_TO_CIK,
-    extract_latest_10k_info,
-    fetch_company_facts,
-    fetch_submissions,
-)
-
-
-def load_sec_document(ticker: str):
-    facts = fetch_company_facts(ticker)
-    if not facts:
-        raise RuntimeError(f"Could not fetch SEC CompanyFacts for {ticker}")
-
-    submissions = fetch_submissions(ticker)
-    filing = extract_latest_10k_info(submissions) if submissions else {}
-    accession = (filing or {}).get("accession_number", "")
-    cik = TICKER_TO_CIK.get(ticker.upper(), "")
-    source_url = (
-        f"https://www.sec.gov/Archives/edgar/data/{cik.lstrip('0')}/{accession.replace('-', '')}/"
-        if accession
-        else f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json"
-    )
-
-    metadata = {
-        "company_name": facts.get("entityName", ticker.upper()),
-        "ticker": ticker.upper(),
-        "cik": cik,
-        "filing_type": (filing or {}).get("form_type", "10-K"),
-        "filing_date": (filing or {}).get("filing_date"),
-        "source_url": source_url,
-    }
-
-    registry = ConceptRegistry(Path(__file__).parent.parent / "config" / "concepts.yaml")
-    mapper = StatementMapper(registry)
-    return registry, mapper.map_xbrl_to_document(facts, metadata)
+from core.financial import FinancialDocumentService, ReasoningEngine, TaskParser
 
 
 def main(ticker: str):
-    registry, document = load_sec_document(ticker)
+    document_service = FinancialDocumentService(Path(__file__).parent.parent / "config" / "concepts.yaml")
+    document = document_service.load_document(ticker)
     question = f"What is the gross margin for {ticker}'s filing?"
     task = TaskParser.parse(question)
 
-    engine = ReasoningEngine(registry)
+    engine = ReasoningEngine(document_service.registry)
     result = engine.answer(task, document)
 
     print("=" * 50)

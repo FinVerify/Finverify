@@ -125,7 +125,9 @@ def test_ambiguous_scale_no_ground_truth():
     [
         ("What was the CET1 ratio?", "numerical"),
         ("Should I buy Apple stock?", "advisory"),
-        ("What is JPMorgan's revenue growth?", "numerical"),
+        ("What is JPMorgan's revenue growth?", "financial_reasoning"),
+        ("What is Apple's gross margin?", "financial_reasoning"),
+        ("Compare revenue YoY for Nvidia", "financial_reasoning"),
         ("Which stock should I invest in?", "advisory"),
         ("Tell me about quarterly reports", "general"),
         ("What was the YoY margin change?", "numerical"),

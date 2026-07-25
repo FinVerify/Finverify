@@ -21,7 +21,15 @@ class FinancialTask(BaseModel):
 class TaskRegistry(BaseModel):
     supported_metrics: dict[TaskType, set[str]] = Field(
         default_factory=lambda: {
-            TaskType.ANSWER_METRIC: {"GrossMargin"},
+            TaskType.ANSWER_METRIC: {
+                "GrossMargin",
+                "OperatingMargin",
+                "Revenue",
+                "RevenueYoYGrowth",
+                "OperatingIncome",
+                "NetIncome",
+                "OperatingCashFlow",
+            },
         }
     )
 
