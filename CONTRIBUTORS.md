@@ -19,7 +19,7 @@ Founder & Research Lead
 
 ## Community Contributors
 
-### @MasRama
+### @MasRama 
 
 Contributions include:
 
