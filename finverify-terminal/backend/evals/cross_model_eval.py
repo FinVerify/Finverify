@@ -36,7 +36,8 @@ import httpx
 
 # Add parent to path so we can import app modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from app.dvl import full_verify, is_correct
+from core import Claim, verify
+from app.dvl import is_correct
 from app.parser import extract_number, clean_llm_output
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
@@ -289,8 +290,12 @@ async def evaluate_model(
                         result.baseline_correct += 1
 
                     # DVL accuracy
-                    verified, _, _, _ = full_verify(sample.question, raw_number, sample.actual)
-                    if is_correct(verified, sample.actual):
+                    verification = verify(Claim(
+                        question=sample.question,
+                        raw_value=raw_number,
+                        actual_value=sample.actual,
+                    ))
+                    if is_correct(verification.verified_value, sample.actual):
                         result.dvl_correct += 1
 
                     if (i + 1) % 10 == 0:

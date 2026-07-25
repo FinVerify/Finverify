@@ -13,11 +13,13 @@ const SAMPLES = [
 interface Props {
   onSubmit: (q: string) => void;
   onRunDemo: () => void;
+  onSelectDemo: (q: string) => void;
   isLoading: boolean;
   demoStatus: string | null; // e.g. "DEMO 1/3..." or null
+  hasSelectedDemo: boolean;
 }
 
-export default function QueryInput({ onSubmit, onRunDemo, isLoading, demoStatus }: Props) {
+export default function QueryInput({ onSubmit, onRunDemo, onSelectDemo, isLoading, demoStatus, hasSelectedDemo }: Props) {
   const [value, setValue] = useState("");
   const ref = useRef<HTMLTextAreaElement>(null);
 
@@ -122,7 +124,7 @@ export default function QueryInput({ onSubmit, onRunDemo, isLoading, demoStatus 
         <button
           id="run-demo-btn"
           onClick={onRunDemo}
-          disabled={isLoading}
+          disabled={isLoading || !hasSelectedDemo}
           className="w-full py-2 text-[11px] font-mono font-bold uppercase tracking-[0.12em] rounded transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
           style={{
             background: "rgba(251,191,36,0.06)",
@@ -146,7 +148,8 @@ export default function QueryInput({ onSubmit, onRunDemo, isLoading, demoStatus 
               <button
                 key={i}
                 id={`sample-${i}`}
-                onClick={() => { setValue(q); ref.current?.focus(); }}
+                disabled={isLoading}
+                onClick={() => { onSelectDemo(q); setValue(q); ref.current?.focus(); }}
                 className="text-[9px] font-mono px-2 py-0.5 rounded border border-t-border text-t-secondary hover:text-t-cyan hover:border-t-cyan/30 transition-all duration-200"
               >
                 {q}

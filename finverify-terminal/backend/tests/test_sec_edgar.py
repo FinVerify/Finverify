@@ -171,19 +171,31 @@ def test_extract_xbrl_metrics_returns_empty_on_missing_us_gaap():
 
 
 # ---------------------------------------------------------------------------
-# verify_and_store_metrics runs full_verify on every metric
+# verify_and_store_metrics runs the shared engine on every metric
 # ---------------------------------------------------------------------------
 
 
-def test_verify_and_store_metrics_calls_full_verify_for_each_metric(monkeypatch):
-    """Every extracted or fallback metric is passed through full_verify before storage."""
+def test_verify_and_store_metrics_calls_engine_for_each_metric(monkeypatch):
+    """Every extracted or fallback metric is passed through core.verify before storage."""
     calls = []
 
-    def fake_full_verify(question, predicted, actual=None):
-        calls.append((question, predicted))
-        return predicted * 2, [], "HIGH", "#00ff88"
+    class FakeResult:
+        verified_value = 0
+        correction_log = []
 
-    monkeypatch.setattr("ingestion.sec_edgar.full_verify", fake_full_verify)
+        class Trust:
+            label = "HIGH"
+            color = "#00ff88"
+
+        trust_score = Trust()
+
+    def fake_verify(claim):
+        calls.append((claim.question, claim.raw_value))
+        result = FakeResult()
+        result.verified_value = claim.raw_value * 2
+        return result
+
+    monkeypatch.setattr("ingestion.sec_edgar.verify", fake_verify)
     monkeypatch.setattr("ingestion.db.upsert_fundamental", lambda **kwargs: None)
 
     metrics = [

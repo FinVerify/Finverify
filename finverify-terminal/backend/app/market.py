@@ -18,7 +18,8 @@ from typing import Optional
 
 import yfinance as yf
 
-from .dvl import full_verify, format_correction_log
+from core.engine import verify
+from core.models import Claim
 
 logger = logging.getLogger(__name__)
 
@@ -270,9 +271,12 @@ def compute_financial_metric(symbol: str, metric_type: str) -> dict:
 
     raw_value = float(raw_value)
 
-    # ── Run through DVL ──
-    verified, logs, trust_score, trust_color = full_verify(question_text, raw_value)
-    formatted_log = format_correction_log(logs)
+    # ── Run through the shared verification engine ──
+    result = verify(Claim(question=question_text, raw_value=raw_value))
+    verified = result.verified_value
+    formatted_log = result.correction_log
+    trust_score = result.trust_score.label
+    trust_color = result.trust_score.color
 
     return {
         "symbol": symbol,

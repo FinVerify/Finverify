@@ -7,6 +7,19 @@ Request / response schemas for the FastAPI endpoints.
 from typing import Optional
 from pydantic import BaseModel, Field
 
+# Re-export the shared domain contracts so existing API consumers can migrate
+# without maintaining a second model hierarchy.
+from core.models import (
+    Claim,
+    Entity,
+    Metric,
+    Evidence,
+    Source,
+    Calculation,
+    TrustScore,
+    VerificationResult,
+)
+
 
 # ---------------------------------------------------------------------------
 # Requests

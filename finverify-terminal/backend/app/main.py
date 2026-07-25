@@ -47,14 +47,13 @@ from .models import (
     QueryRequest,
     VerifyRequest,
     QueryResponse,
-    HealthResponse,
     SampleQuery,
     V1VerifyRequest,
     V1VerifyResponse,
 )
-from .parser import clean_llm_output, format_number_display
-from .dvl import full_verify, format_correction_log
-from .models import CorrectionEntry
+from .parser import clean_llm_output
+from core.engine import verify
+from core.models import Claim
 from .evaluator import build_query_response
 from .router import classify_query
 from .market import (
@@ -323,12 +322,12 @@ async def v1_verify_endpoint(req: V1VerifyRequest, request: Request):
     if req.model_source:
         logger.info("Model source: %s", req.model_source)
 
-    # Run DVL pipeline
-    verified_value, correction_log, trust_label, trust_color = full_verify(
-        question=req.question,
-        predicted=req.raw_value,
-        actual=None,  # No ground truth in standalone mode
-    )
+    # Run the shared verification pipeline.
+    result = verify(Claim(question=req.question, raw_value=req.raw_value))
+    verified_value = result.verified_value
+    correction_log = result.correction_log
+    trust_label = result.trust_score.label
+    trust_color = result.trust_score.color
 
     # Compute delta percentage
     delta_pct = 0.0

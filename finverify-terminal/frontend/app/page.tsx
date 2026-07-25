@@ -76,10 +76,18 @@ function clientDVL(question: string, raw: number): QueryResponse {
 }
 
 /* ── Demo cases ── */
-const DEMO_CASES = [
-  { question: "What was the YoY operating margin change?", raw_number: 0.1240 },
-  { question: "What was the percentage decrease in HTM securities?", raw_number: -34.11 },
-  { question: "What was the increase in Class A shares outstanding?", raw_number: 104.0 },
+type DemoCase = {
+  question: string;
+  raw_number: number;
+};
+
+const DEMO_CASES: DemoCase[] = [
+  { question: "YoY operating margin change?", raw_number: 0.1240 },
+  { question: "CET1 ratio Q4 2022?", raw_number: 10.935 },
+  { question: "Net income increase YoY?", raw_number: 1250000 },
+  { question: "Revenue growth rate?", raw_number: 8.14 },
+  { question: "HTM securities decrease?", raw_number: -34.11 },
+  { question: "Class A shares outstanding change?", raw_number: 104.0 },
 ];
 
 type RightTab = "session" | "errors" | "stats";
@@ -176,6 +184,7 @@ export default function HomePage() {
   const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [demoStatus, setDemoStatus] = useState<string | null>(null);
+  const [selectedDemo, setSelectedDemo] = useState<DemoCase | null>(null);
   const [rightTab, setRightTab] = useState<RightTab>("session");
   const [failureCaseOpen, setFailureCaseOpen] = useState(false);
   const [advisoryDetected, setAdvisoryDetected] = useState(false);
@@ -247,34 +256,37 @@ export default function HomePage() {
   }, [backendOnline]);
 
   const handleRunDemo = useCallback(async () => {
+    if (!selectedDemo) return;
+
+    // Capture the selected input once. UI stages may update, but this request
+    // must use the same question and raw value from start to finish.
+    const demo = { ...selectedDemo };
     setAdvisoryDetected(false);
     setIsLoading(true);
     setError(null);
-    for (let i = 0; i < DEMO_CASES.length; i++) {
-      setDemoStatus(`DEMO ${i + 1}/${DEMO_CASES.length}`);
-      const c = DEMO_CASES[i];
-      try {
-        let res: QueryResponse;
-        if (backendOnline) {
-          try {
-            res = await verifyNumber(c.question, c.raw_number);
-          } catch {
-            res = clientDVL(c.question, c.raw_number);
-          }
-        } else {
-          res = clientDVL(c.question, c.raw_number);
+    setDemoStatus("RUNNING DEMO");
+    try {
+      let res: QueryResponse;
+      if (backendOnline) {
+        try {
+          res = await verifyNumber(demo.question, demo.raw_number);
+        } catch {
+          res = clientDVL(demo.question, demo.raw_number);
         }
-        setResult(res);
-        setHistory((h) => [res, ...h].slice(0, 20));
-      } catch { /* ignore */ }
-      if (i < DEMO_CASES.length - 1) {
-        await new Promise((r) => setTimeout(r, 2000));
+      } else {
+        res = clientDVL(demo.question, demo.raw_number);
       }
+      setResult(res);
+      setHistory((h) => [res, ...h].slice(0, 20));
+      try { addToHistory(res); } catch {}
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unable to run demo");
+    } finally {
+      setDemoStatus("COMPLETE");
+      setTimeout(() => setDemoStatus(null), 2000);
+      setIsLoading(false);
     }
-    setDemoStatus("COMPLETE");
-    setTimeout(() => setDemoStatus(null), 2000);
-    setIsLoading(false);
-  }, [backendOnline]);
+  }, [backendOnline, selectedDemo]);
 
   const restoreResult = (r: QueryResponse) => setResult(r);
 
@@ -366,8 +378,13 @@ export default function HomePage() {
         <QueryInput
           onSubmit={handleSubmit}
           onRunDemo={handleRunDemo}
+          onSelectDemo={(question) => {
+            const demo = DEMO_CASES.find((candidate) => candidate.question === question);
+            if (!isLoading && demo) setSelectedDemo({ ...demo });
+          }}
           isLoading={isLoading}
           demoStatus={demoStatus}
+          hasSelectedDemo={selectedDemo !== null}
         />
       </div>
 

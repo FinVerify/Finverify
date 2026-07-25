@@ -39,7 +39,8 @@ from typing import Optional
 
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from app.dvl import full_verify
+from core.engine import verify
+from core.models import Claim
 
 logger = logging.getLogger(__name__)
 
@@ -350,7 +351,11 @@ def verify_claims(claims: list[dict]) -> list[dict]:
     results = []
     for claim in claims:
         question = build_question_from_claim(claim)
-        verified, log, trust, color = full_verify(question, claim["raw_value"])
+        result = verify(Claim(question=question, raw_value=claim["raw_value"]))
+        verified = result.verified_value
+        log = result.correction_log
+        trust = result.trust_score.label
+        color = result.trust_score.color
 
         dvl_rule = " → ".join(e["rule"] for e in log) if log else None
         dvl_analysis = _classify_dvl_finding(claim, verified, trust, log)

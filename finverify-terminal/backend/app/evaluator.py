@@ -9,8 +9,9 @@ Also provides a verify-only path for demo mode.
 
 from typing import Optional
 
-from .dvl import full_verify, format_correction_log
-from .parser import clean_llm_output, extract_number, format_number_display
+from core.engine import verify
+from core.models import Claim
+from .parser import format_number_display
 from .models import QueryResponse, CorrectionEntry
 
 
@@ -21,8 +22,15 @@ def build_query_response(
     actual: Optional[float] = None,
 ) -> QueryResponse:
     """
-    Run DVL on an already-parsed number and build the API response.
+    Verify an already-parsed number and build the backward-compatible response.
     """
+    result = verify(Claim(
+        question=question,
+        raw_text=raw_text,
+        raw_value=raw_number,
+        actual_value=actual,
+    ))
+
     if raw_number is None:
         return QueryResponse(
             question=question,
@@ -35,17 +43,15 @@ def build_query_response(
             display_value="N/A — no number extracted",
         )
 
-    verified, log, label, color = full_verify(question, raw_number, actual)
-    formatted_log = format_correction_log(log)
-    display = format_number_display(verified, question)
+    display = format_number_display(result.verified_value, question)
 
     return QueryResponse(
         question=question,
         raw_text=raw_text,
         raw_number=raw_number,
-        verified_number=verified,
-        correction_log=[CorrectionEntry(**e) for e in formatted_log],
-        trust_score=label,
-        trust_color=color,
+        verified_number=result.verified_value,
+        correction_log=[CorrectionEntry(**e) for e in result.correction_log],
+        trust_score=result.trust_score.label,
+        trust_color=result.trust_score.color,
         display_value=display,
     )

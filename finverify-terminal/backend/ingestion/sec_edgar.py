@@ -35,7 +35,8 @@ try:
 except ImportError:
     HAS_HTTPX = False
 
-from app.dvl import full_verify
+from core.engine import verify
+from core.models import Claim
 
 logger = logging.getLogger(__name__)
 
@@ -387,12 +388,12 @@ def verify_and_store_metrics(ticker: str, metrics: list[dict]) -> list[dict]:
         raw_value = m["raw_value"]
         question = m["question"]
 
-        # Run DVL verification
-        verified_value, correction_log, trust_label, trust_color = full_verify(
-            question=question,
-            predicted=raw_value,
-            actual=None,  # No ground truth — standalone mode
-        )
+        # Run the shared verification engine.
+        result = verify(Claim(question=question, raw_value=raw_value))
+        verified_value = result.verified_value
+        correction_log = result.correction_log
+        trust_label = result.trust_score.label
+        trust_color = result.trust_score.color
 
         dvl_rule = " → ".join(e["rule"] for e in correction_log) if correction_log else None
 
