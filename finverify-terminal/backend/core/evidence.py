@@ -3,7 +3,7 @@
 from datetime import datetime, timezone
 import logging
 
-from .models import Claim, Evidence, Source
+from .models import Claim, Evidence, Source, VerificationContext
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +12,11 @@ class EvidenceRetriever:
     def __init__(self, registry=None):
         self.registry = registry
 
-    def retrieve(self, claim: Claim) -> list[Evidence]:
+    def retrieve(
+        self,
+        claim: Claim,
+        context: VerificationContext | None = None,
+    ) -> list[Evidence]:
         if self.registry is not None:
             try:
                 evidence = self.registry.retrieve(claim)
@@ -20,11 +24,17 @@ class EvidenceRetriever:
                 logger.warning("Evidence retrieval failed for %r: %s", claim.question, exc)
                 evidence = []
             if evidence:
+                if context is not None:
+                    context.provider = evidence[0].source.name
+                    context.evidence_mode = "retrieved"
                 return evidence
 
         # A raw model value is still useful evidence for DVL verification, but
         # it is explicitly labeled as model input rather than primary truth.
         if claim.raw_value is not None:
+            if context is not None:
+                context.provider = claim.model_source or "model_input"
+                context.evidence_mode = "model_input"
             return [Evidence(
                 source=Source(
                     name=claim.model_source or "model_input",
@@ -36,4 +46,6 @@ class EvidenceRetriever:
                 value=claim.raw_value,
                 period=claim.period,
             )]
+        if context is not None:
+            context.evidence_mode = "missing"
         return []

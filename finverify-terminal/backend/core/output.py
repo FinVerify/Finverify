@@ -1,6 +1,6 @@
 """Output stage for the shared verification result."""
 
-from .models import Calculation, Claim, Evidence, VerificationResult, TrustScore
+from .models import Calculation, Claim, Evidence, VerificationContext, VerificationResult, TrustScore
 
 
 def build_result(
@@ -9,6 +9,7 @@ def build_result(
     corrections: list[dict],
     trust: TrustScore,
     evidence: list[Evidence],
+    context: VerificationContext | None = None,
 ) -> VerificationResult:
     from app.dvl import format_correction_log
 
@@ -20,7 +21,11 @@ def build_result(
         evidence=evidence,
         calculations=[Calculation(
             name="deterministic_dvl",
-            inputs={"raw_value": claim.raw_value},
+            inputs={
+                "raw_value": claim.raw_value,
+                "provider": context.provider if context is not None else None,
+                "evidence_mode": context.evidence_mode if context is not None else None,
+            },
             output=verified_value,
             passed=verified_value is not None,
         )],

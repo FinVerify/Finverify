@@ -1,0 +1,43 @@
+{
+  "benchmark": "FinVerify Smoke",
+  "version": "1.0.0",
+  "created_from": "tests/test_dvl.py and manually verified regressions",
+  "cases": [
+    {
+      "id": "scale_001",
+      "category": "scale",
+      "reason": "Regression for percentage scaling; from DVL test suite",
+      "question": "What was the CET1 ratio in Q4 2022?",
+      "raw_value": 0.10935,
+      "expected_verified": 10.935,
+      "expected_corrections": ["scale_mul100"]
+    },
+    {
+      "id": "sign_001",
+      "category": "sign",
+      "reason": "Regression for sign correction; from known bug fix",
+      "question": "What is the net income change?",
+      "raw_value": -0.152,
+      "expected_verified": -15.2,
+      "expected_corrections": ["scale_mul100"]
+    },
+    {
+      "id": "magnitude_001",
+      "category": "magnitude",
+      "reason": "Regression for magnitude correction; from historical bug",
+      "question": "Revenue in millions?",
+      "raw_value": 104.0,
+      "expected_verified": 104.0,
+      "expected_corrections": []
+    },
+    {
+      "id": "noop_001",
+      "category": "noop",
+      "reason": "No correction expected; baseline sanity check",
+      "question": "What is the net profit margin?",
+      "raw_value": 18.4,
+      "expected_verified": 18.4,
+      "expected_corrections": []
+    }
+  ]
+}
