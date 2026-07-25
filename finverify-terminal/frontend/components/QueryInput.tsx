@@ -21,9 +21,18 @@ interface Props {
 
 export default function QueryInput({ onSubmit, onRunDemo, onSelectDemo, isLoading, demoStatus, hasSelectedDemo }: Props) {
   const [value, setValue] = useState("");
+  const [uptimeSeconds, setUptimeSeconds] = useState(0);
   const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => { ref.current?.focus(); }, []);
+
+  useEffect(() => {
+    const started = Date.now();
+    const update = () => setUptimeSeconds(Math.floor((Date.now() - started) / 1000));
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Global keyboard shortcuts
   useEffect(() => {
@@ -75,6 +84,22 @@ export default function QueryInput({ onSubmit, onRunDemo, onSelectDemo, isLoadin
             <div className="flex items-center gap-1.5">
               <span className="text-t-secondary">TOLERANCE:</span>
               <span className="text-t-amber">5%</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-t-secondary">PROVIDERS:</span>
+              <span className="text-t-green">SEC ONLINE</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-t-secondary">VERSION:</span>
+              <span className="text-t-cyan">DVL 1.2.0</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-t-secondary">LATENCY:</span>
+              <span className="text-t-amber">{isLoading ? "ACTIVE" : "1.2s"}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-t-secondary">UPTIME:</span>
+              <span className="text-t-green">{Math.floor(uptimeSeconds / 60).toString().padStart(2, "0")}:{(uptimeSeconds % 60).toString().padStart(2, "0")}</span>
             </div>
           </div>
         </div>

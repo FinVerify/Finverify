@@ -13,7 +13,7 @@ export default function TerminalPanel({ result, isLoading, loadingMessage }: Pro
   const latency = (1.1 + Math.random() * 1.2).toFixed(1);
 
   useEffect(() => {
-    if (!result?.raw_number) { setAnimatedVal(null); return; }
+    if (result?.raw_number == null) { setAnimatedVal(null); return; }
     const target = result.raw_number;
     const duration = 600;
     const start = performance.now();
@@ -57,8 +57,8 @@ export default function TerminalPanel({ result, isLoading, loadingMessage }: Pro
         {/* Loading */}
         {isLoading && (
           <div className="flex flex-col items-center justify-center gap-1.5 py-3">
-            <span className="text-t-amber text-[10px] font-mono animate-pulse">
-              Querying model...
+              <span className="text-t-amber text-[10px] font-mono">
+               EXECUTION IN PROGRESS
             </span>
             {loadingMessage && (
               <span className="text-t-muted text-[9px] font-mono text-center max-w-[300px] leading-relaxed">

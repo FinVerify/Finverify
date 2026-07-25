@@ -60,7 +60,7 @@ export default function TrustScore({ result }: Props) {
         <span className="label">VERIFIED OUTPUT</span>
         <div className="relative">
           <div
-            className={`trust-badge ${s.bg} cursor-help`}
+            className={`trust-badge trust-badge-animate ${s.bg} cursor-help`}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
             onClick={() => setShowTooltip(!showTooltip)}
@@ -93,7 +93,7 @@ export default function TrustScore({ result }: Props) {
           {/* Verified number */}
           <div className="flex-1">
             <div
-              className={`font-mono font-bold count-animate ${s.text}`}
+              className={`font-mono font-bold count-animate verified-flash ${s.text}`}
               style={{ fontSize: "32px", lineHeight: 1.1, textShadow: `0 0 20px ${s.color}33` }}
             >
               {displayNum !== null ? result.display_value : "---"}

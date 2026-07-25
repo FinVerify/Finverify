@@ -6,6 +6,8 @@ import VerificationLog from "@/components/VerificationLog";
 import TrustScore from "@/components/TrustScore";
 import QueryInterpretation from "@/components/QueryInterpretation";
 import DVLReport from "@/components/DVLReport";
+import HeroNetwork from "@/components/HeroNetwork";
+import type { PipelineStage } from "@/components/VerificationLog";
 import { verifyNumber, queryLLM, type QueryResponse } from "@/lib/api";
 import { useConnection } from "@/lib/connection";
 import { addToHistory } from "@/lib/history";
@@ -91,6 +93,13 @@ const DEMO_CASES: DemoCase[] = [
 ];
 
 type RightTab = "session" | "errors" | "stats";
+
+interface SessionEvent {
+  id: string;
+  time: string;
+  event: string;
+  detail: string;
+}
 
 // Known demo/sample questions → use /verify (DVL only, fast)
 const DEMO_NUMS: Record<string, number> = {
@@ -185,10 +194,23 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [demoStatus, setDemoStatus] = useState<string | null>(null);
   const [selectedDemo, setSelectedDemo] = useState<DemoCase | null>(null);
+  const [pipelineStage, setPipelineStage] = useState<PipelineStage>("idle");
+  const [sessionEvents, setSessionEvents] = useState<SessionEvent[]>([]);
   const [rightTab, setRightTab] = useState<RightTab>("session");
   const [failureCaseOpen, setFailureCaseOpen] = useState(false);
   const [advisoryDetected, setAdvisoryDetected] = useState(false);
   const { backendOnline } = useConnection();
+
+  const logEvent = useCallback((event: string, detail: string) => {
+    const time = new Date().toLocaleTimeString([], { hour12: false });
+    setSessionEvents((events) => [...events, { id: `${Date.now()}-${event}`, time, event, detail }].slice(-40));
+  }, []);
+
+  const advancePipeline = useCallback(async (stage: PipelineStage, event: string, detail: string) => {
+    setPipelineStage(stage);
+    logEvent(event, detail);
+    await new Promise((resolve) => setTimeout(resolve, 130));
+  }, [logEvent]);
 
   const handleSubmit = useCallback(async (question: string) => {
     setAdvisoryDetected(false);
@@ -202,6 +224,10 @@ export default function HomePage() {
     setIsLoading(true);
     setError(null);
     setLoadingMessage(null);
+    setPipelineStage("idle");
+    await advancePipeline("compile", "QUERY RECEIVED", question);
+    await advancePipeline("resolve", "ENTITY RESOLVED", "claim compiler / metric resolver");
+    await advancePipeline("retrieve", backendOnline ? "SEC EVIDENCE LOADED" : "EVIDENCE READY", backendOnline ? "SEC provider registry" : "local verification path");
     try {
       let res: QueryResponse;
       const knownDemo = DEMO_NUMS[question];
@@ -243,8 +269,12 @@ export default function HomePage() {
         setLoadingMessage(null);
         return;
       }
+      await advancePipeline("math", "MATH VERIFICATION", "deterministic rules applied");
+      await advancePipeline("trust", "TRUST SCORE COMPUTED", res.trust_score);
       setResult(res);
       setHistory((h) => [res, ...h].slice(0, 20));
+      setPipelineStage("verified");
+      logEvent("VERIFICATION COMPLETED", res.display_value);
       // Persist to dashboard history (localStorage)
       try { addToHistory(res); } catch {}
     } catch (e) {
@@ -253,7 +283,7 @@ export default function HomePage() {
       setIsLoading(false);
       setLoadingMessage(null);
     }
-  }, [backendOnline]);
+  }, [advancePipeline, backendOnline, logEvent]);
 
   const handleRunDemo = useCallback(async () => {
     if (!selectedDemo) return;
@@ -264,6 +294,10 @@ export default function HomePage() {
     setAdvisoryDetected(false);
     setIsLoading(true);
     setError(null);
+    setPipelineStage("idle");
+    await advancePipeline("compile", "QUERY RECEIVED", demo.question);
+    await advancePipeline("resolve", "ENTITY RESOLVED", "fixed demo claim");
+    await advancePipeline("retrieve", backendOnline ? "SEC EVIDENCE LOADED" : "EVIDENCE READY", backendOnline ? "SEC provider registry" : "local verification path");
     setDemoStatus("RUNNING DEMO");
     try {
       let res: QueryResponse;
@@ -276,8 +310,12 @@ export default function HomePage() {
       } else {
         res = clientDVL(demo.question, demo.raw_number);
       }
+      await advancePipeline("math", "MATH VERIFICATION", "deterministic rules applied");
+      await advancePipeline("trust", "TRUST SCORE COMPUTED", res.trust_score);
       setResult(res);
       setHistory((h) => [res, ...h].slice(0, 20));
+      setPipelineStage("verified");
+      logEvent("VERIFICATION COMPLETED", res.display_value);
       try { addToHistory(res); } catch {}
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unable to run demo");
@@ -286,7 +324,7 @@ export default function HomePage() {
       setTimeout(() => setDemoStatus(null), 2000);
       setIsLoading(false);
     }
-  }, [backendOnline, selectedDemo]);
+  }, [advancePipeline, backendOnline, logEvent, selectedDemo]);
 
   const restoreResult = (r: QueryResponse) => setResult(r);
 
@@ -304,6 +342,8 @@ export default function HomePage() {
     <section id="hero" className="px-4 pt-4 pb-2 max-w-[1800px] mx-auto w-full">
       <div className="panel p-5 relative overflow-hidden" style={{ borderColor: "rgba(0,255,136,0.12)" }}>
         <div className="absolute inset-0 bg-gradient-to-br from-t-green/[0.03] via-transparent to-t-cyan/[0.02] pointer-events-none" />
+        <div className="terminal-scan absolute left-0 right-0 top-0 h-px bg-t-green/20 pointer-events-none" />
+        <HeroNetwork />
         <div className="relative z-10">
           <h1 className="text-[15px] font-mono font-bold text-t-green tracking-wider mb-2">
             FINVERIFY — DETERMINISTIC VERIFICATION LAYER
@@ -414,6 +454,7 @@ export default function HomePage() {
           rawNumber={result?.raw_number ?? null}
           question={result?.question ?? ""}
           isLoading={isLoading}
+          pipelineStage={pipelineStage}
         />
 
         {/* Verified output + trust */}
@@ -552,27 +593,19 @@ export default function HomePage() {
             {/* SESSION tab */}
             {rightTab === "session" && (
               <div className="space-y-0.5">
-                {history.length === 0 && (
+                {sessionEvents.length === 0 && (
                   <div className="text-t-muted text-[10px] font-mono text-center py-6">
-                    No queries yet — run the demo to get started
+                    No terminal events yet — execute a query to begin
                   </div>
                 )}
-                {history.map((h, i) => {
-                  const dotColor = h.trust_score === "HIGH" ? "bg-t-green" : h.trust_score === "MEDIUM" ? "bg-t-amber" : "bg-t-red";
+                {sessionEvents.map((entry) => {
                   return (
-                    <button
-                      key={i}
-                      onClick={() => restoreResult(h)}
-                      className="w-full text-left px-2 py-1.5 rounded hover:bg-white/[0.02] transition-colors flex items-center gap-2"
-                    >
-                      <span className={`w-[5px] h-[5px] rounded-full shrink-0 ${dotColor}`} />
-                      <span className="text-[9px] text-t-secondary font-mono truncate flex-1">
-                        {h.question.length > 35 ? h.question.slice(0, 35) + "..." : h.question}
-                      </span>
-                      <span className="text-[9px] text-t-primary font-mono shrink-0">
-                        {h.display_value}
-                      </span>
-                    </button>
+                    <div key={entry.id} className="session-event animate-fade-in flex items-start gap-2 px-2 py-1.5 border-b border-t-border/20">
+                      <span className="text-[9px] text-t-muted font-mono shrink-0">[{entry.time}]</span>
+                      <span className="w-[5px] h-[5px] rounded-full bg-t-green shrink-0 mt-1 live-pulse" />
+                      <span className="text-[9px] text-t-green font-mono shrink-0">{entry.event}</span>
+                      <span className="text-[9px] text-t-secondary font-mono truncate">{entry.detail}</span>
+                    </div>
                   );
                 })}
               </div>

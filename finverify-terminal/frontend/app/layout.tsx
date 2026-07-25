@@ -37,7 +37,7 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="antialiased min-h-screen flex flex-col">
+      <body className="antialiased min-h-screen flex flex-col terminal-ambience">
         <ConnectionProvider>
           {/* ── Top Navbar ── */}
           <header className="flex items-center justify-between px-5 py-2 border-b border-t-border bg-t-bg sticky top-0 z-50">

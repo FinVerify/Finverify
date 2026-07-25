@@ -76,7 +76,7 @@ export default function TickerBar() {
       </div>
 
       {/* Scrolling marquee */}
-      <div className="flex-1 overflow-hidden" ref={scrollRef}>
+      <div className="flex-1 overflow-hidden relative ticker-viewport" ref={scrollRef}>
         <div className="ticker-scroll flex items-center gap-5 whitespace-nowrap px-4">
           {/* Render items twice for seamless scroll loop */}
           {[...tickers, ...tickers].map((item, i) => {
@@ -92,7 +92,7 @@ export default function TickerBar() {
                 <span className={color}>
                   {arrow} {Math.abs(item.changePct).toFixed(2)}%
                 </span>
-                <span className="text-t-muted/30 mx-1">│</span>
+                <span className="text-t-muted/30 mx-1 ticker-separator">│</span>
               </span>
             );
           })}

@@ -25,9 +25,21 @@ interface Props {
   rawNumber: number | null;
   question: string;
   isLoading: boolean;
+  pipelineStage?: PipelineStage;
 }
 
-export default function VerificationLog({ correctionLog, rawNumber, question, isLoading }: Props) {
+export type PipelineStage = "idle" | "compile" | "resolve" | "retrieve" | "math" | "trust" | "verified";
+
+const PIPELINE_STAGES: { id: Exclude<PipelineStage, "idle">; label: string }[] = [
+  { id: "compile", label: "COMPILE" },
+  { id: "resolve", label: "RESOLVE" },
+  { id: "retrieve", label: "RETRIEVE" },
+  { id: "math", label: "MATH" },
+  { id: "trust", label: "TRUST" },
+  { id: "verified", label: "VERIFIED" },
+];
+
+export default function VerificationLog({ correctionLog, rawNumber, question, isLoading, pipelineStage = "idle" }: Props) {
   const [visibleCount, setVisibleCount] = useState(0);
 
   // Build log entries
@@ -113,9 +125,20 @@ export default function VerificationLog({ correctionLog, rawNumber, question, is
           </div>
         )}
 
-        {isLoading && (
-          <div className="flex items-center gap-2 text-[10px] font-mono text-t-amber py-3">
-            <span className="animate-blink">_</span> Running DVL pipeline...
+        {(isLoading || pipelineStage !== "idle") && (
+          <div className="grid grid-cols-3 gap-1.5 py-2">
+            {PIPELINE_STAGES.map((stage) => {
+              const currentIndex = PIPELINE_STAGES.findIndex((item) => item.id === pipelineStage);
+              const stageIndex = PIPELINE_STAGES.findIndex((item) => item.id === stage.id);
+              const complete = pipelineStage === "verified" || stageIndex < currentIndex;
+              const active = stage.id === pipelineStage;
+              return (
+                <div key={stage.id} className={`flex items-center gap-1 text-[9px] font-mono ${complete ? "text-t-green" : active ? "text-t-amber" : "text-t-muted/60"}`}>
+                  <span className={active ? "animate-blink" : ""}>{complete ? "✓" : active ? "›" : "·"}</span>
+                  <span>{stage.label}</span>
+                </div>
+              );
+            })}
           </div>
         )}
 
