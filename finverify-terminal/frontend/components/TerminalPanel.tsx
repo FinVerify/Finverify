@@ -107,7 +107,7 @@ export default function TerminalPanel({ result, isLoading, loadingMessage }: Pro
 
                 {result.raw_text && (
                   <div className="text-t-muted text-[10px] font-mono break-all max-w-full">
-                    "{result.raw_text.slice(0, 120)}"
+                    {result.raw_text.slice(0, 120)}
                   </div>
                 )}
               </div>
