@@ -2,7 +2,7 @@
 title: FinVerify API
 emoji: 📊
 colorFrom: green
-colorTo: black
+colorTo: gray
 sdk: docker
 pinned: false
 app_port: 7860
