@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.log
+e2e/.test-extension/
+playwright-report/
+test-results/
+finverify-extension.zip

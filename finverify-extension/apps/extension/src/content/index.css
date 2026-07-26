@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset the tiny bit of box-model behavior we need on our own injected
+   nodes without importing Tailwind's global preflight (which would reset
+   ChatGPT's own page styles — preflight is disabled in tailwind.config.js
+   for exactly this reason). */
+[data-finverify-badge] * {
+  box-sizing: border-box;
+}

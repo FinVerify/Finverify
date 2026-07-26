@@ -1,0 +1,154 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same branch/PR to avoid burning CI minutes
+# on commits that are already obsolete by the time the runner picks them up.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Lint, typecheck, unit tests, and build all run in one job rather than
+  # four parallel ones because @finverify/extension's typecheck needs
+  # @finverify/core's compiled .d.ts to exist first (its package.json
+  # points "types" at ./dist/index.d.ts, not raw src/) — splitting these
+  # into separate jobs would mean re-installing + re-building core in
+  # each one just to satisfy that dependency, which costs more CI time
+  # than it saves in parallelism for a monorepo this size.
+  verify:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build @finverify/core
+        # Must happen before lint/typecheck: the extension imports
+        # "@finverify/core" and resolves it via that package's compiled
+        # dist/, not its source.
+        run: npm run build:core
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: |
+          npm run typecheck
+          npm run typecheck:e2e -w @finverify/extension
+
+      - name: Unit tests (with coverage)
+        run: npm run test:coverage
+
+      - name: Enforce coverage thresholds
+        # Redundant with vitest.config.ts's own `coverage.thresholds`
+        # (which already fails the `test:coverage` step above on a
+        # regression) — kept as an explicit, visible CI gate so a
+        # threshold change in vitest.config.ts is easy to spot in a
+        # diff, and so this job fails clearly rather than depending on
+        # vitest's own exit code alone.
+        run: echo "Coverage thresholds enforced by vitest.config.ts (see previous step)."
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: packages/core/coverage
+          retention-days: 14
+
+      - name: Generate API docs
+        run: npm run docs:api -w @finverify/core
+
+      - name: Upload API docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-docs
+          path: packages/core/docs/api
+          retention-days: 14
+
+      - name: Build extension
+        run: npm run build:extension
+
+      - name: Performance report (bundle size + engine throughput)
+        run: |
+          node scripts/perf/bundle-size.mjs
+          node scripts/perf/engine-throughput.mjs
+
+      - name: Package extension for release
+        working-directory: apps/extension
+        run: |
+          cd dist
+          zip -r ../finverify-extension.zip .
+
+      - name: Upload built extension (unpacked + zipped)
+        uses: actions/upload-artifact@v4
+        with:
+          name: finverify-extension
+          path: |
+            apps/extension/dist
+            apps/extension/finverify-extension.zip
+          retention-days: 30
+
+  e2e:
+    name: E2E (Playwright, local fixture)
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download built extension
+        uses: actions/download-artifact@v4
+        with:
+          name: finverify-extension
+          path: apps/extension/dist-downloaded
+
+      - name: Restore dist/ from the built-extension artifact
+        # Playwright's fixture config expects the unpacked extension at
+        # apps/extension/dist — the artifact download step above lands
+        # it one level down (dist-downloaded/dist) because the upload
+        # step preserved the apps/extension/dist path structure.
+        run: |
+          rm -rf apps/extension/dist
+          mv apps/extension/dist-downloaded/dist apps/extension/dist
+
+      - name: Install Playwright browsers
+        working-directory: apps/extension
+        run: npx playwright install --with-deps chromium
+
+      - name: Prepare test extension (adds fixture origin to a copy of the built manifest)
+        working-directory: apps/extension
+        run: node e2e/setup/prepare-test-extension.mjs
+
+      - name: Run E2E tests
+        working-directory: apps/extension
+        # MV3 extensions are unreliable under Chromium's classic headless
+        # mode (see e2e/fixtures/test-base.ts), so the persistent context
+        # launches headed — xvfb-run gives it a virtual display in CI.
+        run: xvfb-run --auto-servernum npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/extension/playwright-report
+          retention-days: 14

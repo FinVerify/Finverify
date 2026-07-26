@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ChatGPT DOM fixture (E2E only — not the real chatgpt.com)</title>
+  <style>
+    body { font-family: sans-serif; background: #0a0a0a; color: #e0e0e0; padding: 24px; }
+    article { margin-bottom: 16px; padding: 12px; border: 1px solid #222; border-radius: 8px; }
+    .toolbar { display: none; gap: 4px; margin-top: 8px; }
+    .toolbar.visible { display: flex; }
+    button { background: #1a1a1a; color: #ccc; border: 1px solid #333; border-radius: 4px; padding: 4px 8px; }
+  </style>
+</head>
+<body>
+  <h1>FinVerify E2E fixture</h1>
+  <p>
+    This page is <strong>not</strong> chatgpt.com. It exists purely to give
+    the real, built content script (<code>adapters/chatgpt/index.ts</code>)
+    the same DOM shape it expects on the real product, in a page this test
+    suite fully controls. See <code>e2e/README.md</code> for why.
+  </p>
+
+  <div id="conversation"></div>
+
+  <script>
+    /**
+     * Test-only helpers. None of this ships in the extension — it's page
+     * script for the fixture itself, loaded only in this E2E harness.
+     */
+    let messageCounter = 0;
+
+    function createAssistantMessage() {
+      const id = `msg-${messageCounter++}`;
+      const article = document.createElement("article");
+      article.id = id;
+
+      const content = document.createElement("div");
+      content.setAttribute("data-message-author-role", "assistant");
+      content.textContent = "";
+      article.appendChild(content);
+
+      const toolbar = document.createElement("div");
+      toolbar.className = "toolbar";
+      const copyBtn = document.createElement("button");
+      copyBtn.setAttribute("aria-label", "Copy");
+      copyBtn.textContent = "Copy";
+      toolbar.appendChild(copyBtn);
+      article.appendChild(toolbar);
+
+      document.getElementById("conversation").appendChild(article);
+      return { article, content, toolbar };
+    }
+
+    /** Simulates a streaming response: appends `fullText` in chunks over
+     *  time, and only reveals the toolbar (Copy button) once streaming
+     *  finishes — matching how adapters/chatgpt/index.ts's isStreaming()
+     *  heuristic (toolbar absence = still streaming) actually behaves on
+     *  the real product. */
+    window.__fvSimulateStreamingReply = async (fullText, { chunkSize = 12, intervalMs = 30 } = {}) => {
+      const { content, toolbar } = createAssistantMessage();
+      for (let i = 0; i < fullText.length; i += chunkSize) {
+        content.textContent += fullText.slice(i, i + chunkSize);
+        await new Promise((r) => setTimeout(r, intervalMs));
+      }
+      toolbar.classList.add("visible");
+      return content.closest("article").id;
+    };
+
+    /** Adds a complete (non-streaming) assistant reply immediately, toolbar included. */
+    window.__fvAddCompleteReply = (fullText) => {
+      const { content, toolbar } = createAssistantMessage();
+      content.textContent = fullText;
+      toolbar.classList.add("visible");
+      return content.closest("article").id;
+    };
+
+    /** Removes a message from the DOM — simulates ChatGPT pruning old
+     *  turns or a regenerate replacing a node entirely, for testing the
+     *  orchestrator's prune/cancel path. */
+    window.__fvRemoveMessage = (articleId) => {
+      document.getElementById(articleId)?.remove();
+    };
+  </script>
+</body>
+</html>

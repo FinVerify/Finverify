@@ -1,0 +1,28 @@
+{
+  "name": "finverify-monorepo",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "FinVerify — verification infrastructure for AI. @finverify/core is the reusable, provider-agnostic verification engine; apps/* are thin clients (Chrome Extension today; VS Code, Desktop, Enterprise Dashboard, and agent integrations are meant to consume the same core package).",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @finverify/core && npm run build -w @finverify/extension",
+    "build:core": "npm run build -w @finverify/core",
+    "build:extension": "npm run build -w @finverify/extension",
+    "typecheck": "npm run typecheck -w @finverify/core && npm run typecheck -w @finverify/extension",
+    "lint": "eslint .",
+    "test": "npm run test -w @finverify/core",
+    "test:coverage": "npm run test:coverage -w @finverify/core",
+    "dev:core": "npm run dev -w @finverify/core"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "eslint": "^9.9.0",
+    "typescript-eslint": "^8.0.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "globals": "^15.9.0"
+  }
+}
