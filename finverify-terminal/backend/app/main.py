@@ -141,7 +141,10 @@ else:
     )
 
 
-async def call_hf_inference(question: str) -> str:
+async def call_hf_inference(
+    question: str,
+    advisory: bool = False,
+) -> str:
     """Call an OpenAI-compatible inference API and return raw text.
 
     Function name kept for backward compatibility with callers.
@@ -152,13 +155,54 @@ async def call_hf_inference(question: str) -> str:
         "Authorization": f"Bearer {INFERENCE_API_KEY}",
         "Content-Type": "application/json",
     }
+    # Choose the appropriate system prompt
+    system_prompt = (
+    """You are FinVerify Terminal.
+
+     The user is asking for educational information about a publicly traded company.
+
+     Respond like a Bloomberg Terminal analyst.
+
+     Structure every response as:
+
+     COMPANY
+     A one-sentence overview.
+
+     STRENGTHS
+     • 2–4 bullet points
+
+     RISKS
+     • 2–4 bullet points
+
+     KEY FACTS
+     • Mention important financial or business facts when relevant.
+
+     CONCLUSION
+     Summarise the company's position in 2–3 sentences.
+
+     Rules:
+     - Never recommend buying or selling.
+     - Never personalise your advice.
+     - Never say you cannot provide financial advice.
+     - Never refuse the request.
+     - Keep the response under 120 words.
+     - Be objective and factual.
+
+     Always end with:
+
+     ⚠ This response is educational and has NOT been verified by FinVerify's Deterministic Verification Layer (DVL).
+     """
+       if advisory
+       else _SYSTEM_PROMPT
+    )
+    
     payload = {
         "model": INFERENCE_MODEL,
         "messages": [
-            {"role": "system", "content": _SYSTEM_PROMPT},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": question},
         ],
-        "max_tokens": 50,
+        "max_tokens": 200 if advisory else 50,
         "temperature": 0.3,
     }
 
@@ -245,12 +289,15 @@ async def query_endpoint(req: QueryRequest):
     # Advisory queries — skip DVL entirely
     if mode == "advisory":
         try:
-            raw_text = await call_hf_inference(req.question)
+          raw_text = await call_hf_inference(
+            req.question,
+            advisory=True,
+        )
         except Exception:
-            raw_text = (
-                "Advisory queries are not verified by the DVL engine. "
-                "This response is unverified LLM output."
-            )
+          raw_text = (
+            "Advisory queries are not verified by the DVL engine. "
+            "This response is unverified LLM output."
+        )   
         return QueryResponse(
             question=req.question,
             raw_text=raw_text,

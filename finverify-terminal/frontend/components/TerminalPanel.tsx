@@ -40,7 +40,7 @@ export default function TerminalPanel({ result, isLoading, loadingMessage }: Pro
           <span className="text-[9px] text-t-muted font-mono uppercase">
             MODE: <span className={
               result.mode === "numerical" ? "text-t-cyan" :
-              result.mode === "advisory" ? "text-t-amber" : "text-t-secondary"
+                result.mode === "advisory" ? "text-t-amber" : "text-t-secondary"
             }>{result.mode}</span>
           </span>
         )}
@@ -57,8 +57,8 @@ export default function TerminalPanel({ result, isLoading, loadingMessage }: Pro
         {/* Loading */}
         {isLoading && (
           <div className="flex flex-col items-center justify-center gap-1.5 py-3">
-              <span className="text-t-amber text-[10px] font-mono">
-               EXECUTION IN PROGRESS
+            <span className="text-t-amber text-[10px] font-mono">
+              EXECUTION IN PROGRESS
             </span>
             {loadingMessage && (
               <span className="text-t-muted text-[9px] font-mono text-center max-w-[300px] leading-relaxed">
@@ -71,30 +71,61 @@ export default function TerminalPanel({ result, isLoading, loadingMessage }: Pro
         {/* Result */}
         {result && !isLoading && (
           <>
-            {result.raw_number !== null ? (
+            {/* Advisory queries */}
+            {result.mode === "advisory" ? (
+              <div className="space-y-3">
+                <div className="text-center">
+                  <div className="text-t-amber text-[12px] font-mono font-bold">
+                    UNVERIFIED LLM RESPONSE
+                  </div>
+                </div>
+
+                <div
+                  className="text-[12px] leading-relaxed font-mono text-t-primary overflow-y-auto"
+                  style={{
+                    maxHeight: "180px",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {result.raw_text || "No response returned."}
+                </div>
+              </div>
+            ) : result.raw_number !== null ? (
+              /* Numerical queries */
               <div className="text-center count-animate">
                 <div className="text-[28px] font-mono font-bold text-t-primary tracking-tight leading-none">
                   {animatedVal ?? "---"}
                 </div>
               </div>
             ) : (
+              /* Genuine extraction failure */
               <div className="text-center space-y-1">
                 <div className="text-t-red text-[12px] font-mono font-bold">
                   EXTRACTION FAILED
                 </div>
+
                 {result.raw_text && (
                   <div className="text-t-muted text-[10px] font-mono break-all max-w-full">
-                    &quot;{result.raw_text.slice(0, 120)}&quot;
+                    "{result.raw_text.slice(0, 120)}"
                   </div>
                 )}
               </div>
             )}
 
-            {/* Footer stats — single compact line */}
+            {/* Footer */}
             <div className="flex items-center justify-between mt-2 pt-2 border-t border-t-border text-[9px] font-mono text-t-muted">
-              <span>tokens: {result.raw_text ? Math.ceil(result.raw_text.length / 4) : "--"}</span>
+              <span>
+                tokens: {result.raw_text ? Math.ceil(result.raw_text.length / 4) : "--"}
+              </span>
+
               <span>latency: {latency}s</span>
-              <span>model: finverify-lora</span>
+
+              <span>
+                model: {result.mode === "advisory"
+                  ? "llama-3.1-8b-instant"
+                  : "finverify-lora"}
+              </span>
             </div>
           </>
         )}

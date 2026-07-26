@@ -15,7 +15,7 @@ import { addToHistory } from "@/lib/history";
 
 
 /* ── Client-side DVL fallback ── */
-const RATIO_KW = ["ratio","percentage","percent","rate","margin","return","yield","growth","change","increase","decrease","loss"];
+const RATIO_KW = ["ratio", "percentage", "percent", "rate", "margin", "return", "yield", "growth", "change", "increase", "decrease", "loss"];
 
 /* Advisory keyword detection */
 const ADVISORY_KW = ["should i", "recommend", "advice", "invest in", "buy or sell", "good investment", "better stock", "where should"];
@@ -215,11 +215,10 @@ export default function HomePage() {
   const handleSubmit = useCallback(async (question: string) => {
     setAdvisoryDetected(false);
 
-    // Check for advisory queries
-    if (isAdvisoryQuery(question)) {
-      setAdvisoryDetected(true);
-      return;
-    }
+    // Advisory queries are allowed, but clearly marked as unverified.
+    const advisory = isAdvisoryQuery(question);
+
+    setAdvisoryDetected(advisory);
 
     setIsLoading(true);
     setError(null);
@@ -276,7 +275,7 @@ export default function HomePage() {
       setPipelineStage("verified");
       logEvent("VERIFICATION COMPLETED", res.display_value);
       // Persist to dashboard history (localStorage)
-      try { addToHistory(res); } catch {}
+      try { addToHistory(res); } catch { }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unknown error");
     } finally {
@@ -316,7 +315,7 @@ export default function HomePage() {
       setHistory((h) => [res, ...h].slice(0, 20));
       setPipelineStage("verified");
       logEvent("VERIFICATION COMPLETED", res.display_value);
-      try { addToHistory(res); } catch {}
+      try { addToHistory(res); } catch { }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unable to run demo");
     } finally {
@@ -338,326 +337,325 @@ export default function HomePage() {
 
   return (
     <>
-    {/* ── Hero Section ── */}
-    <section id="hero" className="px-4 pt-4 pb-2 max-w-[1800px] mx-auto w-full">
-      <div className="panel p-5 relative overflow-hidden" style={{ borderColor: "rgba(0,255,136,0.12)" }}>
-        <div className="absolute inset-0 bg-gradient-to-br from-t-green/[0.03] via-transparent to-t-cyan/[0.02] pointer-events-none" />
-        <div className="terminal-scan absolute left-0 right-0 top-0 h-px bg-t-green/20 pointer-events-none" />
-        <HeroNetwork />
-        <div className="relative z-10">
-          <h1 className="text-[15px] font-mono font-bold text-t-green tracking-wider mb-2">
-            FINVERIFY — DETERMINISTIC VERIFICATION LAYER
-          </h1>
-          <p className="text-[11px] font-mono text-t-secondary leading-relaxed max-w-2xl mb-1.5">
-            Post-inference verification for financial LLM outputs — catches scale, sign,
-            and magnitude errors before they reach production.
-          </p>
-          <p className="text-[10px] font-mono text-t-muted mb-4">
-            <span className="text-t-green">●</span> Numerical formatting corrections
-            <span className="mx-2 text-t-border">|</span>
-            <span className="text-t-cyan">●</span> SEC EDGAR fundamentals
-            <span className="mx-2 text-t-border">|</span>
-            <span className="text-t-amber">●</span> Earnings transcript verification
-          </p>
-          <a
-            id="cta-early-access"
-            href="mailto:aaditya@finverify.dev?subject=Early%20Access%20Request"
-            className="inline-flex items-center gap-2 px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-wider text-t-green border border-t-green/30 rounded hover:bg-t-green/5 hover:border-t-green/50 transition-all"
-          >
-            REQUEST EARLY ACCESS →
-          </a>
+      {/* ── Hero Section ── */}
+      <section id="hero" className="px-4 pt-4 pb-2 max-w-[1800px] mx-auto w-full">
+        <div className="panel p-5 relative overflow-hidden" style={{ borderColor: "rgba(0,255,136,0.12)" }}>
+          <div className="absolute inset-0 bg-gradient-to-br from-t-green/[0.03] via-transparent to-t-cyan/[0.02] pointer-events-none" />
+          <div className="terminal-scan absolute left-0 right-0 top-0 h-px bg-t-green/20 pointer-events-none" />
+          <HeroNetwork />
+          <div className="relative z-10">
+            <h1 className="text-[15px] font-mono font-bold text-t-green tracking-wider mb-2">
+              FINVERIFY — DETERMINISTIC VERIFICATION LAYER
+            </h1>
+            <p className="text-[11px] font-mono text-t-secondary leading-relaxed max-w-2xl mb-1.5">
+              Post-inference verification for financial LLM outputs — catches scale, sign,
+              and magnitude errors before they reach production.
+            </p>
+            <p className="text-[10px] font-mono text-t-muted mb-4">
+              <span className="text-t-green">●</span> Numerical formatting corrections
+              <span className="mx-2 text-t-border">|</span>
+              <span className="text-t-cyan">●</span> SEC EDGAR fundamentals
+              <span className="mx-2 text-t-border">|</span>
+              <span className="text-t-amber">●</span> Earnings transcript verification
+            </p>
+            <a
+              id="cta-early-access"
+              href="mailto:aaditya@finverify.dev?subject=Early%20Access%20Request"
+              className="inline-flex items-center gap-2 px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-wider text-t-green border border-t-green/30 rounded hover:bg-t-green/5 hover:border-t-green/50 transition-all"
+            >
+              REQUEST EARLY ACCESS →
+            </a>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* ── Capabilities Section ── */}
-    <section id="capabilities" className="px-4 pb-2 max-w-[1800px] mx-auto w-full">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        {/* DVL Numeric Correction */}
-        <div className="panel p-4 border-l-2 border-t-green">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-t-green text-[11px]">✓</span>
-            <span className="text-[10px] font-mono font-bold text-t-green uppercase tracking-wider">DVL Numeric Correction</span>
+      {/* ── Capabilities Section ── */}
+      <section id="capabilities" className="px-4 pb-2 max-w-[1800px] mx-auto w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+          {/* DVL Numeric Correction */}
+          <div className="panel p-4 border-l-2 border-t-green">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-t-green text-[11px]">✓</span>
+              <span className="text-[10px] font-mono font-bold text-t-green uppercase tracking-wider">DVL Numeric Correction</span>
+            </div>
+            <p className="text-[10px] font-mono text-t-secondary leading-relaxed mb-2">
+              Three-stage deterministic pipeline: scale correction, sign correction, magnitude correction.
+              42× accuracy improvement on correctable errors (FinQA, n=873).
+            </p>
+            <span className="text-[9px] font-mono text-t-muted">↓ Demo below</span>
           </div>
-          <p className="text-[10px] font-mono text-t-secondary leading-relaxed mb-2">
-            Three-stage deterministic pipeline: scale correction, sign correction, magnitude correction.
-            42× accuracy improvement on correctable errors (FinQA, n=873).
-          </p>
-          <span className="text-[9px] font-mono text-t-muted">↓ Demo below</span>
+          {/* SEC EDGAR Fundamentals */}
+          <div className="panel p-4 border-l-2 border-t-cyan">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-t-cyan text-[11px]">✓</span>
+              <span className="text-[10px] font-mono font-bold text-t-cyan uppercase tracking-wider">SEC EDGAR Fundamentals</span>
+            </div>
+            <p className="text-[10px] font-mono text-t-secondary leading-relaxed mb-2">
+              Pull DVL-verified financial metrics directly from SEC filings.
+              Revenue, margins, EPS — sourced and corrected automatically.
+            </p>
+            <a href="/metrics" className="text-[9px] font-mono text-t-cyan hover:underline">→ View on Research page</a>
+          </div>
+          {/* Earnings Transcript Verification */}
+          <div className="panel p-4 border-l-2 border-t-amber">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-t-amber text-[11px]">✓</span>
+              <span className="text-[10px] font-mono font-bold text-t-amber uppercase tracking-wider">Earnings Verification</span>
+            </div>
+            <p className="text-[10px] font-mono text-t-secondary leading-relaxed mb-2">
+              Verify numeric claims in CEO/CFO earnings call transcripts.
+              Red-flag analysis catches ambiguous or inconsistent figures.
+            </p>
+            <a href="/metrics" className="text-[9px] font-mono text-t-amber hover:underline">→ View on Research page</a>
+          </div>
         </div>
-        {/* SEC EDGAR Fundamentals */}
-        <div className="panel p-4 border-l-2 border-t-cyan">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-t-cyan text-[11px]">✓</span>
-            <span className="text-[10px] font-mono font-bold text-t-cyan uppercase tracking-wider">SEC EDGAR Fundamentals</span>
-          </div>
-          <p className="text-[10px] font-mono text-t-secondary leading-relaxed mb-2">
-            Pull DVL-verified financial metrics directly from SEC filings.
-            Revenue, margins, EPS — sourced and corrected automatically.
-          </p>
-          <a href="/metrics" className="text-[9px] font-mono text-t-cyan hover:underline">→ View on Research page</a>
+      </section>
+
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[32%_42%_26%] gap-2 p-2 max-w-[1800px] mx-auto w-full h-[calc(100vh-73px)]">
+        {/* ── Left: Query Input ── */}
+        <div className="flex flex-col min-h-0">
+          <QueryInput
+            onSubmit={handleSubmit}
+            onRunDemo={handleRunDemo}
+            onSelectDemo={(question) => {
+              const demo = DEMO_CASES.find((candidate) => candidate.question === question);
+              if (!isLoading && demo) setSelectedDemo({ ...demo });
+            }}
+            isLoading={isLoading}
+            demoStatus={demoStatus}
+            hasSelectedDemo={selectedDemo !== null}
+          />
         </div>
-        {/* Earnings Transcript Verification */}
-        <div className="panel p-4 border-l-2 border-t-amber">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-t-amber text-[11px]">✓</span>
-            <span className="text-[10px] font-mono font-bold text-t-amber uppercase tracking-wider">Earnings Verification</span>
-          </div>
-          <p className="text-[10px] font-mono text-t-secondary leading-relaxed mb-2">
-            Verify numeric claims in CEO/CFO earnings call transcripts.
-            Red-flag analysis catches ambiguous or inconsistent figures.
-          </p>
-          <a href="/metrics" className="text-[9px] font-mono text-t-amber hover:underline">→ View on Research page</a>
-        </div>
-      </div>
-    </section>
 
-    <div className="flex-1 grid grid-cols-1 lg:grid-cols-[32%_42%_26%] gap-2 p-2 max-w-[1800px] mx-auto w-full h-[calc(100vh-73px)]">
-      {/* ── Left: Query Input ── */}
-      <div className="flex flex-col min-h-0">
-        <QueryInput
-          onSubmit={handleSubmit}
-          onRunDemo={handleRunDemo}
-          onSelectDemo={(question) => {
-            const demo = DEMO_CASES.find((candidate) => candidate.question === question);
-            if (!isLoading && demo) setSelectedDemo({ ...demo });
-          }}
-          isLoading={isLoading}
-          demoStatus={demoStatus}
-          hasSelectedDemo={selectedDemo !== null}
-        />
-      </div>
+        {/* ── Center: Results Stack ── */}
+        <div className="flex flex-col gap-2 min-h-0 overflow-y-auto">
+          {/* Advisory error state */}
+          {advisoryDetected && (
+            <AdvisoryState onSelect={(q) => { setAdvisoryDetected(false); handleSubmit(q); }} />
+          )}
 
-      {/* ── Center: Results Stack ── */}
-      <div className="flex flex-col gap-2 min-h-0 overflow-y-auto">
-        {/* Advisory error state */}
-        {advisoryDetected && (
-          <AdvisoryState onSelect={(q) => { setAdvisoryDetected(false); handleSubmit(q); }} />
-        )}
+          {/* Query interpretation strip — only when result exists */}
+          {hasResult && !advisoryDetected && (
+            <QueryInterpretation result={result} />
+          )}
 
-        {/* Query interpretation strip — only when result exists */}
-        {hasResult && !advisoryDetected && (
-          <QueryInterpretation result={result} />
-        )}
+          {/* DVL explainer (empty state) — only when no result yet */}
+          {!hasResult && !isLoading && !advisoryDetected && (
+            <DVLExplainer />
+          )}
 
-        {/* DVL explainer (empty state) — only when no result yet */}
-        {!hasResult && !isLoading && !advisoryDetected && (
-          <DVLExplainer />
-        )}
+          {/* Raw output */}
+          <TerminalPanel result={result} isLoading={isLoading} loadingMessage={loadingMessage} />
 
-        {/* Raw output */}
-        <TerminalPanel result={result} isLoading={isLoading} loadingMessage={loadingMessage} />
+          {/* DVL Correction Log */}
+          <VerificationLog
+            correctionLog={result?.correction_log ?? []}
+            rawNumber={result?.raw_number ?? null}
+            question={result?.question ?? ""}
+            isLoading={isLoading}
+            pipelineStage={pipelineStage}
+          />
 
-        {/* DVL Correction Log */}
-        <VerificationLog
-          correctionLog={result?.correction_log ?? []}
-          rawNumber={result?.raw_number ?? null}
-          question={result?.question ?? ""}
-          isLoading={isLoading}
-          pipelineStage={pipelineStage}
-        />
+          {/* Verified output + trust */}
+          <TrustScore result={result} />
 
-        {/* Verified output + trust */}
-        <TrustScore result={result} />
-
-        {/* Export Report button */}
-        {history.length > 0 && (
-          <div className="flex justify-end">
-            <DVLReport entries={history} />
-          </div>
-        )}
-
-        {/* Error */}
-        {error && (
-          <div className="panel p-2 border-l-2 border-t-red">
-            <div className="text-t-red text-[10px] font-mono">{error}</div>
-          </div>
-        )}
-
-        {/* Failure Case Toggle */}
-        <div className="panel">
-          <button
-            onClick={() => setFailureCaseOpen(!failureCaseOpen)}
-            className="w-full panel-header hover:bg-white/[0.02] transition-colors cursor-pointer"
-          >
-            <span className="label text-t-red">
-              {failureCaseOpen ? "▼" : "▶"} VIEW REASONING FAILURE CASE — DVL CANNOT FIX
-            </span>
-            <span className="text-[9px] text-t-muted font-mono">73.1% of errors</span>
-          </button>
-          {failureCaseOpen && (
-            <div className="px-3 py-2.5 border-l-2 border-t-red bg-[#110808]">
-              <div className="text-[10px] font-mono text-t-amber font-bold mb-2">
-                ⚠ REASONING ERROR — UNRECOVERABLE
-              </div>
-              <div className="space-y-1 text-[10px] font-mono">
-                <div className="flex gap-2">
-                  <span className="text-t-muted w-[70px] shrink-0">QUERY:</span>
-                  <span className="text-t-secondary">&quot;What was JPMorgan&apos;s CET1 ratio in 2008?&quot;</span>
-                </div>
-                <div className="flex gap-2">
-                  <span className="text-t-muted w-[70px] shrink-0">ACTUAL:</span>
-                  <span className="text-t-green">0.10935</span>
-                </div>
-                <div className="flex gap-2">
-                  <span className="text-t-muted w-[70px] shrink-0">PREDICTED:</span>
-                  <span className="text-t-red">0.07004</span>
-                </div>
-                <div className="flex gap-2">
-                  <span className="text-t-muted w-[70px] shrink-0">DVL OUT:</span>
-                  <span className="text-t-primary">0.07004 <span className="text-t-muted">(unchanged)</span></span>
-                </div>
-                <div className="mt-2 pt-2 border-t border-t-border/50">
-                  <div className="text-t-muted mb-1">WHY DVL FAILED:</div>
-                  <div className="text-t-secondary leading-relaxed">
-                    Model identified correct table row but used wrong denominator
-                    (total assets instead of risk-weighted assets). This is a
-                    <span className="text-t-red font-bold"> reasoning error</span> —
-                    DVL only corrects formatting-level errors (scale, sign, magnitude).
-                  </div>
-                  <div className="mt-1.5 text-t-amber">
-                    Error type: REASONING (73.1% of remaining failures)
-                  </div>
-                </div>
-              </div>
+          {/* Export Report button */}
+          {history.length > 0 && (
+            <div className="flex justify-end">
+              <DVLReport entries={history} />
             </div>
           )}
-        </div>
 
-        {/* DVL Scope Limitations — always visible */}
-        <div className="panel border-t-border/60">
-          <div className="panel-header" style={{ borderBottomColor: "rgba(30,30,30,0.5)" }}>
-            <span className="label text-t-muted">DVL SCOPE LIMITATIONS</span>
+          {/* Error */}
+          {error && (
+            <div className="panel p-2 border-l-2 border-t-red">
+              <div className="text-t-red text-[10px] font-mono">{error}</div>
+            </div>
+          )}
+
+          {/* Failure Case Toggle */}
+          <div className="panel">
+            <button
+              onClick={() => setFailureCaseOpen(!failureCaseOpen)}
+              className="w-full panel-header hover:bg-white/[0.02] transition-colors cursor-pointer"
+            >
+              <span className="label text-t-red">
+                {failureCaseOpen ? "▼" : "▶"} VIEW REASONING FAILURE CASE — DVL CANNOT FIX
+              </span>
+              <span className="text-[9px] text-t-muted font-mono">73.1% of errors</span>
+            </button>
+            {failureCaseOpen && (
+              <div className="px-3 py-2.5 border-l-2 border-t-red bg-[#110808]">
+                <div className="text-[10px] font-mono text-t-amber font-bold mb-2">
+                  ⚠ REASONING ERROR — UNRECOVERABLE
+                </div>
+                <div className="space-y-1 text-[10px] font-mono">
+                  <div className="flex gap-2">
+                    <span className="text-t-muted w-[70px] shrink-0">QUERY:</span>
+                    <span className="text-t-secondary">&quot;What was JPMorgan&apos;s CET1 ratio in 2008?&quot;</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="text-t-muted w-[70px] shrink-0">ACTUAL:</span>
+                    <span className="text-t-green">0.10935</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="text-t-muted w-[70px] shrink-0">PREDICTED:</span>
+                    <span className="text-t-red">0.07004</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="text-t-muted w-[70px] shrink-0">DVL OUT:</span>
+                    <span className="text-t-primary">0.07004 <span className="text-t-muted">(unchanged)</span></span>
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-t-border/50">
+                    <div className="text-t-muted mb-1">WHY DVL FAILED:</div>
+                    <div className="text-t-secondary leading-relaxed">
+                      Model identified correct table row but used wrong denominator
+                      (total assets instead of risk-weighted assets). This is a
+                      <span className="text-t-red font-bold"> reasoning error</span> —
+                      DVL only corrects formatting-level errors (scale, sign, magnitude).
+                    </div>
+                    <div className="mt-1.5 text-t-amber">
+                      Error type: REASONING (73.1% of remaining failures)
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="px-3 py-2.5 space-y-1.5 text-[10px] font-mono">
-            <div className="flex items-start gap-2">
-              <span className="text-t-green shrink-0">✓</span>
-              <span className="text-t-secondary">
-                <span className="text-t-muted">Corrects:</span> scale errors, sign errors, magnitude errors (formatting-level)
-              </span>
+
+          {/* DVL Scope Limitations — always visible */}
+          <div className="panel border-t-border/60">
+            <div className="panel-header" style={{ borderBottomColor: "rgba(30,30,30,0.5)" }}>
+              <span className="label text-t-muted">DVL SCOPE LIMITATIONS</span>
             </div>
-            <div className="flex items-start gap-2">
-              <span className="text-t-red shrink-0">✗</span>
-              <span className="text-t-secondary">
-                <span className="text-t-muted">Cannot fix:</span> multi-step reasoning errors{" "}
-                <span className="text-t-muted">(73.1% of remaining failures)</span>
-              </span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-t-amber shrink-0">⚠</span>
-              <span className="text-t-secondary">
-                <span className="text-t-muted">When trust is</span>{" "}
-                <span className="text-t-amber">MEDIUM</span>/<span className="text-t-red">LOW</span>:{" "}
-                independently verify the underlying calculation
-              </span>
-            </div>
-            {/* Enhanced key insight — surfaced from ErrorTaxonomy */}
-            <div className="mt-2 pt-2 border-t border-t-border/30">
-              <div className="text-[9px] font-mono text-t-secondary leading-relaxed">
-                <span className="text-t-red font-bold">73.1%</span> of LLM numerical errors are
-                multi-step reasoning failures that DVL cannot correct —
-                only <span className="text-t-green font-bold">26.9%</span> are formatting-level
-                errors (scale, sign, magnitude) where DVL achieves{" "}
-                <span className="text-t-green">42× accuracy improvement on correctable errors</span>.
+            <div className="px-3 py-2.5 space-y-1.5 text-[10px] font-mono">
+              <div className="flex items-start gap-2">
+                <span className="text-t-green shrink-0">✓</span>
+                <span className="text-t-secondary">
+                  <span className="text-t-muted">Corrects:</span> scale errors, sign errors, magnitude errors (formatting-level)
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-t-red shrink-0">✗</span>
+                <span className="text-t-secondary">
+                  <span className="text-t-muted">Cannot fix:</span> multi-step reasoning errors{" "}
+                  <span className="text-t-muted">(73.1% of remaining failures)</span>
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-t-amber shrink-0">⚠</span>
+                <span className="text-t-secondary">
+                  <span className="text-t-muted">When trust is</span>{" "}
+                  <span className="text-t-amber">MEDIUM</span>/<span className="text-t-red">LOW</span>:{" "}
+                  independently verify the underlying calculation
+                </span>
+              </div>
+              {/* Enhanced key insight — surfaced from ErrorTaxonomy */}
+              <div className="mt-2 pt-2 border-t border-t-border/30">
+                <div className="text-[9px] font-mono text-t-secondary leading-relaxed">
+                  <span className="text-t-red font-bold">73.1%</span> of LLM numerical errors are
+                  multi-step reasoning failures that DVL cannot correct —
+                  only <span className="text-t-green font-bold">26.9%</span> are formatting-level
+                  errors (scale, sign, magnitude) where DVL achieves{" "}
+                  <span className="text-t-green">42× accuracy improvement on correctable errors</span>.
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* ── Right: Tabbed Panel ── */}
-      <div className="flex flex-col min-h-0">
-        <div className="panel flex-1 flex flex-col min-h-0">
-          {/* Tab headers */}
-          <div className="flex border-b border-t-border">
-            {(["session", "errors", "stats"] as RightTab[]).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setRightTab(tab)}
-                className={`flex-1 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider transition-colors ${
-                  rightTab === tab
+        {/* ── Right: Tabbed Panel ── */}
+        <div className="flex flex-col min-h-0">
+          <div className="panel flex-1 flex flex-col min-h-0">
+            {/* Tab headers */}
+            <div className="flex border-b border-t-border">
+              {(["session", "errors", "stats"] as RightTab[]).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setRightTab(tab)}
+                  className={`flex-1 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider transition-colors ${rightTab === tab
                     ? "text-t-green border-b border-t-green bg-white/[0.02]"
                     : "text-t-muted hover:text-t-secondary"
-                }`}
-              >
-                {tab}
-                {tab === "errors" && errorEntries.length > 0 && (
-                  <span className="ml-1 text-t-amber">({errorEntries.length})</span>
-                )}
-              </button>
-            ))}
-          </div>
+                    }`}
+                >
+                  {tab}
+                  {tab === "errors" && errorEntries.length > 0 && (
+                    <span className="ml-1 text-t-amber">({errorEntries.length})</span>
+                  )}
+                </button>
+              ))}
+            </div>
 
-          {/* Tab content */}
-          <div className="flex-1 overflow-y-auto p-2">
-            {/* SESSION tab */}
-            {rightTab === "session" && (
-              <div className="space-y-0.5">
-                {sessionEvents.length === 0 && (
-                  <div className="text-t-muted text-[10px] font-mono text-center py-6">
-                    No terminal events yet — execute a query to begin
-                  </div>
-                )}
-                {sessionEvents.map((entry) => {
-                  return (
-                    <div key={entry.id} className="session-event animate-fade-in flex items-start gap-2 px-2 py-1.5 border-b border-t-border/20">
-                      <span className="text-[9px] text-t-muted font-mono shrink-0">[{entry.time}]</span>
-                      <span className="w-[5px] h-[5px] rounded-full bg-t-green shrink-0 mt-1 live-pulse" />
-                      <span className="text-[9px] text-t-green font-mono shrink-0">{entry.event}</span>
-                      <span className="text-[9px] text-t-secondary font-mono truncate">{entry.detail}</span>
+            {/* Tab content */}
+            <div className="flex-1 overflow-y-auto p-2">
+              {/* SESSION tab */}
+              {rightTab === "session" && (
+                <div className="space-y-0.5">
+                  {sessionEvents.length === 0 && (
+                    <div className="text-t-muted text-[10px] font-mono text-center py-6">
+                      No terminal events yet — execute a query to begin
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                  )}
+                  {sessionEvents.map((entry) => {
+                    return (
+                      <div key={entry.id} className="session-event animate-fade-in flex items-start gap-2 px-2 py-1.5 border-b border-t-border/20">
+                        <span className="text-[9px] text-t-muted font-mono shrink-0">[{entry.time}]</span>
+                        <span className="w-[5px] h-[5px] rounded-full bg-t-green shrink-0 mt-1 live-pulse" />
+                        <span className="text-[9px] text-t-green font-mono shrink-0">{entry.event}</span>
+                        <span className="text-[9px] text-t-secondary font-mono truncate">{entry.detail}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
 
-            {/* ERRORS tab */}
-            {rightTab === "errors" && (
-              <div className="space-y-0.5">
-                {errorEntries.length === 0 && (
-                  <div className="text-t-muted text-[10px] font-mono text-center py-6">
-                    No corrections applied yet
+              {/* ERRORS tab */}
+              {rightTab === "errors" && (
+                <div className="space-y-0.5">
+                  {errorEntries.length === 0 && (
+                    <div className="text-t-muted text-[10px] font-mono text-center py-6">
+                      No corrections applied yet
+                    </div>
+                  )}
+                  {errorEntries.map((h, i) => (
+                    <button
+                      key={i}
+                      onClick={() => restoreResult(h)}
+                      className="w-full text-left px-2 py-1.5 rounded hover:bg-white/[0.02] transition-colors flex items-center gap-2"
+                    >
+                      <span className="w-[5px] h-[5px] rounded-full shrink-0 bg-t-amber" />
+                      <span className="text-[9px] text-t-secondary font-mono truncate flex-1">
+                        {h.question.length > 30 ? h.question.slice(0, 30) + "..." : h.question}
+                      </span>
+                      <span className="text-[9px] text-t-amber font-mono shrink-0">
+                        {h.correction_log.length} fix{h.correction_log.length > 1 ? "es" : ""}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* STATS tab */}
+              {rightTab === "stats" && (
+                <div className="space-y-2 pt-2">
+                  <div className="panel p-3 text-center">
+                    <div className="text-xl font-bold font-mono text-t-blue">{history.length}</div>
+                    <div className="text-[9px] text-t-muted font-mono uppercase tracking-wider">Queries</div>
                   </div>
-                )}
-                {errorEntries.map((h, i) => (
-                  <button
-                    key={i}
-                    onClick={() => restoreResult(h)}
-                    className="w-full text-left px-2 py-1.5 rounded hover:bg-white/[0.02] transition-colors flex items-center gap-2"
-                  >
-                    <span className="w-[5px] h-[5px] rounded-full shrink-0 bg-t-amber" />
-                    <span className="text-[9px] text-t-secondary font-mono truncate flex-1">
-                      {h.question.length > 30 ? h.question.slice(0, 30) + "..." : h.question}
-                    </span>
-                    <span className="text-[9px] text-t-amber font-mono shrink-0">
-                      {h.correction_log.length} fix{h.correction_log.length > 1 ? "es" : ""}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* STATS tab */}
-            {rightTab === "stats" && (
-              <div className="space-y-2 pt-2">
-                <div className="panel p-3 text-center">
-                  <div className="text-xl font-bold font-mono text-t-blue">{history.length}</div>
-                  <div className="text-[9px] text-t-muted font-mono uppercase tracking-wider">Queries</div>
+                  <div className="panel p-3 text-center">
+                    <div className="text-xl font-bold font-mono text-t-amber">{totalCorrections}</div>
+                    <div className="text-[9px] text-t-muted font-mono uppercase tracking-wider">Corrections</div>
+                  </div>
+                  <div className="panel p-3 text-center">
+                    <div className="text-xl font-bold font-mono text-t-green">{avgTrust}%</div>
+                    <div className="text-[9px] text-t-muted font-mono uppercase tracking-wider">Avg Trust</div>
+                  </div>
                 </div>
-                <div className="panel p-3 text-center">
-                  <div className="text-xl font-bold font-mono text-t-amber">{totalCorrections}</div>
-                  <div className="text-[9px] text-t-muted font-mono uppercase tracking-wider">Corrections</div>
-                </div>
-                <div className="panel p-3 text-center">
-                  <div className="text-xl font-bold font-mono text-t-green">{avgTrust}%</div>
-                  <div className="text-[9px] text-t-muted font-mono uppercase tracking-wider">Avg Trust</div>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 }
