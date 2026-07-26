@@ -2,18 +2,16 @@ name: Deploy Backend to Hugging Face
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
-      - "backend/**"
+      - "finverify-terminal/backend/**"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout GitHub repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Clone HF Space
         env:
@@ -22,27 +20,24 @@ jobs:
         run: |
           git clone https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/spaces/${HF_USERNAME}/finverify-api hf-space
 
-      - name: Replace backend
+      - name: Sync backend
         run: |
-          rsync -av --delete \
+          rsync -a --delete \
             --exclude='.git' \
-            backend/ \
+            finverify-terminal/backend/ \
             hf-space/
 
-      - name: Commit and Push
-        env:
-          HF_USERNAME: ${{ secrets.HF_USERNAME }}
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      - name: Commit & Push
         run: |
           cd hf-space
 
           git config user.email "github-actions@github.com"
           git config user.name "GitHub Actions"
 
-          if [[ -n $(git status --porcelain) ]]; then
+          if [ -n "$(git status --porcelain)" ]; then
             git add .
-            git commit -m "Auto deploy from GitHub"
+            git commit -m "Auto deploy backend from GitHub"
             git push origin main
           else
-            echo "No changes."
+            echo "No changes to deploy."
           fi
