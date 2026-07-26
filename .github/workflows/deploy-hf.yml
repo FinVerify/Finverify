@@ -2,9 +2,8 @@ name: Deploy Backend to Hugging Face
 
 on:
   push:
-    branches: [main]
-    paths:
-      - "finverify-terminal/backend/**"
+    branches:
+      - main
 
 jobs:
   deploy:
