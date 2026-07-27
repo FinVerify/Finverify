@@ -258,3 +258,8 @@ If you believe you've found a security-sensitive issue (authentication, CORS, se
 - **Founder contact** — [aaditya.thokal24@gmail.com](mailto:aaditya.thokal24@gmail.com) for anything sensitive, security-related, or not suited to a public thread.
 
 Thank you for considering a contribution to FinVerify — verification-first financial AI is a small niche today, and every fixed test gap, reconciled implementation, and honestly-reported benchmark result makes it a little more trustworthy.
+
+## Local Database
+`finverify-terminal/backend/data/fundamentals.db` is a local, ephemeral SQLite
+database and is not tracked in git. Populate it locally by running the
+ingestion scripts in `finverify-terminal/backend/`.
