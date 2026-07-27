@@ -170,6 +170,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 export function VerificationCard({ claims }: Props) {
   const overall = deriveOverallStatus(claims);
   const [showRaw, setShowRaw] = useState(false);
+  const [showAllMetrics, setShowAllMetrics] = useState(false);
 
   if (overall.kind === "empty") {
     return (
@@ -196,7 +197,9 @@ export function VerificationCard({ claims }: Props) {
     (c) => c.result?.trust_score === "LOW" || isMaterialCorrection(c)
   );
   const hardErrorClaims = claims.filter((c) => c.status === "error");
-  const metricClaims = verifiedClaims.slice(0, 6);
+  const METRIC_PREVIEW_COUNT = 6;
+  const visibleMetrics = showAllMetrics ? verifiedClaims : verifiedClaims.slice(0, METRIC_PREVIEW_COUNT);
+  const remainingMetricsCount = verifiedClaims.length - METRIC_PREVIEW_COUNT;
 
   return (
     <div
@@ -270,7 +273,7 @@ export function VerificationCard({ claims }: Props) {
         <section className="fv-mb-4">
           <SectionLabel>Analyst summary</SectionLabel>
           <div
-            className="fv-rounded-xl fv-border-l-2 fv-bg-t-surface fv-px-3.5 fv-py-3"
+            className="fv-rounded-xl fv-border-l-2 fv-bg-t-surface fv-px-3.5 fv-py-2.5"
             style={{ borderLeftColor: palette.text }}
           >
             <p className="fv-text-[12px] fv-leading-relaxed fv-text-t-primary">
@@ -319,14 +322,23 @@ export function VerificationCard({ claims }: Props) {
         </section>
 
         {/* SECTION 2 — Key financial metrics ---------------------------- */}
-        {metricClaims.length > 0 && (
+        {visibleMetrics.length > 0 && (
           <section className="fv-mb-4">
             <SectionLabel>Key financial metrics</SectionLabel>
-            <div className="fv-grid fv-grid-cols-2 fv-gap-2">
-              {metricClaims.map((claim) => (
-                <MetricCard key={claim.id} claim={claim} />
+            <div className="fv-divide-y fv-divide-t-border fv-rounded-xl fv-border fv-border-t-border fv-bg-t-surface fv-px-3">
+              {visibleMetrics.map((claim) => (
+                <MetricRow key={claim.id} claim={claim} />
               ))}
             </div>
+            {remainingMetricsCount > 0 && (
+              <button
+                type="button"
+                onClick={() => setShowAllMetrics((v) => !v)}
+                className="fv-mt-1.5 fv-w-full fv-rounded-lg fv-px-2 fv-py-1.5 fv-text-left fv-text-[10.5px] fv-font-semibold fv-text-t-secondary fv-transition-colors fv-duration-150 hover:fv-text-t-primary fv-outline-none focus-visible:fv-ring-2 focus-visible:fv-ring-white/70"
+              >
+                {showAllMetrics ? "Show fewer metrics" : `View remaining ${remainingMetricsCount} metrics`}
+              </button>
+            )}
           </section>
         )}
 
@@ -334,7 +346,7 @@ export function VerificationCard({ claims }: Props) {
         {(materialCorrections.length > 0 || normalizedOnly.length > 0) && (
           <section className="fv-mb-4">
             <SectionLabel>Corrections &amp; normalizations</SectionLabel>
-            <div className="fv-space-y-1.5">
+            <div className="fv-divide-y fv-divide-t-border fv-rounded-xl fv-border fv-border-t-border fv-bg-t-surface fv-px-3">
               {materialCorrections.map((claim) => (
                 <CorrectionRow key={claim.id} claim={claim} material />
               ))}
@@ -348,20 +360,17 @@ export function VerificationCard({ claims }: Props) {
         {/* SECTION 4 — Methodology (evidence, without inventing sources) - */}
         <section className="fv-mb-4">
           <SectionLabel>Methodology</SectionLabel>
-          <div className="fv-rounded-xl fv-border fv-border-t-border fv-bg-t-surface fv-px-3.5 fv-py-2.5 fv-text-[11px] fv-leading-relaxed fv-text-t-secondary">
-            Each claim is checked with FinVerify's deterministic verification logic — no
-            model-generated scoring.{" "}
-            {verifiedClaims.some((c) => c.result?.question) && (
-              <>Where available, the specific check performed is shown on each metric above.</>
-            )}
-          </div>
+          <p className="fv-px-0.5 fv-text-[10.5px] fv-leading-relaxed fv-text-t-muted">
+            Checked with FinVerify's deterministic verification logic — no model-generated scoring.
+            {verifiedClaims.some((c) => c.result?.question) && " Hover a metric above for the specific check performed."}
+          </p>
         </section>
 
         {/* SECTION 5 — Potential issues ----------------------------------- */}
         {(flaggedForReview.length > 0 || hardErrorClaims.length > 0) && (
           <section className="fv-mb-4">
             <SectionLabel>Potential issues</SectionLabel>
-            <div className="fv-space-y-1.5">
+            <div className="fv-divide-y fv-divide-t-border fv-rounded-xl fv-border fv-border-t-border fv-bg-t-surface fv-px-3">
               {flaggedForReview.map((claim) => (
                 <IssueRow key={claim.id} claim={claim} />
               ))}
@@ -419,58 +428,54 @@ export function VerificationCard({ claims }: Props) {
  * Section 2 — a single metric card
  * ------------------------------------------------------------------ */
 
-function MetricCard({ claim }: { claim: VerifiedClaim }) {
+function MetricRow({ claim }: { claim: VerifiedClaim }) {
   const result = claim.result!;
   const isOffline = !!claim.error;
   const palette = trustPalette(result.trust_score);
 
+  const detail = [
+    `Confidence: ${trustLabel(result.trust_score)}.`,
+    result.correction_applied ? `${result.correction_applied}.` : null,
+    result.question ? `Checked via: ${result.question}` : null,
+    isOffline ? "Backend unreachable — showing an offline estimate." : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div
-      className={`fv-group fv-flex fv-flex-col fv-gap-2 fv-rounded-xl fv-border fv-bg-t-surface fv-px-3 fv-py-2.5 fv-transition-all fv-duration-150 hover:fv-bg-t-border/40 ${
-        isOffline ? "fv-border-dashed fv-border-t-border-accent" : "fv-border-t-border hover:fv-border-t-border-accent"
-      }`}
-      title={isOffline ? "Backend unreachable — showing offline estimate" : undefined}
+      className="fv-flex fv-items-center fv-justify-between fv-gap-3 fv-py-2 fv-transition-colors fv-duration-150 hover:fv-bg-t-border/30"
+      title={detail}
     >
-      <div className="fv-flex fv-items-start fv-justify-between fv-gap-2">
-        <span className="fv-truncate fv-text-[11px] fv-font-semibold fv-leading-tight fv-text-t-primary">
-          {claim.match}
+      <div className="fv-flex fv-min-w-0 fv-items-center fv-gap-2">
+        <span
+          className="fv-h-1.5 fv-w-1.5 fv-shrink-0 fv-rounded-full"
+          style={{ background: palette.text }}
+          aria-hidden="true"
+        />
+        <span className="fv-truncate fv-text-[11.5px] fv-text-t-primary">{claim.match}</span>
+        {result.correction_applied && (
+          <span className="fv-shrink-0 fv-text-[10px] fv-font-bold fv-text-t-amber" aria-hidden="true">
+            *
+          </span>
+        )}
+        {isOffline && (
+          <span className="fv-shrink-0 fv-rounded fv-border fv-border-t-border-accent fv-px-1 fv-py-0.5 fv-text-[8px] fv-font-bold fv-tracking-wide fv-text-t-secondary">
+            OFFLINE
+          </span>
+        )}
+      </div>
+      <div className="fv-flex fv-shrink-0 fv-items-baseline fv-gap-2">
+        <span className="fv-font-mono fv-text-[10.5px] fv-tabular-nums fv-text-t-muted">
+          {formatValue(result.raw_value, result.question)}
         </span>
         <span
-          className="fv-flex fv-shrink-0 fv-items-center fv-gap-1 fv-rounded-full fv-px-1.5 fv-py-0.5 fv-text-[9px] fv-font-bold"
-          style={{ background: palette.bg, color: palette.text }}
+          className="fv-font-mono fv-text-[14px] fv-font-bold fv-tabular-nums"
+          style={{ color: palette.text }}
         >
-          {trustIcon(result.trust_score)} {isOffline ? "OFFLINE" : "VERIFIED"}
+          {formatValue(result.verified_value, result.question)}
         </span>
       </div>
-
-      {/* Verified value reads as the primary number; the LLM's original
-          value is demoted to a small strikethrough-free reference so the
-          eye lands on what was actually confirmed. */}
-      <div className="fv-flex fv-items-baseline fv-justify-between fv-gap-2">
-        <div className="fv-min-w-0">
-          <div className="fv-text-[9px] fv-uppercase fv-tracking-wide fv-text-t-muted">Verified</div>
-          <div
-            className="fv-truncate fv-font-mono fv-text-[15px] fv-font-bold fv-tabular-nums fv-leading-tight"
-            style={{ color: palette.text }}
-          >
-            {formatValue(result.verified_value, result.question)}
-          </div>
-        </div>
-        <div className="fv-shrink-0 fv-text-right">
-          <div className="fv-text-[9px] fv-uppercase fv-tracking-wide fv-text-t-muted">LLM</div>
-          <div className="fv-font-mono fv-text-[10.5px] fv-tabular-nums fv-text-t-secondary">
-            {formatValue(result.raw_value, result.question)}
-          </div>
-        </div>
-      </div>
-
-      <div className="fv-flex fv-items-center fv-justify-between fv-gap-2 fv-border-t fv-border-t-border fv-pt-1.5 fv-text-[9.5px] fv-text-t-muted">
-        <span>Confidence: {trustLabel(result.trust_score)}</span>
-        {result.correction_applied && <span className="fv-truncate fv-text-t-amber">{result.correction_applied}</span>}
-      </div>
-      {result.question && (
-        <div className="fv-truncate fv-text-[9.5px] fv-text-t-muted">Checked via: {result.question}</div>
-      )}
     </div>
   );
 }
@@ -482,37 +487,33 @@ function MetricCard({ claim }: { claim: VerifiedClaim }) {
 function CorrectionRow({ claim, material }: { claim: VerifiedClaim; material: boolean }) {
   const result = claim.result!;
   const palette = trustPalette(material ? result.trust_score : "N/A");
+  const detail = material
+    ? `${result.correction_applied} — reported value differed from verification.`
+    : `${result.correction_applied} — formatting difference only, no financial discrepancy.`;
 
   return (
-    <div className="fv-rounded-xl fv-border fv-border-t-border fv-bg-t-surface fv-px-3 fv-py-2 fv-transition-colors fv-duration-150 hover:fv-border-t-border-accent">
-      <div className="fv-flex fv-items-center fv-justify-between fv-gap-2">
-        <span className="fv-truncate fv-text-[11px] fv-text-t-primary">{claim.match}</span>
-        <div className="fv-flex fv-shrink-0 fv-items-center fv-gap-2">
-          <span className="fv-flex fv-items-center fv-gap-1 fv-font-mono fv-text-[10px] fv-tabular-nums fv-text-t-secondary">
-            {formatValue(result.raw_value, result.question)}
-            <span aria-hidden="true">→</span>
-            <span className="fv-font-semibold" style={{ color: palette.text }}>
-              {formatValue(result.verified_value, result.question)}
+    <div className="fv-flex fv-items-center fv-justify-between fv-gap-2 fv-py-2 fv-transition-colors fv-duration-150 hover:fv-bg-t-border/30" title={detail}>
+      <span className="fv-truncate fv-text-[11.5px] fv-text-t-primary">{claim.match}</span>
+      <div className="fv-flex fv-shrink-0 fv-items-center fv-gap-2">
+        <span className="fv-flex fv-items-center fv-gap-1 fv-font-mono fv-text-[10px] fv-tabular-nums fv-text-t-secondary">
+          {formatValue(result.raw_value, result.question)}
+          <span aria-hidden="true">→</span>
+          <span className="fv-font-semibold" style={{ color: palette.text }}>
+            {formatValue(result.verified_value, result.question)}
+          </span>
+          {Math.abs(result.delta_pct) > 0.05 && (
+            <span className="fv-text-t-muted">
+              (Δ{result.delta_pct > 0 ? "+" : ""}
+              {result.delta_pct.toFixed(1)}%)
             </span>
-            {Math.abs(result.delta_pct) > 0.05 && (
-              <span className="fv-text-t-muted">
-                (Δ{result.delta_pct > 0 ? "+" : ""}
-                {result.delta_pct.toFixed(1)}%)
-              </span>
-            )}
-          </span>
-          <span
-            className="fv-shrink-0 fv-rounded-full fv-px-1.5 fv-py-0.5 fv-text-[9px] fv-font-bold"
-            style={{ background: palette.bg, color: palette.text }}
-          >
-            {material ? "CORRECTED" : "NORMALIZED"}
-          </span>
-        </div>
-      </div>
-      <div className="fv-mt-1 fv-truncate fv-text-[9.5px] fv-text-t-muted">
-        {material
-          ? `${result.correction_applied} — reported value differed from verification.`
-          : `${result.correction_applied} — formatting difference only, no financial discrepancy.`}
+          )}
+        </span>
+        <span
+          className="fv-shrink-0 fv-rounded-full fv-px-1.5 fv-py-0.5 fv-text-[9px] fv-font-bold"
+          style={{ background: palette.bg, color: palette.text }}
+        >
+          {material ? "CORRECTED" : "NORMALIZED"}
+        </span>
       </div>
     </div>
   );
@@ -524,21 +525,19 @@ function CorrectionRow({ claim, material }: { claim: VerifiedClaim; material: bo
 
 function IssueRow({ claim }: { claim: VerifiedClaim }) {
   if (claim.status === "error" || !claim.result) {
+    const low = trustPalette("LOW");
     return (
       <div
-        className="fv-flex fv-flex-col fv-gap-0.5 fv-rounded-xl fv-border fv-border-dashed fv-px-3 fv-py-2"
-        style={{ borderColor: trustPalette("LOW").border }}
+        className="fv-flex fv-items-center fv-justify-between fv-gap-2 fv-py-2 fv-transition-colors fv-duration-150 hover:fv-bg-t-border/30"
+        title={claim.error ?? "Verification failed"}
       >
-        <div className="fv-flex fv-items-center fv-justify-between fv-gap-2">
-          <span className="fv-truncate fv-text-[11px] fv-text-t-primary">{claim.match}</span>
-          <span
-            className="fv-shrink-0 fv-rounded-full fv-px-1.5 fv-py-0.5 fv-text-[9px] fv-font-bold"
-            style={{ background: trustPalette("LOW").bg, color: trustPalette("LOW").text }}
-          >
-            ! UNAVAILABLE
-          </span>
-        </div>
-        <span className="fv-truncate fv-text-[10px] fv-text-t-secondary">{claim.error ?? "Verification failed"}</span>
+        <span className="fv-truncate fv-text-[11.5px] fv-text-t-primary">{claim.match}</span>
+        <span
+          className="fv-shrink-0 fv-rounded-full fv-px-1.5 fv-py-0.5 fv-text-[9px] fv-font-bold"
+          style={{ background: low.bg, color: low.text }}
+        >
+          ! UNAVAILABLE
+        </span>
       </div>
     );
   }
@@ -546,19 +545,22 @@ function IssueRow({ claim }: { claim: VerifiedClaim }) {
   const result = claim.result;
   const palette = trustPalette(result.trust_score);
   return (
-    <div className="fv-flex fv-items-center fv-justify-between fv-gap-2 fv-rounded-xl fv-border fv-border-t-border fv-px-3 fv-py-2 fv-transition-colors fv-duration-150 hover:fv-border-t-border-accent">
-      <div className="fv-min-w-0">
-        <span className="fv-truncate fv-text-[11px] fv-text-t-primary">{claim.match}</span>
-        <div className="fv-truncate fv-text-[9.5px] fv-text-t-muted">
-          Differs by {Math.abs(result.delta_pct).toFixed(1)}% — confirm against the source.
-        </div>
+    <div
+      className="fv-flex fv-items-center fv-justify-between fv-gap-2 fv-py-2 fv-transition-colors fv-duration-150 hover:fv-bg-t-border/30"
+      title={`Differs by ${Math.abs(result.delta_pct).toFixed(1)}% from the reported value — confirm against the source.`}
+    >
+      <span className="fv-truncate fv-text-[11.5px] fv-text-t-primary">{claim.match}</span>
+      <div className="fv-flex fv-shrink-0 fv-items-center fv-gap-2">
+        <span className="fv-font-mono fv-text-[10px] fv-tabular-nums fv-text-t-muted">
+          Δ{Math.abs(result.delta_pct).toFixed(1)}%
+        </span>
+        <span
+          className="fv-shrink-0 fv-rounded-full fv-px-1.5 fv-py-0.5 fv-text-[9px] fv-font-bold"
+          style={{ background: palette.bg, color: palette.text }}
+        >
+          {trustIcon(result.trust_score)} {result.trust_score}
+        </span>
       </div>
-      <span
-        className="fv-shrink-0 fv-rounded-full fv-px-1.5 fv-py-0.5 fv-text-[9px] fv-font-bold"
-        style={{ background: palette.bg, color: palette.text }}
-      >
-        {trustIcon(result.trust_score)} {result.trust_score}
-      </span>
     </div>
   );
 }
