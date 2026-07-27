@@ -45,6 +45,17 @@ Contributions include:
 - Environment-based origin allowlisting
 - Backend security improvements
 
+  
+
+### @Felix-sof
+
+Contributions include:
+
+- Repository maintenance and cleanup
+- Local SQLite database handling improvements
+- Git hygiene improvements
+- Contributor documentation updates
+
 Thank you for helping improve FinVerify. 🚀
 
 ---
