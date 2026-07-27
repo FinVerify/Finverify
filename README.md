@@ -1,12 +1,16 @@
 <div align="center">
 
+<br />
+
 # FinVerify
 
 ### The verification layer for financial AI.
 
-FinVerify catches scale, sign, and magnitude errors in AI-generated numbers and corrects them with a deterministic, auditable rule engine — in the browser, in your backend, and in your terminal.
+Deterministic correction for AI-generated numbers — in the browser, in your backend, in your terminal.
 
-[Live Demo](https://finverify-llm.vercel.app/) · [Docs](finverify-terminal/README.md) · [Paper](#) · [Model on HF](https://huggingface.co/spaces/aadi2026/finverify-api/tree/main) · [Discussions](https://github.com/aadityat23/finverify-llm/discussions)
+<br />
+
+[**Live Demo**](#) &nbsp;•&nbsp; [**Docs**](finverify-terminal/README.md) &nbsp;•&nbsp; [**Paper**](#) &nbsp;•&nbsp; [**Model**](https://huggingface.co/aadi2026/finverify-lora) &nbsp;•&nbsp; [**Discussions**](https://github.com/aadityat23/finverify-llm/discussions)
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](finverify-terminal/backend/requirements.txt)
@@ -15,37 +19,33 @@ FinVerify catches scale, sign, and magnitude errors in AI-generated numbers and 
 [![SDK Tests](https://github.com/aadityat23/finverify-llm/actions/workflows/sdk-tests.yml/badge.svg?branch=main)](https://github.com/aadityat23/finverify-llm/actions/workflows/sdk-tests.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
+<br />
+
+**[Extension](#chrome-extension) · [Features](#features) · [Architecture](#architecture) · [Quick Start](#quick-start) · [Results](#results) · [Research](#research) · [Contributing](#contributing)**
+
+<br />
+
 </div>
 
 ---
 
-## Table of Contents
+<div align="center">
 
-- [Why FinVerify](#why-finverify)
-- [Current Status](#current-status)
-- [Built With](#built-with)
-- [Chrome Extension](#chrome-extension)
-- [Features](#features)
-- [Showcase](#showcase)
-- [Architecture](#architecture)
-- [Quick Start](#quick-start)
-- [Results](#results)
-- [Benchmarks](#benchmarks)
-- [Repository Structure](#repository-structure)
-- [API Reference](#api-reference)
-- [Research](#research)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [Community](#community)
-- [License](#license)
+| 🔒 Deterministic | 🧾 Auditable | 🌱 Open Source |
+|:---:|:---:|:---:|
+| Rule-based correction, not another model guess | Every correction logged — rule, input, output | Apache 2.0, actively developed, open to contributors |
+
+</div>
 
 ---
 
 ## Why FinVerify
 
-LLMs answering financial questions are often directionally right and numerically wrong — a decimal point misplaced, a percentage reported as a raw fraction, a sign flipped. In a regulated or capital-allocation context, that's not a rounding error. It's a liability.
+> LLMs answering financial questions are often directionally right and numerically wrong — a decimal point misplaced, a percentage reported as a raw fraction, a sign flipped. In a regulated or capital-allocation context, that's not a rounding error. It's a liability.
 
-Most fixes reach for more prompting: chain-of-thought, more context, bigger models. FinVerify reaches for a rule engine instead: the **Deterministic Verification Layer (DVL)**. Scale, sign, and magnitude errors are mechanically distinct from reasoning errors. They don't need another model call to fix — they need a rule.
+Most fixes reach for more prompting. FinVerify reaches for a rule engine instead: the **Deterministic Verification Layer (DVL)**. Scale, sign, and magnitude errors are mechanically distinct from reasoning errors — they need a rule, not another model call.
+
+<br />
 
 | Traditional AI Workflow | FinVerify |
 |---|---|
@@ -55,27 +55,43 @@ Most fixes reach for more prompting: chain-of-thought, more context, bigger mode
 | Fix errors with better prompts | Fix errors with rules |
 | Black box | Transparent, logged, reproducible |
 
-**Who it's for**
+<br />
 
-- Developers shipping AI products that surface financial numbers and need an auditable correction layer
-- Researchers studying numerical hallucination who need a reproducible, ground-truth-free verification method
-- Anyone using AI chat assistants for financial analysis who wants a deterministic second check before acting on the numbers
+**Built for**
 
-## Current Status
+| | |
+|---|---|
+| 🛠️ **Developers** | Shipping AI products that surface financial numbers and need an auditable correction layer |
+| 🔬 **Researchers** | Studying numerical hallucination, who need a reproducible, ground-truth-free method |
+| 📊 **Analysts** | Using AI chat assistants for financial analysis who want a deterministic second check |
 
-- Actively maintained, single maintainer, open to contributors
-- Apache 2.0 licensed
-- GitHub Discussions enabled for design questions and feedback
-- Backend, SDK, and Terminal UI stable, with CI-covered test suites
-- Chrome Extension under active development
+---
 
-## Built With
+<div align="center">
 
-`TypeScript` · `React` · `Next.js` · `Python` · `FastAPI` · `Mistral-7B (QLoRA)` · `HuggingFace` · `Playwright` · `GitHub Actions`
+**Actively maintained** &nbsp;·&nbsp; **Apache 2.0** &nbsp;·&nbsp; **Discussions enabled** &nbsp;·&nbsp; **Extension in active development**
+
+`TypeScript` `React` `Next.js` `Python` `FastAPI` `Mistral-7B (QLoRA)` `HuggingFace` `Playwright` `GitHub Actions`
+
+</div>
+
+---
 
 ## Chrome Extension
 
 FinVerify's flagship surface. It verifies numbers in AI chat output inline, without leaving the page.
+
+<div align="center">
+
+<br />
+
+**[ Screenshot — Chrome Extension Popup ]**
+
+<sub>Default popup state, provider connected.</sub>
+
+<br />
+
+</div>
 
 | Capability | Description |
 |---|---|
@@ -84,51 +100,41 @@ FinVerify's flagship surface. It verifies numbers in AI chat output inline, with
 | **Verification report** | Expand a badge to see the correction rule, the original value, and the corrected value |
 | **Provider Adapters** | New chat surfaces can be added without touching the DVL |
 
+<div align="center">
+
+<br />
+
+**[ Screenshot — Inline Trust Badge ]**
+
+<sub>A HIGH / MEDIUM / LOW badge rendered next to an AI chat answer.</sub>
+
+<br />
+<br />
+
+**[ Screenshot — Verification Report ]**
+
+<sub>Expanded badge showing the correction rule, original value, and corrected value.</sub>
+
+<br />
+
+</div>
+
 Built as a monorepo workspace (`@finverify/core` shared package) with separate build targets: content and background scripts as IIFE bundles, popup as an ES module. Playwright end-to-end tests against local chat-UI fixtures are in progress, alongside the existing unit test suite.
 
-See [Architecture](#architecture) for how a claim flows from the page to a badge.
+---
 
 ## Features
 
-**Verification**
-- DVL — deterministic scale, sign, and magnitude correction with per-correction audit logging
-- Financial Constraint Graph — accounting-identity and ratio-bound checks across multiple figures
-- Trust Engine — HIGH / MEDIUM / LOW confidence from relative delta, not just a correction count
-
-**Browser Extension**
-- Inline trust badges and verification reports on AI chat output
-- Provider Adapter architecture, monorepo workspace
-
-**Backend**
-- FastAPI REST + WebSocket API
-- Live market data (Yahoo Finance) verified through the DVL
-- SEC EDGAR and earnings-transcript ingestion
-- RAG pipeline (Pinecone + keyword-overlap fallback)
-
-**Research**
-- FinVerifyBench — synthetic diagnostic benchmark isolating formatting errors from reasoning errors
-- Reproducible FinQA evaluation harness and published ablation study
-
-**Developer Experience**
-- Standalone SDK (`pip install finverify`) for offline, local verification
-- Terminal UI for direct query/verify interaction
-- CI pipelines for backend and SDK test suites
-
-**Open Source**
-- Apache 2.0, CONTRIBUTING guide, Code of Conduct, Security policy
-- Issues triaged with `good first issue`, `help wanted`, `advanced`, `research`
-
-## Showcase
-
-> An open contribution — see [Contributing](#contributing). Each slot names exactly what's needed.
-
-| Slot | What to capture |
+| Category | Highlights |
 |---|---|
-| Chrome Extension Popup | Default popup state, provider connected |
-| Inline Trust Badge | A HIGH/MEDIUM/LOW badge rendered next to an AI chat answer |
-| Verification Report | Expanded badge showing rule, original value, corrected value |
-| Terminal | Query flow in the terminal-style UI |
-| Market Dashboard | Watchlist with verified metric cards and sparklines |
+| **Verification** | DVL — deterministic scale, sign, and magnitude correction · Financial Constraint Graph — accounting-identity checks · Trust Engine — delta-based confidence scoring |
+| **Browser Extension** | Inline trust badges and verification reports · Provider Adapter architecture · Monorepo workspace |
+| **Backend** | FastAPI REST + WebSocket API · Live market data verified through the DVL · SEC EDGAR & earnings-transcript ingestion · RAG pipeline (Pinecone + fallback) |
+| **Research** | FinVerifyBench — synthetic diagnostic benchmark · Reproducible FinQA evaluation harness · Published ablation study |
+| **Developer Experience** | Standalone SDK (`pip install finverify`) · Terminal UI · CI pipelines for backend and SDK |
+| **Open Source** | Apache 2.0 · CONTRIBUTING guide, Code of Conduct, Security policy · Issues triaged by label |
+
+---
 
 ## Architecture
 
@@ -155,22 +161,72 @@ flowchart TD
     G --> H[Verified Output + correction log]
 ```
 
+> **Why it matters** — every surface (extension, terminal, API) calls the same DVL. Verification logic lives in one place, not reimplemented per surface.
+
 This intentionally omits the Financial Constraint Graph, ingestion, and RAG subsystems — see [Repository Structure](#repository-structure) for those.
+
+---
 
 ## Quick Start
 
-### Backend
+<table>
+<tr><td width="50%" valign="top">
+
+### 🖥 Backend
 Runs the FastAPI verification service.
 
 ```bash
 git clone https://github.com/aadityat23/finverify-llm.git
 cd finverify-llm/finverify-terminal/backend
 python -m venv venv
-source venv/bin/activate    # Windows: venv\Scripts\activate
+source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env        # fill in HF_TOKEN
 uvicorn app.main:app --reload --port 8000
 ```
+
+</td><td width="50%" valign="top">
+
+### 🖼 Frontend
+Runs the terminal and market dashboard UI.
+
+```bash
+cd finverify-llm/finverify-terminal/frontend
+npm install
+cp .env.local.example .env.local
+npm run dev    # http://localhost:3000
+```
+
+</td></tr>
+<tr><td width="50%" valign="top">
+
+### 📦 SDK
+Installs the standalone Python SDK for local, offline verification.
+
+```bash
+cd finverify-llm/finverify-terminal/sdk
+pip install -e .
+```
+
+See `sdk/README.md` to use it against a hosted API instead.
+
+</td><td width="50%" valign="top">
+
+### 🧩 Chrome Extension
+Builds the browser extension for inline verification.
+
+```bash
+cd finverify-llm/finverify-extension
+npm install
+npm run build
+```
+
+Load it via `chrome://extensions` → **Load unpacked**.
+
+</td></tr>
+</table>
+
+**Verify the backend is running:**
 
 ```bash
 curl http://localhost:8000/health
@@ -182,36 +238,32 @@ curl -X POST http://localhost:8000/verify \
 curl http://localhost:8000/market/quotes?symbols=AAPL,TSLA
 ```
 
-### Frontend
-Runs the terminal and market dashboard UI.
+---
 
-```bash
-cd finverify-llm/finverify-terminal/frontend
-npm install
-cp .env.local.example .env.local    # adjust API_URL if needed
-npm run dev                          # http://localhost:3000
-```
+## Showcase
 
-### SDK
-Installs the standalone Python SDK for local, offline verification.
+<div align="center">
 
-```bash
-cd finverify-llm/finverify-terminal/sdk
-pip install -e .
-```
+<br />
 
-See `sdk/README.md` for usage against a hosted API instead.
+**[ Screenshot — Terminal ]**
 
-### Chrome Extension
-Builds the browser extension for inline verification.
+<sub>Query flow in the terminal-style UI.</sub>
 
-```bash
-cd finverify-llm/finverify-extension
-npm install
-npm run build
-```
+<br />
+<br />
 
-Load the build output as an unpacked extension via `chrome://extensions` → **Load unpacked**.
+**[ Screenshot — Market Dashboard ]**
+
+<sub>Watchlist with verified metric cards and sparklines.</sub>
+
+<br />
+
+</div>
+
+> Screenshots are an open contribution — see [Contributing](#contributing).
+
+---
 
 ## Results
 
@@ -227,11 +279,9 @@ FinQA dev set, n=873, 95% bootstrap CI:
 
 Negative results: CoT prompting −9.0pp, CoT fine-tuning −12.0pp, cross-doc RAG −7.5pp.
 
-At 42.61%, this is 5.4pp behind GPT-3.5 (no CoT, 48.0%), using a model 25x smaller, no proprietary compute, and fully deterministic, auditable output.
-
-> The DVL only fires on formatting-level errors, not reasoning errors — see the [error taxonomy](#benchmarks) below.
-
-## Benchmarks
+> At 42.61%, this is 5.4pp behind GPT-3.5 (no CoT, 48.0%) — using a model 25x smaller, no proprietary compute, and fully deterministic, auditable output.
+>
+> The DVL only fires on formatting-level errors, not reasoning errors — see the error taxonomy below.
 
 ### Error taxonomy (n=539 remaining failures)
 
@@ -245,6 +295,8 @@ At 42.61%, this is 5.4pp behind GPT-3.5 (no CoT, 48.0%), using a model 25x small
 | Scale | 4 | 0.8% |
 
 73.1% of remaining failures are reasoning errors, not correctable by the DVL. 0% are formatting or extraction failures after fine-tuning.
+
+---
 
 ## Repository Structure
 
@@ -280,6 +332,11 @@ finverify-llm/
         └── finverify/           # standalone `pip install finverify` package
 ```
 
+<details>
+<summary><b>Component reference</b> (click to expand)</summary>
+
+<br />
+
 | Component | Path | Purpose |
 |---|---|---|
 | Chrome Extension core | `finverify-extension/packages/core` | Shared verification client used across content/background/popup |
@@ -294,6 +351,10 @@ finverify-llm/
 | Terminal UI | `frontend/app/page.tsx` | Terminal-style query interface, three-panel layout |
 | Market mode | `frontend/app/market/page.tsx` | Live watchlist, verified metric cards, sparklines |
 | Metrics dashboard | `frontend/app/metrics/page.tsx` | Paper results, ablation study, error taxonomy |
+
+</details>
+
+---
 
 ## API Reference
 
@@ -311,52 +372,68 @@ finverify-llm/
 | GET, POST, DELETE | `/v1/history/*` | User query-history persistence |
 | WS | `/ws/market` | Real-time market data stream |
 
-`/v1/fundamentals/{ticker}`, `/v1/earnings/{ticker}`, and `/v1/ingest/*` are also exposed, for on-demand SEC and transcript ingestion. Endpoint-by-endpoint documentation for these is an open contribution — see [Contributing](#contributing).
+`/v1/fundamentals/{ticker}`, `/v1/earnings/{ticker}`, and `/v1/ingest/*` are also exposed, for on-demand SEC and transcript ingestion. Endpoint-by-endpoint documentation is an open contribution — see [Contributing](#contributing).
+
+---
 
 ## Research
 
-**Paper** — *Modular Verification Outperforms Chain-of-Thought Reasoning in Small Financial LLMs: A Systematic Ablation Study on Numerical Hallucination Reduction*
+| | |
+|---|---|
+| **Paper** | *Modular Verification Outperforms Chain-of-Thought Reasoning in Small Financial LLMs: A Systematic Ablation Study on Numerical Hallucination Reduction* |
+| **Submitted to** | FinNLP @ EMNLP 2026 / IEEE Access |
+| **Author** | Aaditya Thokal, Universal College of Engineering, Mumbai — [aaditya.thokal24@gmail.com](mailto:aaditya.thokal24@gmail.com) |
+| **Model** | [aadi2026/finverify-lora](https://huggingface.co/aadi2026/finverify-lora) — Mistral-7B + QLoRA, trained on 2,000 FinQA examples |
+| **Dataset** | [FinQA](https://finqasite.github.io/) dev set (n=873); FinVerifyBench isolates formatting-level errors from reasoning errors |
 
-**Submitted to** — FinNLP @ EMNLP 2026 / IEEE Access
-
-**Author** — Aaditya Thokal, Universal College of Engineering, Mumbai — [aaditya.thokal24@gmail.com](mailto:aaditya.thokal24@gmail.com)
-
-**Model** — [aadi2026/finverify-lora](https://huggingface.co/aadi2026/finverify-lora), Mistral-7B + QLoRA, trained on 2,000 FinQA examples
-
-**Dataset** — evaluated on the [FinQA](https://finqasite.github.io/) dev set (n=873). FinVerifyBench, a synthetic diagnostic benchmark, isolates formatting-level errors from reasoning errors.
+---
 
 ## Roadmap
 
-Tracked through GitHub Milestones.
+Tracked through GitHub Milestones — here's where things stand, and where help is most useful.
+
+<table>
+<tr><td valign="top">
 
 **Core Infrastructure**
 - ✅ FastAPI backend, WebSocket market stream
 - ✅ CI pipelines for backend and SDK
-- 🔧 API stability and documentation for ingestion routes
+- 🔧 API stability & docs for ingestion routes
+
+</td><td valign="top">
 
 **Verification Engine**
-- ✅ DVL (scale / sign / magnitude), Financial Constraint Graph, Trust Engine
+- ✅ DVL, Financial Constraint Graph, Trust Engine
 - 🔧 Consolidating the DVL
-- 📋 Additional verification methods beyond scale/sign/magnitude
+- 📋 Verification methods beyond scale/sign/magnitude
+
+</td></tr>
+<tr><td valign="top">
 
 **Browser Extension**
-- ✅ Core, monorepo restructure, Provider Adapter architecture
-- 🔧 Playwright end-to-end coverage against chat-UI fixtures
+- ✅ Core, monorepo restructure, Provider Adapters
+- 🔧 Playwright E2E against chat-UI fixtures
 - 📋 Additional Provider Adapters
 
-**Developer Experience**
+</td><td valign="top">
+
+**Developer Experience & Research**
 - ✅ Standalone SDK, Terminal UI
-- 🔧 Expanding automated test coverage across the backend
+- 🔧 Expanding backend test coverage
+- 📋 Broader model evaluation, deployment tooling
 
-**Future Research**
-- 📋 Broader model evaluation
-- 📋 Improved deployment tooling
+</td></tr>
+</table>
 
-✅ Completed · 🔧 In progress · 📋 Planned
+`✅ Completed` `🔧 In progress` `📋 Planned`
+
+---
 
 ## Contributing
 
-Start with [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, workflow, and coding standards, and read the [Code of Conduct](./CODE_OF_CONDUCT.md).
+FinVerify is a young project with a lot of open surface area — there's a meaningful way to contribute regardless of your background.
+
+Start with [CONTRIBUTING.md](./CONTRIBUTING.md) for setup and workflow, and [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) for community guidelines.
 
 | Label | Good for |
 |---|---|
@@ -368,26 +445,32 @@ Start with [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, workflow, and coding 
 | `extension` | Chrome Extension, Provider Adapters, Playwright E2E |
 | `documentation` | Endpoint docs, guides, screenshots |
 
+> First open-source contribution? `good first issue` is the place to start.
+
+---
+
 ## Community
 
 | | |
 |---|---|
-| Website | [Live Demo](#) |
-| Discussions | [GitHub Discussions](https://github.com/aadityat23/finverify-llm/discussions) — design questions, feedback, "is this worth doing" conversations |
-| Issues | [GitHub Issues](https://github.com/aadityat23/finverify-llm/issues) — bugs and tracked work |
-| Contributing guide | [CONTRIBUTING.md](./CONTRIBUTING.md) |
-| Contributors | [CONTRIBUTORS.md](CONTRIBUTORS.md) |
+| 🌐 Website | [Live Demo](#) |
+| 💬 Discussions | [GitHub Discussions](https://github.com/aadityat23/finverify-llm/discussions) — design questions, feedback, "is this worth doing" conversations |
+| 🐛 Issues | [GitHub Issues](https://github.com/aadityat23/finverify-llm/issues) — bugs and tracked work |
+| 📄 Contributing guide | [CONTRIBUTING.md](./CONTRIBUTING.md) |
+| 👥 Contributors | [CONTRIBUTORS.md](CONTRIBUTORS.md) |
 
-FinVerify was created and is currently maintained by [Aaditya Thokal](mailto:aaditya.thokal24@gmail.com), Universal College of Engineering, Mumbai.
-
-## License
-
-Apache License 2.0. See [LICENSE](./LICENSE).
+FinVerify was created and is maintained by [Aaditya Thokal](mailto:aaditya.thokal24@gmail.com), Universal College of Engineering, Mumbai.
 
 ---
 
+## License
+
+Apache License 2.0 — see [LICENSE](./LICENSE).
+
+<br />
+
 <div align="center">
 
-If FinVerify is useful to you, consider starring the repository.
+**If FinVerify is useful to you, consider starring the repository. ⭐**
 
 </div>
