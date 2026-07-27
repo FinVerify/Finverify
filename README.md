@@ -6,7 +6,7 @@
 
 FinVerify catches scale, sign, and magnitude errors in AI-generated numbers and corrects them with a deterministic, auditable rule engine — in the browser, in your backend, and in your terminal.
 
-[Live Demo](#) · [Docs](finverify-terminal/README.md) · [Paper](#) · [Model on HF](https://huggingface.co/aadi2026/finverify-lora) · [Discussions](https://github.com/aadityat23/finverify-llm/discussions)
+[Live Demo](https://finverify-llm.vercel.app/) · [Docs](finverify-terminal/README.md) · [Paper](#) · [Model on HF](https://huggingface.co/spaces/aadi2026/finverify-api/tree/main) · [Discussions](https://github.com/aadityat23/finverify-llm/discussions)
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](finverify-terminal/backend/requirements.txt)
