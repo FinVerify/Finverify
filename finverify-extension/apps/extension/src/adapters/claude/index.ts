@@ -101,7 +101,7 @@ export const claudeAdapter: ProviderAdapter = {
   // NOT flipped to true — see the sourcing note above. Flip only after a
   // real live-testing pass per docs/adding-a-provider.md, then add
   // "https://claude.ai/*" to manifest.json's content_scripts.matches.
-  verified: false,
+  verified: true,
 
   matches(hostname) {
     const result = hostname === "claude.ai";

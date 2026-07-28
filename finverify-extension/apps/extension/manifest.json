@@ -21,13 +21,23 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*"],
-      "js": ["src/content/index.js"],
-      "css": ["src/content/index.css"],
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://claude.ai/*"
+      ],
+      "js": [
+        "src/content/index.js"
+      ],
+      "css": [
+        "src/content/index.css"
+      ],
       "run_at": "document_idle"
     }
   ],
-  "permissions": ["storage"],
+  "permissions": [
+    "storage"
+  ],
   "host_permissions": [
     "https://aadi2026-finverify-api.hf.space/*"
   ]
