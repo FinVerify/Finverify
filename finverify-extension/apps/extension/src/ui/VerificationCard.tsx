@@ -196,6 +196,15 @@ export function VerificationCard({ claims }: Props) {
   const flaggedForReview = verifiedClaims.filter(
     (c) => c.result?.trust_score === "LOW" || isMaterialCorrection(c)
   );
+  /* Claims flagged for review purely because the verifier couldn't
+   * corroborate them (trust_score === "LOW") *without* a material
+   * correction being involved — e.g. no matching evidence tier, so the
+   * value reads back as "matched" the model's own number exactly, but
+   * that "match" was never checked against anything external. Without
+   * this, a response can show a low overall confidence percentage while
+   * the analyst-summary paragraph says nothing about why — see the
+   * comment at the summary's trailing sentence below. */
+  const lowConfidenceUncorrected = flaggedForReview.filter((c) => !isMaterialCorrection(c)).length;
   const hardErrorClaims = claims.filter((c) => c.status === "error");
   const METRIC_PREVIEW_COUNT = 6;
   const visibleMetrics = showAllMetrics ? verifiedClaims : verifiedClaims.slice(0, METRIC_PREVIEW_COUNT);
@@ -310,11 +319,21 @@ export function VerificationCard({ claims }: Props) {
                     </>
                   )}
                   {summary.offline > 0 && <>Some values are offline estimates pending a live backend. </>}
+                  {/* Every branch below must produce text. The old version fell
+                   * through to "" whenever claims were flagged for review purely
+                   * for low trust with no material correction (e.g. no
+                   * corroborating evidence tier available) — that's exactly the
+                   * case where the confidence meter reads LOW while this
+                   * paragraph, left silent, implied everything was fine. */}
                   {flaggedForReview.length === 0 && summary.unavailable === 0
                     ? "No material discrepancies detected."
-                    : materialCorrections.length > 0
-                      ? `${materialCorrections.length} value${materialCorrections.length === 1 ? "" : "s"} differed materially from what was reported.`
-                      : ""}
+                    : materialCorrections.length > 0 && lowConfidenceUncorrected > 0
+                      ? `${materialCorrections.length} value${materialCorrections.length === 1 ? "" : "s"} differed materially from what was reported, and ${lowConfidenceUncorrected} more matched the reported figure but could not be corroborated against verified evidence.`
+                      : materialCorrections.length > 0
+                        ? `${materialCorrections.length} value${materialCorrections.length === 1 ? "" : "s"} differed materially from what was reported.`
+                        : lowConfidenceUncorrected > 0
+                          ? `${lowConfidenceUncorrected} value${lowConfidenceUncorrected === 1 ? "" : "s"} matched the reported figure exactly but couldn't be corroborated against verified evidence — that's why confidence is lower than the match count alone suggests.`
+                          : "No material discrepancies detected among the claims that could be checked."}
                 </>
               )}
             </p>
