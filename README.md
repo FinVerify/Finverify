@@ -522,7 +522,7 @@ Start with [CONTRIBUTING.md](./CONTRIBUTING.md) for setup and workflow, and [COD
 | 📄 Contributing guide | [CONTRIBUTING.md](./CONTRIBUTING.md) |
 | 👥 Contributors | [CONTRIBUTORS.md](CONTRIBUTORS.md) |
 
-FinVerify was created and is maintained by [Aaditya Thokal](mailto:aaditya.thokal24@gmail.com), Universal College of Engineering, Mumbai.
+FinVerify was created and is maintained by [Aaditya Thokal](mailto:aaditya.thokal24@gmail.com), University of Mumbai/ IITM.
 
 ---
 
