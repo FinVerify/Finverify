@@ -1,0 +1,1368 @@
+[
+  {
+    "id": "fvb_000426",
+    "domain": "finance",
+    "question": "What is the net change in cash from all activities?",
+    "context": "Cash Flow Statement (in millions)\nOperating Activities: $2,340.0\nInvesting Activities: $(1,890.0)\nFinancing Activities: $(780.0)\n(Negative values denote outflows)",
+    "ground_truth": -330,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000427",
+    "domain": "finance",
+    "question": "What is the net change in cash from all activities?",
+    "context": "Cash Flow Statement (in millions)\nOperating Activities: $4,100.0\nInvesting Activities: $(2,800.0)\nFinancing Activities: $(1,200.0)\n(Negative values denote outflows)",
+    "ground_truth": 100,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000428",
+    "domain": "finance",
+    "question": "What is the net change in cash from all activities?",
+    "context": "Cash Flow Statement (in millions)\nOperating Activities: $1,800.0\nInvesting Activities: $(3,200.0)\nFinancing Activities: $(600.0)\n(Negative values denote outflows)",
+    "ground_truth": -2000,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000429",
+    "domain": "finance",
+    "question": "What is the net change in cash from all activities?",
+    "context": "Cash Flow Statement (in millions)\nOperating Activities: $3,600.0\nInvesting Activities: $(1,500.0)\nFinancing Activities: $(900.0)\n(Negative values denote outflows)",
+    "ground_truth": 1200,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000430",
+    "domain": "finance",
+    "question": "What is the net change in cash from all activities?",
+    "context": "Cash Flow Statement (in millions)\nOperating Activities: $5,200.0\nInvesting Activities: $(4,100.0)\nFinancing Activities: $(2,000.0)\n(Negative values denote outflows)",
+    "ground_truth": -900,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000431",
+    "domain": "finance",
+    "question": "What is the net change in cash from all activities?",
+    "context": "Cash Flow Statement (in millions)\nOperating Activities: $2,800.0\nInvesting Activities: $(2,100.0)\nFinancing Activities: $(800.0)\n(Negative values denote outflows)",
+    "ground_truth": -100,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000432",
+    "domain": "finance",
+    "question": "What is the net change in cash from all activities?",
+    "context": "Cash Flow Statement (in millions)\nOperating Activities: $7,400.0\nInvesting Activities: $(3,800.0)\nFinancing Activities: $(1,600.0)\n(Negative values denote outflows)",
+    "ground_truth": 2000,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000433",
+    "domain": "finance",
+    "question": "What is the net change in cash from all activities?",
+    "context": "Cash Flow Statement (in millions)\nOperating Activities: $1,400.0\nInvesting Activities: $(2,600.0)\nFinancing Activities: $(500.0)\n(Negative values denote outflows)",
+    "ground_truth": -1700,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000434",
+    "domain": "finance",
+    "question": "What is the net change in cash from all activities?",
+    "context": "Cash Flow Statement (in millions)\nOperating Activities: $4,800.0\nInvesting Activities: $(2,400.0)\nFinancing Activities: $(1,100.0)\n(Negative values denote outflows)",
+    "ground_truth": 1300,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000435",
+    "domain": "finance",
+    "question": "What is the net change in cash from all activities?",
+    "context": "Cash Flow Statement (in millions)\nOperating Activities: $3,200.0\nInvesting Activities: $(5,100.0)\nFinancing Activities: $(900.0)\n(Negative values denote outflows)",
+    "ground_truth": -2800,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000436",
+    "domain": "finance",
+    "question": "What is the book value per share?",
+    "context": "Balance Sheet Data\nTotal Shareholders' Equity (in millions): $24,600.0\nShares Outstanding (in millions): 480.0",
+    "ground_truth": 51.25,
+    "unit": "usd",
+    "error_category": [
+      "ratio_error",
+      "magnitude_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "unit_conversion"
+    ],
+    "source_type": "balance_sheet",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000437",
+    "domain": "finance",
+    "question": "What is the book value per share?",
+    "context": "Balance Sheet Data\nTotal Shareholders' Equity (in millions): $15,800.0\nShares Outstanding (in millions): 320.0",
+    "ground_truth": 49.38,
+    "unit": "usd",
+    "error_category": [
+      "ratio_error",
+      "magnitude_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "unit_conversion"
+    ],
+    "source_type": "balance_sheet",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000438",
+    "domain": "finance",
+    "question": "What is the book value per share?",
+    "context": "Balance Sheet Data\nTotal Shareholders' Equity (in millions): $38,400.0\nShares Outstanding (in millions): 640.0",
+    "ground_truth": 60.0,
+    "unit": "usd",
+    "error_category": [
+      "ratio_error",
+      "magnitude_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "unit_conversion"
+    ],
+    "source_type": "balance_sheet",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000439",
+    "domain": "finance",
+    "question": "What is the book value per share?",
+    "context": "Balance Sheet Data\nTotal Shareholders' Equity (in millions): $9,200.0\nShares Outstanding (in millions): 200.0",
+    "ground_truth": 46.0,
+    "unit": "usd",
+    "error_category": [
+      "ratio_error",
+      "magnitude_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "unit_conversion"
+    ],
+    "source_type": "balance_sheet",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000440",
+    "domain": "finance",
+    "question": "What is the book value per share?",
+    "context": "Balance Sheet Data\nTotal Shareholders' Equity (in millions): $52,000.0\nShares Outstanding (in millions): 800.0",
+    "ground_truth": 65.0,
+    "unit": "usd",
+    "error_category": [
+      "ratio_error",
+      "magnitude_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "unit_conversion"
+    ],
+    "source_type": "balance_sheet",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000441",
+    "domain": "finance",
+    "question": "What is the book value per share?",
+    "context": "Balance Sheet Data\nTotal Shareholders' Equity (in millions): $21,000.0\nShares Outstanding (in millions): 420.0",
+    "ground_truth": 50.0,
+    "unit": "usd",
+    "error_category": [
+      "ratio_error",
+      "magnitude_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "unit_conversion"
+    ],
+    "source_type": "balance_sheet",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000442",
+    "domain": "finance",
+    "question": "What is the book value per share?",
+    "context": "Balance Sheet Data\nTotal Shareholders' Equity (in millions): $12,400.0\nShares Outstanding (in millions): 280.0",
+    "ground_truth": 44.29,
+    "unit": "usd",
+    "error_category": [
+      "ratio_error",
+      "magnitude_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "unit_conversion"
+    ],
+    "source_type": "balance_sheet",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000443",
+    "domain": "finance",
+    "question": "What is the book value per share?",
+    "context": "Balance Sheet Data\nTotal Shareholders' Equity (in millions): $34,800.0\nShares Outstanding (in millions): 600.0",
+    "ground_truth": 58.0,
+    "unit": "usd",
+    "error_category": [
+      "ratio_error",
+      "magnitude_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "unit_conversion"
+    ],
+    "source_type": "balance_sheet",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000444",
+    "domain": "finance",
+    "question": "What is the book value per share?",
+    "context": "Balance Sheet Data\nTotal Shareholders' Equity (in millions): $18,600.0\nShares Outstanding (in millions): 360.0",
+    "ground_truth": 51.67,
+    "unit": "usd",
+    "error_category": [
+      "ratio_error",
+      "magnitude_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "unit_conversion"
+    ],
+    "source_type": "balance_sheet",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000445",
+    "domain": "finance",
+    "question": "What is the book value per share?",
+    "context": "Balance Sheet Data\nTotal Shareholders' Equity (in millions): $46,000.0\nShares Outstanding (in millions): 720.0",
+    "ground_truth": 63.89,
+    "unit": "usd",
+    "error_category": [
+      "ratio_error",
+      "magnitude_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "unit_conversion"
+    ],
+    "source_type": "balance_sheet",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000446",
+    "domain": "finance",
+    "question": "What is the effective tax rate for the period?",
+    "context": "Income Statement (in millions)\nIncome Before Tax: $6,200.0\nIncome Tax Expense: $1,426.0",
+    "ground_truth": 23.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000447",
+    "domain": "finance",
+    "question": "What is the effective tax rate for the period?",
+    "context": "Income Statement (in millions)\nIncome Before Tax: $3,800.0\nIncome Tax Expense: $874.0",
+    "ground_truth": 23.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000448",
+    "domain": "finance",
+    "question": "What is the effective tax rate for the period?",
+    "context": "Income Statement (in millions)\nIncome Before Tax: $9,400.0\nIncome Tax Expense: $2,162.0",
+    "ground_truth": 23.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000449",
+    "domain": "finance",
+    "question": "What is the effective tax rate for the period?",
+    "context": "Income Statement (in millions)\nIncome Before Tax: $2,100.0\nIncome Tax Expense: $483.0",
+    "ground_truth": 23.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000450",
+    "domain": "finance",
+    "question": "What is the effective tax rate for the period?",
+    "context": "Income Statement (in millions)\nIncome Before Tax: $12,800.0\nIncome Tax Expense: $2,944.0",
+    "ground_truth": 23.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000451",
+    "domain": "finance",
+    "question": "What is the effective tax rate for the period?",
+    "context": "Income Statement (in millions)\nIncome Before Tax: $4,600.0\nIncome Tax Expense: $1,058.0",
+    "ground_truth": 23.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000452",
+    "domain": "finance",
+    "question": "What is the effective tax rate for the period?",
+    "context": "Income Statement (in millions)\nIncome Before Tax: $1,800.0\nIncome Tax Expense: $414.0",
+    "ground_truth": 23.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000453",
+    "domain": "finance",
+    "question": "What is the effective tax rate for the period?",
+    "context": "Income Statement (in millions)\nIncome Before Tax: $7,600.0\nIncome Tax Expense: $1,748.0",
+    "ground_truth": 23.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000454",
+    "domain": "finance",
+    "question": "What is the effective tax rate for the period?",
+    "context": "Income Statement (in millions)\nIncome Before Tax: $3,200.0\nIncome Tax Expense: $736.0",
+    "ground_truth": 23.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000455",
+    "domain": "finance",
+    "question": "What is the effective tax rate for the period?",
+    "context": "Income Statement (in millions)\nIncome Before Tax: $11,000.0\nIncome Tax Expense: $2,530.0",
+    "ground_truth": 23.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000456",
+    "domain": "finance",
+    "question": "What was the percentage change in earnings per share (EPS) from 2021 to 2022?",
+    "context": "EPS Data\n2021 EPS: $4.32\n2022 EPS: $3.87",
+    "ground_truth": -10.42,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "earnings_release",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000457",
+    "domain": "finance",
+    "question": "What was the percentage change in earnings per share (EPS) from 2022 to 2023?",
+    "context": "EPS Data\n2022 EPS: $2.80\n2023 EPS: $3.45",
+    "ground_truth": 23.21,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "earnings_release",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000458",
+    "domain": "finance",
+    "question": "What was the percentage change in earnings per share (EPS) from 2022 to 2023?",
+    "context": "EPS Data\n2022 EPS: $6.10\n2023 EPS: $5.42",
+    "ground_truth": -11.15,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "earnings_release",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000459",
+    "domain": "finance",
+    "question": "What was the percentage change in earnings per share (EPS) from 2021 to 2022?",
+    "context": "EPS Data\n2021 EPS: $1.90\n2022 EPS: $2.34",
+    "ground_truth": 23.16,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "earnings_release",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000460",
+    "domain": "finance",
+    "question": "What was the percentage change in earnings per share (EPS) from 2022 to 2023?",
+    "context": "EPS Data\n2022 EPS: $8.20\n2023 EPS: $7.61",
+    "ground_truth": -7.2,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "earnings_release",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000461",
+    "domain": "finance",
+    "question": "What was the percentage change in earnings per share (EPS) from 2022 to 2023?",
+    "context": "EPS Data\n2022 EPS: $3.40\n2023 EPS: $4.08",
+    "ground_truth": 20.0,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "earnings_release",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000462",
+    "domain": "finance",
+    "question": "What was the percentage change in earnings per share (EPS) from 2021 to 2022?",
+    "context": "EPS Data\n2021 EPS: $5.60\n2022 EPS: $4.90",
+    "ground_truth": -12.5,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "earnings_release",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000463",
+    "domain": "finance",
+    "question": "What was the percentage change in earnings per share (EPS) from 2022 to 2023?",
+    "context": "EPS Data\n2022 EPS: $2.10\n2023 EPS: $2.73",
+    "ground_truth": 30.0,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "earnings_release",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000464",
+    "domain": "finance",
+    "question": "What was the percentage change in earnings per share (EPS) from 2022 to 2023?",
+    "context": "EPS Data\n2022 EPS: $7.80\n2023 EPS: $6.89",
+    "ground_truth": -11.67,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "earnings_release",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000465",
+    "domain": "finance",
+    "question": "What was the percentage change in earnings per share (EPS) from 2022 to 2023?",
+    "context": "EPS Data\n2022 EPS: $4.00\n2023 EPS: $4.64",
+    "ground_truth": 16.0,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "earnings_release",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000466",
+    "domain": "finance",
+    "question": "What is the total revenue across all business segments?",
+    "context": "Segment Revenue (in billions)\nCloud Services: $12.4\nEnterprise Software: $8.9\nConsumer Products: $5.2",
+    "ground_truth": 26.5,
+    "unit": "billion_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000467",
+    "domain": "finance",
+    "question": "What is the total revenue across all business segments?",
+    "context": "Segment Revenue (in billions)\nNorth America: $18.2\nEurope: $9.4\nAsia Pacific: $7.8\nOther: $2.1",
+    "ground_truth": 37.5,
+    "unit": "billion_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000468",
+    "domain": "finance",
+    "question": "What is the total revenue across all business segments?",
+    "context": "Segment Revenue (in billions)\nHardware: $34.2\nSoftware: $28.6\nServices: $15.8",
+    "ground_truth": 78.6,
+    "unit": "billion_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000469",
+    "domain": "finance",
+    "question": "What is the total revenue across all business segments?",
+    "context": "Segment Revenue (in billions)\nFinancial Services: $8.4\nHealthcare: $6.2\nTechnology: $11.3\nEnergy: $3.8",
+    "ground_truth": 29.7,
+    "unit": "billion_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000470",
+    "domain": "finance",
+    "question": "What is the total revenue across all business segments?",
+    "context": "Segment Revenue (in billions)\nRetail: $22.1\nWholesale: $14.6\nDirect: $9.3",
+    "ground_truth": 46.0,
+    "unit": "billion_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000471",
+    "domain": "finance",
+    "question": "What is the total revenue across all business segments?",
+    "context": "Segment Revenue (in billions)\nDomestic: $41.2\nInternational: $28.7",
+    "ground_truth": 69.9,
+    "unit": "billion_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000472",
+    "domain": "finance",
+    "question": "What is the total revenue across all business segments?",
+    "context": "Segment Revenue (in billions)\nProduct A: $5.8\nProduct B: $7.2\nProduct C: $4.1\nProduct D: $3.3",
+    "ground_truth": 20.4,
+    "unit": "billion_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000473",
+    "domain": "finance",
+    "question": "What is the total revenue across all business segments?",
+    "context": "Segment Revenue (in billions)\nUpstream: $18.9\nMidstream: $12.4\nDownstream: $8.7",
+    "ground_truth": 40.0,
+    "unit": "billion_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000474",
+    "domain": "finance",
+    "question": "What is the total revenue across all business segments?",
+    "context": "Segment Revenue (in billions)\nConsumer: $31.4\nEnterprise: $24.8\nGovernment: $9.2",
+    "ground_truth": 65.4,
+    "unit": "billion_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000475",
+    "domain": "finance",
+    "question": "What is the total revenue across all business segments?",
+    "context": "Segment Revenue (in billions)\nSubscription: $14.6\nTransaction: $8.9\nLicensing: $6.3\nOther: $2.8",
+    "ground_truth": 32.6,
+    "unit": "billion_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000476",
+    "domain": "finance",
+    "question": "What is the total Capital Expenditure over the 3-year period from 2021 to 2023?",
+    "context": "Capital Expenditure (in millions)\n2021: $1,240.0\n2022: $1,560.0\n2023: $1,890.0",
+    "ground_truth": 4690,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000477",
+    "domain": "finance",
+    "question": "What is the total R&D Expense over the 3-year period from 2021 to 2023?",
+    "context": "R&D Expense (in millions)\n2021: $2,100.0\n2022: $2,450.0\n2023: $2,890.0",
+    "ground_truth": 7440,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000478",
+    "domain": "finance",
+    "question": "What is the total Free Cash Flow over the 4-year period from 2020 to 2023?",
+    "context": "Free Cash Flow (in millions)\n2020: $1,800.0\n2021: $2,400.0\n2022: $3,200.0\n2023: $2,750.0",
+    "ground_truth": 10150,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000479",
+    "domain": "finance",
+    "question": "What is the total Dividends Paid over the 4-year period from 2020 to 2023?",
+    "context": "Dividends Paid (in millions)\n2020: $900.0\n2021: $1,000.0\n2022: $1,100.0\n2023: $1,200.0",
+    "ground_truth": 4200,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000480",
+    "domain": "finance",
+    "question": "What is the total Share Repurchases over the 3-year period from 2021 to 2023?",
+    "context": "Share Repurchases (in millions)\n2021: $2,400.0\n2022: $3,200.0\n2023: $2,800.0",
+    "ground_truth": 8400,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000481",
+    "domain": "finance",
+    "question": "What is the total Capital Expenditure over the 5-year period from 2019 to 2023?",
+    "context": "Capital Expenditure (in millions)\n2019: $800.0\n2020: $900.0\n2021: $1,100.0\n2022: $1,400.0\n2023: $1,800.0",
+    "ground_truth": 6000,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000482",
+    "domain": "finance",
+    "question": "What is the total Depreciation over the 3-year period from 2021 to 2023?",
+    "context": "Depreciation (in millions)\n2021: $1,400.0\n2022: $1,600.0\n2023: $1,800.0",
+    "ground_truth": 4800,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000483",
+    "domain": "finance",
+    "question": "What is the total Interest Payments over the 3-year period from 2021 to 2023?",
+    "context": "Interest Payments (in millions)\n2021: $780.0\n2022: $820.0\n2023: $860.0",
+    "ground_truth": 2460,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000484",
+    "domain": "finance",
+    "question": "What is the total Tax Payments over the 4-year period from 2020 to 2023?",
+    "context": "Tax Payments (in millions)\n2020: $1,200.0\n2021: $1,400.0\n2022: $1,600.0\n2023: $1,800.0",
+    "ground_truth": 6000,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000485",
+    "domain": "finance",
+    "question": "What is the total Stock Compensation over the 3-year period from 2021 to 2023?",
+    "context": "Stock Compensation (in millions)\n2021: $1,200.0\n2022: $1,500.0\n2023: $1,800.0",
+    "ground_truth": 4500,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "sec_10k",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000486",
+    "domain": "finance",
+    "question": "What is the exact percentage increase in revenue from 2017 to 2018?",
+    "context": "Revenue Data (in millions)\n2017: $8,452.0\n2018: $9,124.0",
+    "ground_truth": 7.95,
+    "unit": "percent",
+    "error_category": [
+      "rounding_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000487",
+    "domain": "finance",
+    "question": "What is the exact percentage increase in revenue from 2021 to 2022?",
+    "context": "Revenue Data (in millions)\n2021: $31,200.0\n2022: $34,800.0",
+    "ground_truth": 11.54,
+    "unit": "percent",
+    "error_category": [
+      "rounding_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000488",
+    "domain": "finance",
+    "question": "What is the exact percentage increase in revenue from 2022 to 2023?",
+    "context": "Revenue Data (in millions)\n2022: $48,900.0\n2023: $52,400.0",
+    "ground_truth": 7.16,
+    "unit": "percent",
+    "error_category": [
+      "rounding_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000489",
+    "domain": "finance",
+    "question": "What is the exact percentage increase in revenue from 2021 to 2022?",
+    "context": "Revenue Data (in millions)\n2021: $12,800.0\n2022: $14,200.0",
+    "ground_truth": 10.94,
+    "unit": "percent",
+    "error_category": [
+      "rounding_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000490",
+    "domain": "finance",
+    "question": "What is the exact percentage increase in revenue from 2022 to 2023?",
+    "context": "Revenue Data (in millions)\n2022: $78,400.0\n2023: $84,100.0",
+    "ground_truth": 7.27,
+    "unit": "percent",
+    "error_category": [
+      "rounding_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000491",
+    "domain": "finance",
+    "question": "What is the exact percentage increase in revenue from 2021 to 2022?",
+    "context": "Revenue Data (in millions)\n2021: $24,600.0\n2022: $27,300.0",
+    "ground_truth": 10.98,
+    "unit": "percent",
+    "error_category": [
+      "rounding_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000492",
+    "domain": "finance",
+    "question": "What is the exact percentage increase in revenue from 2022 to 2023?",
+    "context": "Revenue Data (in millions)\n2022: $56,200.0\n2023: $61,400.0",
+    "ground_truth": 9.25,
+    "unit": "percent",
+    "error_category": [
+      "rounding_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000493",
+    "domain": "finance",
+    "question": "What is the exact percentage increase in revenue from 2021 to 2022?",
+    "context": "Revenue Data (in millions)\n2021: $19,800.0\n2022: $22,100.0",
+    "ground_truth": 11.62,
+    "unit": "percent",
+    "error_category": [
+      "rounding_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000494",
+    "domain": "finance",
+    "question": "What is the exact percentage increase in revenue from 2022 to 2023?",
+    "context": "Revenue Data (in millions)\n2022: $92,000.0\n2023: $98,600.0",
+    "ground_truth": 7.17,
+    "unit": "percent",
+    "error_category": [
+      "rounding_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000495",
+    "domain": "finance",
+    "question": "What is the exact percentage increase in revenue from 2021 to 2022?",
+    "context": "Revenue Data (in millions)\n2021: $35,400.0\n2022: $38,900.0",
+    "ground_truth": 9.89,
+    "unit": "percent",
+    "error_category": [
+      "rounding_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000496",
+    "domain": "finance",
+    "question": "What was the operating income reported for fiscal year 2021?",
+    "context": "Income Statement (in millions)\n2020 Operating Income: $3,240\n2021 Operating Income: $4,180\n2022 Operating Income: $3,920\n2023 Operating Income: $5,100",
+    "ground_truth": 4180.0,
+    "unit": "million_usd",
+    "error_category": [
+      "context_confusion"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000497",
+    "domain": "finance",
+    "question": "What was the operating income reported for fiscal year 2021?",
+    "context": "Income Statement (in millions)\n2020 Operating Income: $3,240\n2021 Operating Income: $4,180\n2022 Operating Income: $3,920\n2023 Operating Income: $5,100",
+    "ground_truth": 4180.0,
+    "unit": "million_usd",
+    "error_category": [
+      "context_confusion"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000498",
+    "domain": "finance",
+    "question": "What was the operating income reported for fiscal year 2021?",
+    "context": "Income Statement (in millions)\n2020 Operating Income: $3,240\n2021 Operating Income: $4,180\n2022 Operating Income: $3,920\n2023 Operating Income: $5,100",
+    "ground_truth": 4180.0,
+    "unit": "million_usd",
+    "error_category": [
+      "context_confusion"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000499",
+    "domain": "finance",
+    "question": "What was the operating income reported for fiscal year 2021?",
+    "context": "Income Statement (in millions)\n2020 Operating Income: $3,240\n2021 Operating Income: $4,180\n2022 Operating Income: $3,920\n2023 Operating Income: $5,100",
+    "ground_truth": 4180.0,
+    "unit": "million_usd",
+    "error_category": [
+      "context_confusion"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  },
+  {
+    "id": "fvb_000500",
+    "domain": "finance",
+    "question": "What was the operating income reported for fiscal year 2021?",
+    "context": "Income Statement (in millions)\n2020 Operating Income: $3,240\n2021 Operating Income: $4,180\n2022 Operating Income: $3,920\n2023 Operating Income: $5,100",
+    "ground_truth": 4180.0,
+    "unit": "million_usd",
+    "error_category": [
+      "context_confusion"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "test"
+  }
+]

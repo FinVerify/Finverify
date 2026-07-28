@@ -1,0 +1,1402 @@
+[
+  {
+    "id": "fvb_000001",
+    "prediction": 27.73
+  },
+  {
+    "id": "fvb_000002",
+    "prediction": 33.35
+  },
+  {
+    "id": "fvb_000003",
+    "prediction": 29.06
+  },
+  {
+    "id": "fvb_000004",
+    "prediction": 35.66
+  },
+  {
+    "id": "fvb_000005",
+    "prediction": 34.13
+  },
+  {
+    "id": "fvb_000006",
+    "prediction": 31.36
+  },
+  {
+    "id": "fvb_000007",
+    "prediction": 29.57
+  },
+  {
+    "id": "fvb_000008",
+    "prediction": 31.34
+  },
+  {
+    "id": "fvb_000009",
+    "prediction": 32.29
+  },
+  {
+    "id": "fvb_000010",
+    "prediction": 29.67
+  },
+  {
+    "id": "fvb_000011",
+    "prediction": 29.44
+  },
+  {
+    "id": "fvb_000012",
+    "prediction": 33.38
+  },
+  {
+    "id": "fvb_000013",
+    "prediction": 31.33
+  },
+  {
+    "id": "fvb_000014",
+    "prediction": 36.56
+  },
+  {
+    "id": "fvb_000015",
+    "prediction": 32.49
+  },
+  {
+    "id": "fvb_000016",
+    "prediction": 29.7
+  },
+  {
+    "id": "fvb_000017",
+    "prediction": 35.48
+  },
+  {
+    "id": "fvb_000018",
+    "prediction": 30.72
+  },
+  {
+    "id": "fvb_000019",
+    "prediction": 28.73
+  },
+  {
+    "id": "fvb_000020",
+    "prediction": 31.28
+  },
+  {
+    "id": "fvb_000021",
+    "prediction": 33.66
+  },
+  {
+    "id": "fvb_000022",
+    "prediction": 31.63
+  },
+  {
+    "id": "fvb_000023",
+    "prediction": 31.19
+  },
+  {
+    "id": "fvb_000024",
+    "prediction": 29.7
+  },
+  {
+    "id": "fvb_000025",
+    "prediction": 31.99
+  },
+  {
+    "id": "fvb_000026",
+    "prediction": 31.41
+  },
+  {
+    "id": "fvb_000027",
+    "prediction": 33.75
+  },
+  {
+    "id": "fvb_000028",
+    "prediction": 33.31
+  },
+  {
+    "id": "fvb_000029",
+    "prediction": 30.78
+  },
+  {
+    "id": "fvb_000030",
+    "prediction": 30.44
+  },
+  {
+    "id": "fvb_000031",
+    "prediction": 31.91
+  },
+  {
+    "id": "fvb_000032",
+    "prediction": 30.84
+  },
+  {
+    "id": "fvb_000033",
+    "prediction": 32.41
+  },
+  {
+    "id": "fvb_000034",
+    "prediction": 33.32
+  },
+  {
+    "id": "fvb_000035",
+    "prediction": 29.5
+  },
+  {
+    "id": "fvb_000036",
+    "prediction": 34.21
+  },
+  {
+    "id": "fvb_000037",
+    "prediction": 33.1
+  },
+  {
+    "id": "fvb_000038",
+    "prediction": 31.83
+  },
+  {
+    "id": "fvb_000039",
+    "prediction": 30.93
+  },
+  {
+    "id": "fvb_000040",
+    "prediction": 32.51
+  },
+  {
+    "id": "fvb_000041",
+    "prediction": 8.27
+  },
+  {
+    "id": "fvb_000042",
+    "prediction": 9.23
+  },
+  {
+    "id": "fvb_000043",
+    "prediction": 8.99
+  },
+  {
+    "id": "fvb_000044",
+    "prediction": 9.34
+  },
+  {
+    "id": "fvb_000045",
+    "prediction": 8.1
+  },
+  {
+    "id": "fvb_000046",
+    "prediction": 8.45
+  },
+  {
+    "id": "fvb_000047",
+    "prediction": 8.65
+  },
+  {
+    "id": "fvb_000048",
+    "prediction": 9.37
+  },
+  {
+    "id": "fvb_000049",
+    "prediction": 8.48
+  },
+  {
+    "id": "fvb_000050",
+    "prediction": 8.62
+  },
+  {
+    "id": "fvb_000051",
+    "prediction": 9.21
+  },
+  {
+    "id": "fvb_000052",
+    "prediction": 9.27
+  },
+  {
+    "id": "fvb_000053",
+    "prediction": 9.2
+  },
+  {
+    "id": "fvb_000054",
+    "prediction": 8.71
+  },
+  {
+    "id": "fvb_000055",
+    "prediction": 9.33
+  },
+  {
+    "id": "fvb_000056",
+    "prediction": 9.64
+  },
+  {
+    "id": "fvb_000057",
+    "prediction": 8.2
+  },
+  {
+    "id": "fvb_000058",
+    "prediction": 8.45
+  },
+  {
+    "id": "fvb_000059",
+    "prediction": 8.71
+  },
+  {
+    "id": "fvb_000060",
+    "prediction": 9.1
+  },
+  {
+    "id": "fvb_000061",
+    "prediction": 9.18
+  },
+  {
+    "id": "fvb_000062",
+    "prediction": 9.39
+  },
+  {
+    "id": "fvb_000063",
+    "prediction": 9.0
+  },
+  {
+    "id": "fvb_000064",
+    "prediction": 9.83
+  },
+  {
+    "id": "fvb_000065",
+    "prediction": 8.04
+  },
+  {
+    "id": "fvb_000066",
+    "prediction": 7.77
+  },
+  {
+    "id": "fvb_000067",
+    "prediction": 7.71
+  },
+  {
+    "id": "fvb_000068",
+    "prediction": 7.8
+  },
+  {
+    "id": "fvb_000069",
+    "prediction": 7.72
+  },
+  {
+    "id": "fvb_000070",
+    "prediction": 8.43
+  },
+  {
+    "id": "fvb_000071",
+    "prediction": 7.47
+  },
+  {
+    "id": "fvb_000072",
+    "prediction": 7.57
+  },
+  {
+    "id": "fvb_000073",
+    "prediction": 7.49
+  },
+  {
+    "id": "fvb_000074",
+    "prediction": 7.94
+  },
+  {
+    "id": "fvb_000075",
+    "prediction": 7.76
+  },
+  {
+    "id": "fvb_000076",
+    "prediction": 6.94
+  },
+  {
+    "id": "fvb_000077",
+    "prediction": 7.31
+  },
+  {
+    "id": "fvb_000078",
+    "prediction": 7.78
+  },
+  {
+    "id": "fvb_000079",
+    "prediction": 7.4
+  },
+  {
+    "id": "fvb_000080",
+    "prediction": 8.04
+  },
+  {
+    "id": "fvb_000081",
+    "prediction": 7.79
+  },
+  {
+    "id": "fvb_000082",
+    "prediction": 6.99
+  },
+  {
+    "id": "fvb_000083",
+    "prediction": 7.47
+  },
+  {
+    "id": "fvb_000084",
+    "prediction": 7.0
+  },
+  {
+    "id": "fvb_000085",
+    "prediction": 7.56
+  },
+  {
+    "id": "fvb_000086",
+    "prediction": -248.88
+  },
+  {
+    "id": "fvb_000087",
+    "prediction": 3817.81
+  },
+  {
+    "id": "fvb_000088",
+    "prediction": -1728.48
+  },
+  {
+    "id": "fvb_000089",
+    "prediction": -1319.45
+  },
+  {
+    "id": "fvb_000090",
+    "prediction": -438.55
+  },
+  {
+    "id": "fvb_000091",
+    "prediction": -695.57
+  },
+  {
+    "id": "fvb_000092",
+    "prediction": -994.24
+  },
+  {
+    "id": "fvb_000093",
+    "prediction": 1506.7
+  },
+  {
+    "id": "fvb_000094",
+    "prediction": 3890.76
+  },
+  {
+    "id": "fvb_000095",
+    "prediction": -493.12
+  },
+  {
+    "id": "fvb_000096",
+    "prediction": 570.65
+  },
+  {
+    "id": "fvb_000097",
+    "prediction": 512.15
+  },
+  {
+    "id": "fvb_000098",
+    "prediction": -658.46
+  },
+  {
+    "id": "fvb_000099",
+    "prediction": -609.28
+  },
+  {
+    "id": "fvb_000100",
+    "prediction": -445.08
+  },
+  {
+    "id": "fvb_000101",
+    "prediction": 7057.85
+  },
+  {
+    "id": "fvb_000102",
+    "prediction": -3540.55
+  },
+  {
+    "id": "fvb_000103",
+    "prediction": -565.26
+  },
+  {
+    "id": "fvb_000104",
+    "prediction": 2599.06
+  },
+  {
+    "id": "fvb_000105",
+    "prediction": 290.36
+  },
+  {
+    "id": "fvb_000106",
+    "prediction": -273.18
+  },
+  {
+    "id": "fvb_000107",
+    "prediction": -318.99
+  },
+  {
+    "id": "fvb_000108",
+    "prediction": -410.13
+  },
+  {
+    "id": "fvb_000109",
+    "prediction": 886.02
+  },
+  {
+    "id": "fvb_000110",
+    "prediction": 199.27
+  },
+  {
+    "id": "fvb_000111",
+    "prediction": -1497.94
+  },
+  {
+    "id": "fvb_000112",
+    "prediction": 710.12
+  },
+  {
+    "id": "fvb_000113",
+    "prediction": -63.26
+  },
+  {
+    "id": "fvb_000114",
+    "prediction": -467.16
+  },
+  {
+    "id": "fvb_000115",
+    "prediction": -134.55
+  },
+  {
+    "id": "fvb_000116",
+    "prediction": 434.04
+  },
+  {
+    "id": "fvb_000117",
+    "prediction": 168.64
+  },
+  {
+    "id": "fvb_000118",
+    "prediction": -1162.96
+  },
+  {
+    "id": "fvb_000119",
+    "prediction": 3027.27
+  },
+  {
+    "id": "fvb_000120",
+    "prediction": -149.09
+  },
+  {
+    "id": "fvb_000121",
+    "prediction": -281.5
+  },
+  {
+    "id": "fvb_000122",
+    "prediction": -3091.25
+  },
+  {
+    "id": "fvb_000123",
+    "prediction": 1209.69
+  },
+  {
+    "id": "fvb_000124",
+    "prediction": -616.01
+  },
+  {
+    "id": "fvb_000125",
+    "prediction": -0.5
+  },
+  {
+    "id": "fvb_000126",
+    "prediction": 15.68370372496824
+  },
+  {
+    "id": "fvb_000127",
+    "prediction": -10.548821134671451
+  },
+  {
+    "id": "fvb_000128",
+    "prediction": -6.363095364495386
+  },
+  {
+    "id": "fvb_000129",
+    "prediction": 14.37592717430228
+  },
+  {
+    "id": "fvb_000130",
+    "prediction": 13.757879231095366
+  },
+  {
+    "id": "fvb_000131",
+    "prediction": 17.28848046290494
+  },
+  {
+    "id": "fvb_000132",
+    "prediction": -14.354731338214712
+  },
+  {
+    "id": "fvb_000133",
+    "prediction": -9.883789470260508
+  },
+  {
+    "id": "fvb_000134",
+    "prediction": -19.295563585471825
+  },
+  {
+    "id": "fvb_000135",
+    "prediction": -12.363648512227739
+  },
+  {
+    "id": "fvb_000136",
+    "prediction": 6.3434146990168045
+  },
+  {
+    "id": "fvb_000137",
+    "prediction": -9.093044273748514
+  },
+  {
+    "id": "fvb_000138",
+    "prediction": -8.547741337254665
+  },
+  {
+    "id": "fvb_000139",
+    "prediction": 13.698874919640925
+  },
+  {
+    "id": "fvb_000140",
+    "prediction": -20.91121166931692
+  },
+  {
+    "id": "fvb_000141",
+    "prediction": 16.85144868148731
+  },
+  {
+    "id": "fvb_000142",
+    "prediction": 46.158490549622044
+  },
+  {
+    "id": "fvb_000143",
+    "prediction": 21.178103090272817
+  },
+  {
+    "id": "fvb_000144",
+    "prediction": -11.744639882332692
+  },
+  {
+    "id": "fvb_000145",
+    "prediction": 10.241297098032026
+  },
+  {
+    "id": "fvb_000146",
+    "prediction": 11.581563226121919
+  },
+  {
+    "id": "fvb_000147",
+    "prediction": -10.779766569290954
+  },
+  {
+    "id": "fvb_000148",
+    "prediction": -16.882051349786217
+  },
+  {
+    "id": "fvb_000149",
+    "prediction": 17.191256261367208
+  },
+  {
+    "id": "fvb_000150",
+    "prediction": -8.220731252493092
+  },
+  {
+    "id": "fvb_000151",
+    "prediction": 22.09912662756807
+  },
+  {
+    "id": "fvb_000152",
+    "prediction": -8.279426105290126
+  },
+  {
+    "id": "fvb_000153",
+    "prediction": 12.394245476599261
+  },
+  {
+    "id": "fvb_000154",
+    "prediction": 21.323912227206915
+  },
+  {
+    "id": "fvb_000155",
+    "prediction": 6.240334693919737
+  },
+  {
+    "id": "fvb_000156",
+    "prediction": -5.824551247035156
+  },
+  {
+    "id": "fvb_000157",
+    "prediction": -16.081802546030605
+  },
+  {
+    "id": "fvb_000158",
+    "prediction": 16.64547406498318
+  },
+  {
+    "id": "fvb_000159",
+    "prediction": -17.96144901930493
+  },
+  {
+    "id": "fvb_000160",
+    "prediction": -14.996679169544977
+  },
+  {
+    "id": "fvb_000161",
+    "prediction": 13.02
+  },
+  {
+    "id": "fvb_000162",
+    "prediction": 14.0
+  },
+  {
+    "id": "fvb_000163",
+    "prediction": 11.83
+  },
+  {
+    "id": "fvb_000164",
+    "prediction": 11.99
+  },
+  {
+    "id": "fvb_000165",
+    "prediction": 13.04
+  },
+  {
+    "id": "fvb_000166",
+    "prediction": 11.32
+  },
+  {
+    "id": "fvb_000167",
+    "prediction": 12.97
+  },
+  {
+    "id": "fvb_000168",
+    "prediction": 12.3
+  },
+  {
+    "id": "fvb_000169",
+    "prediction": 12.19
+  },
+  {
+    "id": "fvb_000170",
+    "prediction": 12.65
+  },
+  {
+    "id": "fvb_000171",
+    "prediction": 12.38
+  },
+  {
+    "id": "fvb_000172",
+    "prediction": 12.13
+  },
+  {
+    "id": "fvb_000173",
+    "prediction": 12.58
+  },
+  {
+    "id": "fvb_000174",
+    "prediction": 12.35
+  },
+  {
+    "id": "fvb_000175",
+    "prediction": 12.44
+  },
+  {
+    "id": "fvb_000176",
+    "prediction": 12.47
+  },
+  {
+    "id": "fvb_000177",
+    "prediction": 13.24
+  },
+  {
+    "id": "fvb_000178",
+    "prediction": 12.67
+  },
+  {
+    "id": "fvb_000179",
+    "prediction": 13.04
+  },
+  {
+    "id": "fvb_000180",
+    "prediction": 11.88
+  },
+  {
+    "id": "fvb_000181",
+    "prediction": 6.11
+  },
+  {
+    "id": "fvb_000182",
+    "prediction": 6.01
+  },
+  {
+    "id": "fvb_000183",
+    "prediction": 6.82
+  },
+  {
+    "id": "fvb_000184",
+    "prediction": 6.74
+  },
+  {
+    "id": "fvb_000185",
+    "prediction": 6.09
+  },
+  {
+    "id": "fvb_000186",
+    "prediction": 6.7
+  },
+  {
+    "id": "fvb_000187",
+    "prediction": 6.52
+  },
+  {
+    "id": "fvb_000188",
+    "prediction": 6.65
+  },
+  {
+    "id": "fvb_000189",
+    "prediction": 6.07
+  },
+  {
+    "id": "fvb_000190",
+    "prediction": 6.81
+  },
+  {
+    "id": "fvb_000191",
+    "prediction": 5.97
+  },
+  {
+    "id": "fvb_000192",
+    "prediction": 6.49
+  },
+  {
+    "id": "fvb_000193",
+    "prediction": 7.2
+  },
+  {
+    "id": "fvb_000194",
+    "prediction": 6.62
+  },
+  {
+    "id": "fvb_000195",
+    "prediction": 6.45
+  },
+  {
+    "id": "fvb_000196",
+    "prediction": 1.49
+  },
+  {
+    "id": "fvb_000197",
+    "prediction": 1.52
+  },
+  {
+    "id": "fvb_000198",
+    "prediction": 1.55
+  },
+  {
+    "id": "fvb_000199",
+    "prediction": 1.24
+  },
+  {
+    "id": "fvb_000200",
+    "prediction": 1.65
+  },
+  {
+    "id": "fvb_000201",
+    "prediction": 1.37
+  },
+  {
+    "id": "fvb_000202",
+    "prediction": 1.23
+  },
+  {
+    "id": "fvb_000203",
+    "prediction": 1.55
+  },
+  {
+    "id": "fvb_000204",
+    "prediction": 1.36
+  },
+  {
+    "id": "fvb_000205",
+    "prediction": 1.69
+  },
+  {
+    "id": "fvb_000206",
+    "prediction": 1.49
+  },
+  {
+    "id": "fvb_000207",
+    "prediction": 1.08
+  },
+  {
+    "id": "fvb_000208",
+    "prediction": 1.58
+  },
+  {
+    "id": "fvb_000209",
+    "prediction": 1.41
+  },
+  {
+    "id": "fvb_000210",
+    "prediction": 1.64
+  },
+  {
+    "id": "fvb_000211",
+    "prediction": 0.4
+  },
+  {
+    "id": "fvb_000212",
+    "prediction": 0.23
+  },
+  {
+    "id": "fvb_000213",
+    "prediction": 0.42
+  },
+  {
+    "id": "fvb_000214",
+    "prediction": 0.17
+  },
+  {
+    "id": "fvb_000215",
+    "prediction": 0.44
+  },
+  {
+    "id": "fvb_000216",
+    "prediction": 0.35
+  },
+  {
+    "id": "fvb_000217",
+    "prediction": 0.34
+  },
+  {
+    "id": "fvb_000218",
+    "prediction": 0.42
+  },
+  {
+    "id": "fvb_000219",
+    "prediction": 0.37
+  },
+  {
+    "id": "fvb_000220",
+    "prediction": 0.45
+  },
+  {
+    "id": "fvb_000221",
+    "prediction": 0.35
+  },
+  {
+    "id": "fvb_000222",
+    "prediction": 0.25
+  },
+  {
+    "id": "fvb_000223",
+    "prediction": 0.42
+  },
+  {
+    "id": "fvb_000224",
+    "prediction": 0.32
+  },
+  {
+    "id": "fvb_000225",
+    "prediction": 0.4
+  },
+  {
+    "id": "fvb_000226",
+    "prediction": 6.62
+  },
+  {
+    "id": "fvb_000227",
+    "prediction": 4.76
+  },
+  {
+    "id": "fvb_000228",
+    "prediction": 7.59
+  },
+  {
+    "id": "fvb_000229",
+    "prediction": 3.84
+  },
+  {
+    "id": "fvb_000230",
+    "prediction": 7.43
+  },
+  {
+    "id": "fvb_000231",
+    "prediction": 4.96
+  },
+  {
+    "id": "fvb_000232",
+    "prediction": 3.66
+  },
+  {
+    "id": "fvb_000233",
+    "prediction": 8.46
+  },
+  {
+    "id": "fvb_000234",
+    "prediction": 5.33
+  },
+  {
+    "id": "fvb_000235",
+    "prediction": 6.72
+  },
+  {
+    "id": "fvb_000236",
+    "prediction": 15.15
+  },
+  {
+    "id": "fvb_000237",
+    "prediction": 16.36
+  },
+  {
+    "id": "fvb_000238",
+    "prediction": 16.67
+  },
+  {
+    "id": "fvb_000239",
+    "prediction": 13.16
+  },
+  {
+    "id": "fvb_000240",
+    "prediction": 18.25
+  },
+  {
+    "id": "fvb_000241",
+    "prediction": 14.9
+  },
+  {
+    "id": "fvb_000242",
+    "prediction": 15.01
+  },
+  {
+    "id": "fvb_000243",
+    "prediction": 15.81
+  },
+  {
+    "id": "fvb_000244",
+    "prediction": 14.1
+  },
+  {
+    "id": "fvb_000245",
+    "prediction": 17.17
+  },
+  {
+    "id": "fvb_000246",
+    "prediction": 14.43
+  },
+  {
+    "id": "fvb_000247",
+    "prediction": 15.34
+  },
+  {
+    "id": "fvb_000248",
+    "prediction": 14.23
+  },
+  {
+    "id": "fvb_000249",
+    "prediction": 16.45
+  },
+  {
+    "id": "fvb_000250",
+    "prediction": 17.05
+  },
+  {
+    "id": "fvb_000251",
+    "prediction": 14.148956606462738
+  },
+  {
+    "id": "fvb_000252",
+    "prediction": 23.892182859249743
+  },
+  {
+    "id": "fvb_000253",
+    "prediction": 16.238014204208916
+  },
+  {
+    "id": "fvb_000254",
+    "prediction": 23.437032890798758
+  },
+  {
+    "id": "fvb_000255",
+    "prediction": 11.39727249528857
+  },
+  {
+    "id": "fvb_000256",
+    "prediction": 16.79745977280501
+  },
+  {
+    "id": "fvb_000257",
+    "prediction": 15.170855515365908
+  },
+  {
+    "id": "fvb_000258",
+    "prediction": 15.114282668564368
+  },
+  {
+    "id": "fvb_000259",
+    "prediction": 26.326627243282964
+  },
+  {
+    "id": "fvb_000260",
+    "prediction": 16.87056891331527
+  },
+  {
+    "id": "fvb_000261",
+    "prediction": 19.121361394629414
+  },
+  {
+    "id": "fvb_000262",
+    "prediction": 19.588357494995723
+  },
+  {
+    "id": "fvb_000263",
+    "prediction": 15.361212634564161
+  },
+  {
+    "id": "fvb_000264",
+    "prediction": 19.909357703636854
+  },
+  {
+    "id": "fvb_000265",
+    "prediction": 11.379526050687364
+  },
+  {
+    "id": "fvb_000266",
+    "prediction": 13.356871605052264
+  },
+  {
+    "id": "fvb_000267",
+    "prediction": 16.98492025794769
+  },
+  {
+    "id": "fvb_000268",
+    "prediction": 11.643976960459351
+  },
+  {
+    "id": "fvb_000269",
+    "prediction": 12.344585073242738
+  },
+  {
+    "id": "fvb_000270",
+    "prediction": 14.870157955133982
+  },
+  {
+    "id": "fvb_000271",
+    "prediction": 48.27
+  },
+  {
+    "id": "fvb_000272",
+    "prediction": 16.83
+  },
+  {
+    "id": "fvb_000273",
+    "prediction": 87.41
+  },
+  {
+    "id": "fvb_000274",
+    "prediction": 32.97
+  },
+  {
+    "id": "fvb_000275",
+    "prediction": 13.37
+  },
+  {
+    "id": "fvb_000276",
+    "prediction": 30.71
+  },
+  {
+    "id": "fvb_000277",
+    "prediction": 10.29
+  },
+  {
+    "id": "fvb_000278",
+    "prediction": 4.28
+  },
+  {
+    "id": "fvb_000279",
+    "prediction": 6.58
+  },
+  {
+    "id": "fvb_000280",
+    "prediction": 8.7
+  },
+  {
+    "id": "fvb_000281",
+    "prediction": 56.2
+  },
+  {
+    "id": "fvb_000282",
+    "prediction": 13.61
+  },
+  {
+    "id": "fvb_000283",
+    "prediction": 39.29
+  },
+  {
+    "id": "fvb_000284",
+    "prediction": 19.36
+  },
+  {
+    "id": "fvb_000285",
+    "prediction": 7.94
+  },
+  {
+    "id": "fvb_000286",
+    "prediction": 485280252.34
+  },
+  {
+    "id": "fvb_000287",
+    "prediction": 241781341.96
+  },
+  {
+    "id": "fvb_000288",
+    "prediction": 130727749.74
+  },
+  {
+    "id": "fvb_000289",
+    "prediction": 46406765.19
+  },
+  {
+    "id": "fvb_000290",
+    "prediction": 85984076.59
+  },
+  {
+    "id": "fvb_000291",
+    "prediction": 173046261.84
+  },
+  {
+    "id": "fvb_000292",
+    "prediction": 813652285.62
+  },
+  {
+    "id": "fvb_000293",
+    "prediction": 324131407.23
+  },
+  {
+    "id": "fvb_000294",
+    "prediction": 518427328.89
+  },
+  {
+    "id": "fvb_000295",
+    "prediction": 70192020.26
+  },
+  {
+    "id": "fvb_000296",
+    "prediction": 35.26
+  },
+  {
+    "id": "fvb_000297",
+    "prediction": 29.47
+  },
+  {
+    "id": "fvb_000298",
+    "prediction": 14.17
+  },
+  {
+    "id": "fvb_000299",
+    "prediction": 9.53
+  },
+  {
+    "id": "fvb_000300",
+    "prediction": 7.58
+  },
+  {
+    "id": "fvb_000301",
+    "prediction": 15115.84
+  },
+  {
+    "id": "fvb_000302",
+    "prediction": 11240.97
+  },
+  {
+    "id": "fvb_000303",
+    "prediction": 1805.14
+  },
+  {
+    "id": "fvb_000304",
+    "prediction": 4800.16
+  },
+  {
+    "id": "fvb_000305",
+    "prediction": 3208.81
+  },
+  {
+    "id": "fvb_000306",
+    "prediction": 17990.36
+  },
+  {
+    "id": "fvb_000307",
+    "prediction": 7432.21
+  },
+  {
+    "id": "fvb_000308",
+    "prediction": 3269.18
+  },
+  {
+    "id": "fvb_000309",
+    "prediction": 3733.12
+  },
+  {
+    "id": "fvb_000310",
+    "prediction": 476.74
+  },
+  {
+    "id": "fvb_000311",
+    "prediction": 1306.57
+  },
+  {
+    "id": "fvb_000312",
+    "prediction": 2618.39
+  },
+  {
+    "id": "fvb_000313",
+    "prediction": 4076.69
+  },
+  {
+    "id": "fvb_000314",
+    "prediction": 3210.02
+  },
+  {
+    "id": "fvb_000315",
+    "prediction": 1019.0
+  },
+  {
+    "id": "fvb_000316",
+    "prediction": 508.59
+  },
+  {
+    "id": "fvb_000317",
+    "prediction": 1170.67
+  },
+  {
+    "id": "fvb_000318",
+    "prediction": 759.51
+  },
+  {
+    "id": "fvb_000319",
+    "prediction": 3323.65
+  },
+  {
+    "id": "fvb_000320",
+    "prediction": 1920.57
+  },
+  {
+    "id": "fvb_000321",
+    "prediction": 1516.89
+  },
+  {
+    "id": "fvb_000322",
+    "prediction": 934.12
+  },
+  {
+    "id": "fvb_000323",
+    "prediction": 2070.69
+  },
+  {
+    "id": "fvb_000324",
+    "prediction": 3661.61
+  },
+  {
+    "id": "fvb_000325",
+    "prediction": 1196.37
+  },
+  {
+    "id": "fvb_000326",
+    "prediction": 8407.33
+  },
+  {
+    "id": "fvb_000327",
+    "prediction": 2154.34
+  },
+  {
+    "id": "fvb_000328",
+    "prediction": 2275.96
+  },
+  {
+    "id": "fvb_000329",
+    "prediction": 517.21
+  },
+  {
+    "id": "fvb_000330",
+    "prediction": 205.84
+  },
+  {
+    "id": "fvb_000331",
+    "prediction": -170.1
+  },
+  {
+    "id": "fvb_000332",
+    "prediction": -137.74
+  },
+  {
+    "id": "fvb_000333",
+    "prediction": -462.23
+  },
+  {
+    "id": "fvb_000334",
+    "prediction": -221.64
+  },
+  {
+    "id": "fvb_000335",
+    "prediction": -370.68
+  },
+  {
+    "id": "fvb_000336",
+    "prediction": -193.95
+  },
+  {
+    "id": "fvb_000337",
+    "prediction": -79.34
+  },
+  {
+    "id": "fvb_000338",
+    "prediction": -110.02
+  },
+  {
+    "id": "fvb_000339",
+    "prediction": -263.31
+  },
+  {
+    "id": "fvb_000340",
+    "prediction": -345.51
+  },
+  {
+    "id": "fvb_000341",
+    "prediction": -465.39
+  },
+  {
+    "id": "fvb_000342",
+    "prediction": -198.52
+  },
+  {
+    "id": "fvb_000343",
+    "prediction": -530.81
+  },
+  {
+    "id": "fvb_000344",
+    "prediction": -87.3
+  },
+  {
+    "id": "fvb_000345",
+    "prediction": -318.37
+  },
+  {
+    "id": "fvb_000346",
+    "prediction": -1.19
+  },
+  {
+    "id": "fvb_000347",
+    "prediction": -6.93
+  },
+  {
+    "id": "fvb_000348",
+    "prediction": -26.03
+  },
+  {
+    "id": "fvb_000349",
+    "prediction": -862.07
+  },
+  {
+    "id": "fvb_000350",
+    "prediction": -146.2
+  }
+]

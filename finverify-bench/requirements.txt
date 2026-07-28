@@ -1,0 +1,29 @@
+# FinVerifyBench — requirements
+# Core benchmark (no ML framework needed)
+# Python 3.8+
+
+# Zero hard runtime dependencies — benchmark/evaluator is pure stdlib
+
+# Optional: for export_huggingface.py and statistics reporting
+# (these are only needed if you run the scripts, not to import benchmark/)
+
+# Dataset utilities (optional)
+# datasets>=2.14.0          # for push_to_hub()
+
+# Development / testing
+pytest>=7.0.0
+
+# For running baseline models (optional)
+# torch>=2.0.0
+# transformers>=4.40.0
+# peft>=0.10.0
+# bitsandbytes>=0.42.0
+# accelerate>=0.27.0
+# faiss-cpu>=1.7.4          # for RAG baseline
+# sentence-transformers>=2.2.2  # for RAG baseline
+
+# For notebooks (optional)
+# jupyter>=1.0.0
+# matplotlib>=3.7.0
+# seaborn>=0.12.0
+# pandas>=2.0.0

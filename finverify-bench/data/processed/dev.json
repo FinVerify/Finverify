@@ -1,0 +1,1343 @@
+[
+  {
+    "id": "fvb_000351",
+    "domain": "finance",
+    "question": "What was the Warranty reserve increase (net) reported for the period?",
+    "context": "Financial Statement (in millions)\nWarranty reserve increase (net): $(210.0)",
+    "ground_truth": -210.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000352",
+    "domain": "finance",
+    "question": "What was the Environmental remediation charge reported for the period?",
+    "context": "Financial Statement (in millions)\nEnvironmental remediation charge: $(175.0)",
+    "ground_truth": -175.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000353",
+    "domain": "finance",
+    "question": "What was the Legal settlement charge reported for the period?",
+    "context": "Financial Statement (in millions)\nLegal settlement charge: $(320.0)",
+    "ground_truth": -320.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000354",
+    "domain": "finance",
+    "question": "What was the Inventory write-down reported for the period?",
+    "context": "Financial Statement (in millions)\nInventory write-down: $(145.0)",
+    "ground_truth": -145.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000355",
+    "domain": "finance",
+    "question": "What was the Accounts receivable write-off reported for the period?",
+    "context": "Financial Statement (in millions)\nAccounts receivable write-off: $(67.0)",
+    "ground_truth": -67.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000356",
+    "domain": "finance",
+    "question": "What was the Asset retirement obligation reported for the period?",
+    "context": "Financial Statement (in millions)\nAsset retirement obligation: $(230.0)",
+    "ground_truth": -230.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000357",
+    "domain": "finance",
+    "question": "What was the Realized loss on debt extinguishment reported for the period?",
+    "context": "Financial Statement (in millions)\nRealized loss on debt extinguishment: $(142.0)",
+    "ground_truth": -142.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000358",
+    "domain": "finance",
+    "question": "What was the Net loss on asset disposal reported for the period?",
+    "context": "Financial Statement (in millions)\nNet loss on asset disposal: $(98.0)",
+    "ground_truth": -98.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000359",
+    "domain": "finance",
+    "question": "What was the Deferred revenue decrease reported for the period?",
+    "context": "Financial Statement (in millions)\nDeferred revenue decrease: $(180.0)",
+    "ground_truth": -180.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000360",
+    "domain": "finance",
+    "question": "What was the Cumulative translation adjustment reported for the period?",
+    "context": "Financial Statement (in millions)\nCumulative translation adjustment: $(312.0)",
+    "ground_truth": -312.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000361",
+    "domain": "finance",
+    "question": "What was the Minority interest loss reported for the period?",
+    "context": "Financial Statement (in millions)\nMinority interest loss: $(56.0)",
+    "ground_truth": -56.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000362",
+    "domain": "finance",
+    "question": "What was the Software impairment reported for the period?",
+    "context": "Financial Statement (in millions)\nSoftware impairment: $(234.0)",
+    "ground_truth": -234.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000363",
+    "domain": "finance",
+    "question": "What was the Goodwill write-down (partial) reported for the period?",
+    "context": "Financial Statement (in millions)\nGoodwill write-down (partial): $(780.0)",
+    "ground_truth": -780.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000364",
+    "domain": "finance",
+    "question": "What was the Net actuarial loss (pensions) reported for the period?",
+    "context": "Financial Statement (in millions)\nNet actuarial loss (pensions): $(198.0)",
+    "ground_truth": -198.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000365",
+    "domain": "finance",
+    "question": "What was the Loss on equity investments reported for the period?",
+    "context": "Financial Statement (in millions)\nLoss on equity investments: $(89.0)",
+    "ground_truth": -89.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000366",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $34,500.0\nEBIT: $5,175.0\nDepreciation & Amortization: $1,380.0\nEBITDA: $6,555.0",
+    "ground_truth": 19.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000367",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $78,900.0\nEBIT: $11,046.0\nDepreciation & Amortization: $2,367.0\nEBITDA: $13,413.0",
+    "ground_truth": 17.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000368",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $22,100.0\nEBIT: $3,094.0\nDepreciation & Amortization: $884.0\nEBITDA: $3,978.0",
+    "ground_truth": 18.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000369",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $95,000.0\nEBIT: $14,250.0\nDepreciation & Amortization: $3,800.0\nEBITDA: $18,050.0",
+    "ground_truth": 19.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000370",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $41,200.0\nEBIT: $5,768.0\nDepreciation & Amortization: $1,648.0\nEBITDA: $7,416.0",
+    "ground_truth": 18.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000371",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $67,800.0\nEBIT: $9,762.0\nDepreciation & Amortization: $2,712.0\nEBITDA: $12,474.0",
+    "ground_truth": 18.4,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000372",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $18,900.0\nEBIT: $2,646.0\nDepreciation & Amortization: $945.0\nEBITDA: $3,591.0",
+    "ground_truth": 19.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000373",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $112,000.0\nEBIT: $15,680.0\nDepreciation & Amortization: $4,480.0\nEBITDA: $20,160.0",
+    "ground_truth": 18.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000374",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $38,500.0\nEBIT: $5,390.0\nDepreciation & Amortization: $1,540.0\nEBITDA: $6,930.0",
+    "ground_truth": 18.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000375",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $58,000.0\nEBIT: $8,120.0\nDepreciation & Amortization: $2,320.0\nEBITDA: $10,440.0",
+    "ground_truth": 18.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000376",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $24,700.0\nEBIT: $3,458.0\nDepreciation & Amortization: $988.0\nEBITDA: $4,446.0",
+    "ground_truth": 18.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000377",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $89,000.0\nEBIT: $12,460.0\nDepreciation & Amortization: $3,560.0\nEBITDA: $16,020.0",
+    "ground_truth": 18.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000378",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $31,200.0\nEBIT: $4,368.0\nDepreciation & Amortization: $1,248.0\nEBITDA: $5,616.0",
+    "ground_truth": 18.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000379",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $71,500.0\nEBIT: $10,010.0\nDepreciation & Amortization: $2,860.0\nEBITDA: $12,870.0",
+    "ground_truth": 18.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000380",
+    "domain": "finance",
+    "question": "What is the EBITDA margin for the period?",
+    "context": "Income Statement (in millions)\nRevenue: $47,000.0\nEBIT: $6,580.0\nDepreciation & Amortization: $1,880.0\nEBITDA: $8,460.0",
+    "ground_truth": 18.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "margin_calculation",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "income_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000381",
+    "domain": "finance",
+    "question": "What is the quick ratio (acid-test ratio)?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $3,240.0\nShort-term Investments: $1,890.0\nAccounts Receivable: $4,560.0\nCurrent Liabilities: $9,870.0",
+    "ground_truth": 0.982,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "aggregation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000382",
+    "domain": "finance",
+    "question": "What is the quick ratio (acid-test ratio)?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $1,800.0\nShort-term Investments: $900.0\nAccounts Receivable: $2,400.0\nCurrent Liabilities: $5,600.0",
+    "ground_truth": 0.911,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "aggregation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000383",
+    "domain": "finance",
+    "question": "What is the quick ratio (acid-test ratio)?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $4,200.0\nShort-term Investments: $2,100.0\nAccounts Receivable: $5,800.0\nCurrent Liabilities: $12,800.0",
+    "ground_truth": 0.945,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "aggregation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000384",
+    "domain": "finance",
+    "question": "What is the quick ratio (acid-test ratio)?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $900.0\nShort-term Investments: $450.0\nAccounts Receivable: $1,200.0\nCurrent Liabilities: $2,800.0",
+    "ground_truth": 0.911,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "aggregation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000385",
+    "domain": "finance",
+    "question": "What is the quick ratio (acid-test ratio)?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $6,100.0\nShort-term Investments: $3,200.0\nAccounts Receivable: $8,400.0\nCurrent Liabilities: $18,000.0",
+    "ground_truth": 0.983,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "aggregation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000386",
+    "domain": "finance",
+    "question": "What is the quick ratio (acid-test ratio)?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $2,400.0\nShort-term Investments: $1,200.0\nAccounts Receivable: $3,200.0\nCurrent Liabilities: $7,200.0",
+    "ground_truth": 0.944,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "aggregation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000387",
+    "domain": "finance",
+    "question": "What is the quick ratio (acid-test ratio)?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $1,200.0\nShort-term Investments: $600.0\nAccounts Receivable: $1,600.0\nCurrent Liabilities: $3,600.0",
+    "ground_truth": 0.944,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "aggregation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000388",
+    "domain": "finance",
+    "question": "What is the quick ratio (acid-test ratio)?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $5,000.0\nShort-term Investments: $2,500.0\nAccounts Receivable: $6,800.0\nCurrent Liabilities: $14,600.0",
+    "ground_truth": 0.979,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "aggregation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000389",
+    "domain": "finance",
+    "question": "What is the quick ratio (acid-test ratio)?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $3,800.0\nShort-term Investments: $1,900.0\nAccounts Receivable: $5,100.0\nCurrent Liabilities: $11,000.0",
+    "ground_truth": 0.982,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "aggregation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000390",
+    "domain": "finance",
+    "question": "What is the quick ratio (acid-test ratio)?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $7,200.0\nShort-term Investments: $3,600.0\nAccounts Receivable: $9,600.0\nCurrent Liabilities: $20,800.0",
+    "ground_truth": 0.981,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "aggregation_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "ratio_calculation",
+      "aggregation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000391",
+    "domain": "finance",
+    "question": "What is the dividend yield percentage?",
+    "context": "Market Data\nAnnual Dividend Per Share: $3.20\nCurrent Stock Price: $128.50",
+    "ground_truth": 2.49,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000392",
+    "domain": "finance",
+    "question": "What is the dividend yield percentage?",
+    "context": "Market Data\nAnnual Dividend Per Share: $1.80\nCurrent Stock Price: $89.40",
+    "ground_truth": 2.01,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000393",
+    "domain": "finance",
+    "question": "What is the dividend yield percentage?",
+    "context": "Market Data\nAnnual Dividend Per Share: $4.50\nCurrent Stock Price: $178.20",
+    "ground_truth": 2.53,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000394",
+    "domain": "finance",
+    "question": "What is the dividend yield percentage?",
+    "context": "Market Data\nAnnual Dividend Per Share: $0.96\nCurrent Stock Price: $48.00",
+    "ground_truth": 2.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000395",
+    "domain": "finance",
+    "question": "What is the dividend yield percentage?",
+    "context": "Market Data\nAnnual Dividend Per Share: $2.40\nCurrent Stock Price: $120.00",
+    "ground_truth": 2.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000396",
+    "domain": "finance",
+    "question": "What is the dividend yield percentage?",
+    "context": "Market Data\nAnnual Dividend Per Share: $6.00\nCurrent Stock Price: $240.00",
+    "ground_truth": 2.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000397",
+    "domain": "finance",
+    "question": "What is the dividend yield percentage?",
+    "context": "Market Data\nAnnual Dividend Per Share: $1.20\nCurrent Stock Price: $60.00",
+    "ground_truth": 2.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000398",
+    "domain": "finance",
+    "question": "What is the dividend yield percentage?",
+    "context": "Market Data\nAnnual Dividend Per Share: $3.60\nCurrent Stock Price: $144.00",
+    "ground_truth": 2.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000399",
+    "domain": "finance",
+    "question": "What is the dividend yield percentage?",
+    "context": "Market Data\nAnnual Dividend Per Share: $0.80\nCurrent Stock Price: $40.00",
+    "ground_truth": 2.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000400",
+    "domain": "finance",
+    "question": "What is the dividend yield percentage?",
+    "context": "Market Data\nAnnual Dividend Per Share: $5.40\nCurrent Stock Price: $216.00",
+    "ground_truth": 2.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000401",
+    "domain": "finance",
+    "question": "What is the inventory turnover ratio for the period?",
+    "context": "Financial Data (in millions)\nCost of Goods Sold: $23,400.0\nAverage Inventory: $4,680.0",
+    "ground_truth": 5.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000402",
+    "domain": "finance",
+    "question": "What is the inventory turnover ratio for the period?",
+    "context": "Financial Data (in millions)\nCost of Goods Sold: $14,200.0\nAverage Inventory: $2,840.0",
+    "ground_truth": 5.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000403",
+    "domain": "finance",
+    "question": "What is the inventory turnover ratio for the period?",
+    "context": "Financial Data (in millions)\nCost of Goods Sold: $38,900.0\nAverage Inventory: $5,557.0",
+    "ground_truth": 7.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000404",
+    "domain": "finance",
+    "question": "What is the inventory turnover ratio for the period?",
+    "context": "Financial Data (in millions)\nCost of Goods Sold: $9,800.0\nAverage Inventory: $2,450.0",
+    "ground_truth": 4.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000405",
+    "domain": "finance",
+    "question": "What is the inventory turnover ratio for the period?",
+    "context": "Financial Data (in millions)\nCost of Goods Sold: $52,000.0\nAverage Inventory: $6,500.0",
+    "ground_truth": 8.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000406",
+    "domain": "finance",
+    "question": "What is the inventory turnover ratio for the period?",
+    "context": "Financial Data (in millions)\nCost of Goods Sold: $18,600.0\nAverage Inventory: $3,100.0",
+    "ground_truth": 6.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000407",
+    "domain": "finance",
+    "question": "What is the inventory turnover ratio for the period?",
+    "context": "Financial Data (in millions)\nCost of Goods Sold: $7,400.0\nAverage Inventory: $1,850.0",
+    "ground_truth": 4.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000408",
+    "domain": "finance",
+    "question": "What is the inventory turnover ratio for the period?",
+    "context": "Financial Data (in millions)\nCost of Goods Sold: $31,200.0\nAverage Inventory: $5,200.0",
+    "ground_truth": 6.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000409",
+    "domain": "finance",
+    "question": "What is the inventory turnover ratio for the period?",
+    "context": "Financial Data (in millions)\nCost of Goods Sold: $12,800.0\nAverage Inventory: $2,560.0",
+    "ground_truth": 5.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000410",
+    "domain": "finance",
+    "question": "What is the inventory turnover ratio for the period?",
+    "context": "Financial Data (in millions)\nCost of Goods Sold: $45,600.0\nAverage Inventory: $5,700.0",
+    "ground_truth": 8.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000411",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $7,800.0\nCapital Expenditures: $2,400.0",
+    "ground_truth": 5400,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000412",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $4,200.0\nCapital Expenditures: $5,100.0",
+    "ground_truth": -900,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000413",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $12,000.0\nCapital Expenditures: $3,800.0",
+    "ground_truth": 8200,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000414",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $2,900.0\nCapital Expenditures: $3,600.0",
+    "ground_truth": -700,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000415",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $9,400.0\nCapital Expenditures: $2,800.0",
+    "ground_truth": 6600,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000416",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $3,600.0\nCapital Expenditures: $4,200.0",
+    "ground_truth": -600,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000417",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $15,000.0\nCapital Expenditures: $5,000.0",
+    "ground_truth": 10000,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000418",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $5,200.0\nCapital Expenditures: $6,000.0",
+    "ground_truth": -800,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000419",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $11,200.0\nCapital Expenditures: $3,400.0",
+    "ground_truth": 7800,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000420",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $6,800.0\nCapital Expenditures: $2,200.0",
+    "ground_truth": 4600,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000421",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $3,200.0\nCapital Expenditures: $3,900.0",
+    "ground_truth": -700,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000422",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $8,600.0\nCapital Expenditures: $2,600.0",
+    "ground_truth": 6000,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000423",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $4,400.0\nCapital Expenditures: $5,200.0",
+    "ground_truth": -800,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error",
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000424",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $13,000.0\nCapital Expenditures: $4,100.0",
+    "ground_truth": 8900,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  },
+  {
+    "id": "fvb_000425",
+    "domain": "finance",
+    "question": "What is the free cash flow for the period?",
+    "context": "Cash Flow Statement (in millions)\nOperating Cash Flow: $7,200.0\nCapital Expenditures: $2,100.0",
+    "ground_truth": 5100,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "multi_step_arithmetic"
+    ],
+    "source_type": "cash_flow_statement",
+    "split": "dev"
+  }
+]

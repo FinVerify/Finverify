@@ -1,0 +1,57 @@
+{
+  "dataset_name": "finverifybench",
+  "description": "FinVerifyBench: A benchmark for structured numerical hallucinations in financial language models. Motivated by findings that LLM numerical errors are statistically structured (\u03c7\u00b2=41.97, p<0.001) rather than random.",
+  "version": "1.0.0",
+  "license": "cc-by-4.0",
+  "splits": {
+    "train": {
+      "n": 350,
+      "path": "train.json"
+    },
+    "dev": {
+      "n": 75,
+      "path": "dev.json"
+    },
+    "test": {
+      "n": 75,
+      "path": "test.json"
+    }
+  },
+  "features": {
+    "id": {
+      "dtype": "string"
+    },
+    "domain": {
+      "dtype": "string"
+    },
+    "question": {
+      "dtype": "string"
+    },
+    "context": {
+      "dtype": "string"
+    },
+    "ground_truth": {
+      "dtype": "float64"
+    },
+    "unit": {
+      "dtype": "string"
+    },
+    "error_category": {
+      "dtype": "list<string>"
+    },
+    "difficulty": {
+      "dtype": "string"
+    },
+    "reasoning_type": {
+      "dtype": "list<string>"
+    },
+    "source_type": {
+      "dtype": "string"
+    },
+    "split": {
+      "dtype": "string"
+    }
+  },
+  "citation": "@misc{finverifybench2026,\n  title={{FinVerifyBench}: A Benchmark for Structured Numerical Hallucinations in Financial {LLM}s},\n  author={Anonymous},\n  year={2026},\n  url={https://github.com/your-org/finverifybench}\n}",
+  "homepage": "https://github.com/your-org/finverifybench"
+}

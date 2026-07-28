@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finverify-sdk"
+version = "0.9.0"
+description = "Official Python SDK for the FinVerify DVL API — deterministic verification for financial LLM outputs."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "Aaditya Thokal", email = "aaditya.thokal24@gmail.com" },
+]
+keywords = ["llm", "verification", "financial", "nlp", "hallucination", "dvl", "finqa", "sdk"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Office/Business :: Financial",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Typing :: Typed",
+]
+dependencies = [
+    "httpx>=0.24,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "respx>=0.20",
+]
+
+[project.urls]
+Homepage = "https://github.com/aadityat23/finverify-llm"
+Repository = "https://github.com/aadityat23/finverify-llm"
+"Live Demo" = "https://finverify-llm.vercel.app"
+"HuggingFace Model" = "https://huggingface.co/aadi2026/finverify-lora"
+"Bug Tracker" = "https://github.com/aadityat23/finverify-llm/issues"
+
+[tool.setuptools.packages.find]
+include = ["finverify*"]
+
+[tool.setuptools.package-data]
+finverify = ["py.typed"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

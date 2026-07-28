@@ -1,0 +1,6180 @@
+[
+  {
+    "id": "fvb_000001",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $45,230.0\nCost of Revenue: $33,245.0\nGross Profit: $11,985.0",
+    "ground_truth": 26.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000002",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $28,400.0\nCost of Revenue: $19,040.0\nGross Profit: $9,360.0",
+    "ground_truth": 32.96,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000003",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $61,200.0\nCost of Revenue: $42,840.0\nGross Profit: $18,360.0",
+    "ground_truth": 30.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000004",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $18,700.0\nCost of Revenue: $12,342.0\nGross Profit: $6,358.0",
+    "ground_truth": 34.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000005",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $92,400.0\nCost of Revenue: $60,984.0\nGross Profit: $31,416.0",
+    "ground_truth": 34.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000006",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $34,500.0\nCost of Revenue: $22,425.0\nGross Profit: $12,075.0",
+    "ground_truth": 35.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000007",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $78,900.0\nCost of Revenue: $53,532.0\nGross Profit: $25,368.0",
+    "ground_truth": 32.15,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000008",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $24,600.0\nCost of Revenue: $17,220.0\nGross Profit: $7,380.0",
+    "ground_truth": 30.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000009",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $110,000.0\nCost of Revenue: $74,800.0\nGross Profit: $35,200.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000010",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $43,200.0\nCost of Revenue: $29,376.0\nGross Profit: $13,824.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000011",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $55,000.0\nCost of Revenue: $37,400.0\nGross Profit: $17,600.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000012",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $19,800.0\nCost of Revenue: $13,266.0\nGross Profit: $6,534.0",
+    "ground_truth": 33.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000013",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $87,300.0\nCost of Revenue: $58,491.0\nGross Profit: $28,809.0",
+    "ground_truth": 33.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000014",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $31,500.0\nCost of Revenue: $20,790.0\nGross Profit: $10,710.0",
+    "ground_truth": 34.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000015",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $64,800.0\nCost of Revenue: $44,496.0\nGross Profit: $20,304.0",
+    "ground_truth": 31.33,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000016",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $22,400.0\nCost of Revenue: $15,232.0\nGross Profit: $7,168.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000017",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $98,000.0\nCost of Revenue: $65,660.0\nGross Profit: $32,340.0",
+    "ground_truth": 33.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000018",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $41,000.0\nCost of Revenue: $27,880.0\nGross Profit: $13,120.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000019",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $73,500.0\nCost of Revenue: $50,715.0\nGross Profit: $22,785.0",
+    "ground_truth": 31.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000020",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $26,300.0\nCost of Revenue: $18,147.0\nGross Profit: $8,153.0",
+    "ground_truth": 31.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000021",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $115,000.0\nCost of Revenue: $79,350.0\nGross Profit: $35,650.0",
+    "ground_truth": 31.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000022",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $37,800.0\nCost of Revenue: $25,326.0\nGross Profit: $12,474.0",
+    "ground_truth": 33.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000023",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $82,100.0\nCost of Revenue: $55,818.0\nGross Profit: $26,282.0",
+    "ground_truth": 32.01,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000024",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $29,000.0\nCost of Revenue: $19,720.0\nGross Profit: $9,280.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000025",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $105,000.0\nCost of Revenue: $70,350.0\nGross Profit: $34,650.0",
+    "ground_truth": 33.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000026",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $47,600.0\nCost of Revenue: $32,394.0\nGross Profit: $15,206.0",
+    "ground_truth": 31.95,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000027",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $69,000.0\nCost of Revenue: $46,920.0\nGross Profit: $22,080.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000028",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $21,500.0\nCost of Revenue: $14,405.0\nGross Profit: $7,095.0",
+    "ground_truth": 33.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000029",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $93,000.0\nCost of Revenue: $62,310.0\nGross Profit: $30,690.0",
+    "ground_truth": 33.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000030",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $35,400.0\nCost of Revenue: $23,868.0\nGross Profit: $11,532.0",
+    "ground_truth": 32.58,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000031",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $76,500.0\nCost of Revenue: $51,255.0\nGross Profit: $25,245.0",
+    "ground_truth": 33.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000032",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $23,700.0\nCost of Revenue: $15,918.0\nGross Profit: $7,782.0",
+    "ground_truth": 32.84,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000033",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $108,000.0\nCost of Revenue: $72,360.0\nGross Profit: $35,640.0",
+    "ground_truth": 33.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000034",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $42,500.0\nCost of Revenue: $28,900.0\nGross Profit: $13,600.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000035",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $67,200.0\nCost of Revenue: $45,696.0\nGross Profit: $21,504.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000036",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $20,100.0\nCost of Revenue: $13,468.0\nGross Profit: $6,632.0",
+    "ground_truth": 33.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000037",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $96,500.0\nCost of Revenue: $65,140.0\nGross Profit: $31,360.0",
+    "ground_truth": 32.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000038",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $39,100.0\nCost of Revenue: $26,388.0\nGross Profit: $12,712.0",
+    "ground_truth": 32.51,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000039",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $72,000.0\nCost of Revenue: $48,960.0\nGross Profit: $23,040.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000040",
+    "domain": "finance",
+    "question": "What is the gross profit margin percentage?",
+    "context": "Income Statement (million)\nRevenue: $25,100.0\nCost of Revenue: $17,068.0\nGross Profit: $8,032.0",
+    "ground_truth": 32.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000041",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $52,400.0\nOperating Income: $4,460.0",
+    "ground_truth": 8.51,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000042",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $34,200.0\nOperating Income: $3,078.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000043",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $78,600.0\nOperating Income: $7,074.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000044",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $21,300.0\nOperating Income: $1,917.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000045",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $95,000.0\nOperating Income: $8,550.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000046",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $43,800.0\nOperating Income: $3,942.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000047",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $67,000.0\nOperating Income: $6,030.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000048",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $18,900.0\nOperating Income: $1,701.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000049",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $112,000.0\nOperating Income: $10,080.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000050",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $38,500.0\nOperating Income: $3,465.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000051",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $58,000.0\nOperating Income: $5,220.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000052",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $24,700.0\nOperating Income: $2,223.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000053",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $89,000.0\nOperating Income: $8,010.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000054",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $31,200.0\nOperating Income: $2,808.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000055",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $71,500.0\nOperating Income: $6,435.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000056",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $20,800.0\nOperating Income: $1,872.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000057",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $103,000.0\nOperating Income: $9,270.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000058",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $46,200.0\nOperating Income: $4,158.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000059",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $63,500.0\nOperating Income: $5,715.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000060",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $27,400.0\nOperating Income: $2,466.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000061",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $84,000.0\nOperating Income: $7,560.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000062",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $36,700.0\nOperating Income: $3,303.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000063",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $77,000.0\nOperating Income: $6,930.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000064",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $22,600.0\nOperating Income: $2,034.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000065",
+    "domain": "finance",
+    "question": "What is the operating margin percentage for the reported period?",
+    "context": "Income Statement (in millions)\nTotal Revenue: $48,000.0\nOperating Income: $4,320.0",
+    "ground_truth": 9.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error",
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000066",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $89,200.0\nNet Income: $7,136.0",
+    "ground_truth": 8.0,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000067",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $42,000.0\nNet Income: $3,276.0",
+    "ground_truth": 7.8,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000068",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $76,500.0\nNet Income: $5,738.0",
+    "ground_truth": 7.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000069",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $23,400.0\nNet Income: $1,755.0",
+    "ground_truth": 7.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000070",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $98,000.0\nNet Income: $7,546.0",
+    "ground_truth": 7.7,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000071",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $35,000.0\nNet Income: $2,625.0",
+    "ground_truth": 7.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000072",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $61,000.0\nNet Income: $4,575.0",
+    "ground_truth": 7.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000073",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $19,500.0\nNet Income: $1,443.0",
+    "ground_truth": 7.4,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000074",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $115,000.0\nNet Income: $8,855.0",
+    "ground_truth": 7.7,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000075",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $47,000.0\nNet Income: $3,478.0",
+    "ground_truth": 7.4,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000076",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $83,000.0\nNet Income: $6,308.0",
+    "ground_truth": 7.6,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000077",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $28,000.0\nNet Income: $2,128.0",
+    "ground_truth": 7.6,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000078",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $102,000.0\nNet Income: $7,854.0",
+    "ground_truth": 7.7,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000079",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $39,000.0\nNet Income: $2,925.0",
+    "ground_truth": 7.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000080",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $72,000.0\nNet Income: $5,472.0",
+    "ground_truth": 7.6,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000081",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $21,000.0\nNet Income: $1,575.0",
+    "ground_truth": 7.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000082",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $94,000.0\nNet Income: $7,238.0",
+    "ground_truth": 7.7,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000083",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $44,000.0\nNet Income: $3,300.0",
+    "ground_truth": 7.5,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000084",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $68,000.0\nNet Income: $5,168.0",
+    "ground_truth": 7.6,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000085",
+    "domain": "finance",
+    "question": "What is the net profit margin for the period?",
+    "context": "Consolidated P&L (in millions)\nTotal Revenue: $26,000.0\nNet Income: $1,976.0",
+    "ground_truth": 7.6,
+    "unit": "percent",
+    "error_category": [
+      "scale_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "margin_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000086",
+    "domain": "finance",
+    "question": "What was the change in Operating Income from 2021 to 2022?",
+    "context": "Financial Data (in million)\n2021 Operating Income: $4,120.0\n2022 Operating Income: $3,875.0",
+    "ground_truth": -245,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000087",
+    "domain": "finance",
+    "question": "What was the change in Net Revenue from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Net Revenue: $28,000.0\n2023 Net Revenue: $31,500.0",
+    "ground_truth": 3500,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000088",
+    "domain": "finance",
+    "question": "What was the change in Cash & Equivalents from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Cash & Equivalents: $8,420.0\n2023 Cash & Equivalents: $6,780.0",
+    "ground_truth": -1640,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000089",
+    "domain": "finance",
+    "question": "What was the change in Long-term Debt from 2021 to 2022?",
+    "context": "Financial Data (in million)\n2021 Long-term Debt: $14,200.0\n2022 Long-term Debt: $12,900.0",
+    "ground_truth": -1300,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000090",
+    "domain": "finance",
+    "question": "What was the change in Retained Earnings from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Retained Earnings: $12,340.0\n2023 Retained Earnings: $11,890.0",
+    "ground_truth": -450,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000091",
+    "domain": "finance",
+    "question": "What was the change in EBIT from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 EBIT: $5,670.0\n2023 EBIT: $4,980.0",
+    "ground_truth": -690,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000092",
+    "domain": "finance",
+    "question": "What was the change in SG&A Expenses from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 SG&A Expenses: $8,920.0\n2023 SG&A Expenses: $7,840.0",
+    "ground_truth": -1080,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000093",
+    "domain": "finance",
+    "question": "What was the change in Gross Profit from 2021 to 2022?",
+    "context": "Financial Data (in million)\n2021 Gross Profit: $11,200.0\n2022 Gross Profit: $12,800.0",
+    "ground_truth": 1600,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000094",
+    "domain": "finance",
+    "question": "What was the change in Total Assets from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Total Assets: $67,400.0\n2023 Total Assets: $71,200.0",
+    "ground_truth": 3800,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000095",
+    "domain": "finance",
+    "question": "What was the change in Capital Expenditure from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Capital Expenditure: $2,340.0\n2023 Capital Expenditure: $1,890.0",
+    "ground_truth": -450,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000096",
+    "domain": "finance",
+    "question": "What was the change in R&D Expense from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 R&D Expense: $3,100.0\n2023 R&D Expense: $3,640.0",
+    "ground_truth": 540,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000097",
+    "domain": "finance",
+    "question": "What was the change in Inventory from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Inventory: $4,560.0\n2023 Inventory: $5,120.0",
+    "ground_truth": 560,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000098",
+    "domain": "finance",
+    "question": "What was the change in Accounts Receivable from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Accounts Receivable: $6,700.0\n2023 Accounts Receivable: $5,980.0",
+    "ground_truth": -720,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000099",
+    "domain": "finance",
+    "question": "What was the change in Net Income from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Net Income: $5,400.0\n2023 Net Income: $4,780.0",
+    "ground_truth": -620,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000100",
+    "domain": "finance",
+    "question": "What was the change in Free Cash Flow from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Free Cash Flow: $3,200.0\n2023 Free Cash Flow: $2,750.0",
+    "ground_truth": -450,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000101",
+    "domain": "finance",
+    "question": "What was the change in Revenue from 2021 to 2022?",
+    "context": "Financial Data (in million)\n2021 Revenue: $42,000.0\n2022 Revenue: $48,600.0",
+    "ground_truth": 6600,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000102",
+    "domain": "finance",
+    "question": "What was the change in Operating Expenses from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Operating Expenses: $38,000.0\n2023 Operating Expenses: $34,500.0",
+    "ground_truth": -3500,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000103",
+    "domain": "finance",
+    "question": "What was the change in Goodwill from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Goodwill: $9,800.0\n2023 Goodwill: $9,240.0",
+    "ground_truth": -560,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000104",
+    "domain": "finance",
+    "question": "What was the change in Total Equity from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Total Equity: $22,000.0\n2023 Total Equity: $24,600.0",
+    "ground_truth": 2600,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000105",
+    "domain": "finance",
+    "question": "What was the change in Depreciation from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Depreciation: $1,800.0\n2023 Depreciation: $2,100.0",
+    "ground_truth": 300,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000106",
+    "domain": "finance",
+    "question": "What was the change in Interest Expense from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Interest Expense: $1,240.0\n2023 Interest Expense: $980.0",
+    "ground_truth": -260,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000107",
+    "domain": "finance",
+    "question": "What was the change in Tax Expense from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Tax Expense: $2,100.0\n2023 Tax Expense: $1,750.0",
+    "ground_truth": -350,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000108",
+    "domain": "finance",
+    "question": "What was the change in Short-term Debt from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Short-term Debt: $3,200.0\n2023 Short-term Debt: $2,800.0",
+    "ground_truth": -400,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000109",
+    "domain": "finance",
+    "question": "What was the change in Working Capital from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Working Capital: $8,400.0\n2023 Working Capital: $9,200.0",
+    "ground_truth": 800,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000110",
+    "domain": "finance",
+    "question": "What was the change in Dividends Paid from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Dividends Paid: $1,200.0\n2023 Dividends Paid: $1,400.0",
+    "ground_truth": 200,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000111",
+    "domain": "finance",
+    "question": "What was the change in PP&E Net from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 PP&E Net: $18,000.0\n2023 PP&E Net: $16,500.0",
+    "ground_truth": -1500,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000112",
+    "domain": "finance",
+    "question": "What was the change in Deferred Revenue from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Deferred Revenue: $3,400.0\n2023 Deferred Revenue: $4,100.0",
+    "ground_truth": 700,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000113",
+    "domain": "finance",
+    "question": "What was the change in Other Income from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Other Income: $450.0\n2023 Other Income: $380.0",
+    "ground_truth": -70,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000114",
+    "domain": "finance",
+    "question": "What was the change in Pension Obligation from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Pension Obligation: $5,600.0\n2023 Pension Obligation: $5,100.0",
+    "ground_truth": -500,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000115",
+    "domain": "finance",
+    "question": "What was the change in Minority Interest from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Minority Interest: $890.0\n2023 Minority Interest: $760.0",
+    "ground_truth": -130,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000116",
+    "domain": "finance",
+    "question": "What was the change in Stock-based Compensation from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Stock-based Compensation: $1,800.0\n2023 Stock-based Compensation: $2,200.0",
+    "ground_truth": 400,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000117",
+    "domain": "finance",
+    "question": "What was the change in Amortization from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Amortization: $920.0\n2023 Amortization: $1,080.0",
+    "ground_truth": 160,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000118",
+    "domain": "finance",
+    "question": "What was the change in Current Liabilities from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Current Liabilities: $14,200.0\n2023 Current Liabilities: $13,100.0",
+    "ground_truth": -1100,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000119",
+    "domain": "finance",
+    "question": "What was the change in Non-current Assets from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Non-current Assets: $52,000.0\n2023 Non-current Assets: $55,000.0",
+    "ground_truth": 3000,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000120",
+    "domain": "finance",
+    "question": "What was the change in Prepaid Expenses from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Prepaid Expenses: $780.0\n2023 Prepaid Expenses: $640.0",
+    "ground_truth": -140,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000121",
+    "domain": "finance",
+    "question": "What was the change in Accrued Liabilities from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Accrued Liabilities: $2,100.0\n2023 Accrued Liabilities: $1,800.0",
+    "ground_truth": -300,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000122",
+    "domain": "finance",
+    "question": "What was the change in Total Liabilities from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Total Liabilities: $41,000.0\n2023 Total Liabilities: $38,000.0",
+    "ground_truth": -3000,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000123",
+    "domain": "finance",
+    "question": "What was the change in Cash from Operations from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Cash from Operations: $7,800.0\n2023 Cash from Operations: $8,900.0",
+    "ground_truth": 1100,
+    "unit": "million_usd",
+    "error_category": [
+      "arithmetic_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000124",
+    "domain": "finance",
+    "question": "What was the change in Intangible Assets Net from 2022 to 2023?",
+    "context": "Financial Data (in million)\n2022 Intangible Assets Net: $4,200.0\n2023 Intangible Assets Net: $3,600.0",
+    "ground_truth": -600,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000125",
+    "domain": "finance",
+    "question": "What was the change in EPS (diluted) from 2021 to 2022?",
+    "context": "Financial Data (in usd)\n2021 EPS (diluted): $4.32\n2022 EPS (diluted): $3.87",
+    "ground_truth": -0.5,
+    "unit": "usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000126",
+    "domain": "finance",
+    "question": "What was the percentage change in Revenue from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Revenue: $42,000.0\n2023 Revenue: $48,600.0",
+    "ground_truth": 15.71,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000127",
+    "domain": "finance",
+    "question": "What was the percentage change in Net Income from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Net Income: $5,400.0\n2023 Net Income: $4,780.0",
+    "ground_truth": -11.48,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000128",
+    "domain": "finance",
+    "question": "What was the percentage change in Operating Income from 2021 to 2022?",
+    "context": "Annual Data (in millions)\n2021 Operating Income: $4,120.0\n2022 Operating Income: $3,875.0",
+    "ground_truth": -5.95,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000129",
+    "domain": "finance",
+    "question": "What was the percentage change in EBITDA from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 EBITDA: $9,200.0\n2023 EBITDA: $10,500.0",
+    "ground_truth": 14.13,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000130",
+    "domain": "finance",
+    "question": "What was the percentage change in Gross Profit from 2021 to 2022?",
+    "context": "Annual Data (in millions)\n2021 Gross Profit: $11,200.0\n2022 Gross Profit: $12,800.0",
+    "ground_truth": 14.29,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000131",
+    "domain": "finance",
+    "question": "What was the percentage change in R&D Expense from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 R&D Expense: $3,100.0\n2023 R&D Expense: $3,640.0",
+    "ground_truth": 17.42,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000132",
+    "domain": "finance",
+    "question": "What was the percentage change in Free Cash Flow from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Free Cash Flow: $3,200.0\n2023 Free Cash Flow: $2,750.0",
+    "ground_truth": -14.06,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000133",
+    "domain": "finance",
+    "question": "What was the percentage change in EPS from 2021 to 2022?",
+    "context": "Annual Data (in millions)\n2021 EPS: $4.32\n2022 EPS: $3.87",
+    "ground_truth": -10.42,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000134",
+    "domain": "finance",
+    "question": "What was the percentage change in Capital Expenditure from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Capital Expenditure: $2,340.0\n2023 Capital Expenditure: $1,890.0",
+    "ground_truth": -19.23,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000135",
+    "domain": "finance",
+    "question": "What was the percentage change in SG&A from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 SG&A: $8,920.0\n2023 SG&A: $7,840.0",
+    "ground_truth": -12.11,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000136",
+    "domain": "finance",
+    "question": "What was the percentage change in Total Assets from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Total Assets: $67,400.0\n2023 Total Assets: $71,200.0",
+    "ground_truth": 5.64,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000137",
+    "domain": "finance",
+    "question": "What was the percentage change in Long-term Debt from 2021 to 2022?",
+    "context": "Annual Data (in millions)\n2021 Long-term Debt: $14,200.0\n2022 Long-term Debt: $12,900.0",
+    "ground_truth": -9.15,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000138",
+    "domain": "finance",
+    "question": "What was the percentage change in Operating Expenses from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Operating Expenses: $38,000.0\n2023 Operating Expenses: $34,500.0",
+    "ground_truth": -9.21,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000139",
+    "domain": "finance",
+    "question": "What was the percentage change in Cash Flow from Operations from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Cash Flow from Operations: $7,800.0\n2023 Cash Flow from Operations: $8,900.0",
+    "ground_truth": 14.1,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000140",
+    "domain": "finance",
+    "question": "What was the percentage change in Interest Expense from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Interest Expense: $1,240.0\n2023 Interest Expense: $980.0",
+    "ground_truth": -20.97,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000141",
+    "domain": "finance",
+    "question": "What was the percentage change in Revenue from 2020 to 2022?",
+    "context": "Annual Data (in millions)\n2020 Revenue: $31,000.0\n2022 Revenue: $36,200.0",
+    "ground_truth": 16.77,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000142",
+    "domain": "finance",
+    "question": "What was the percentage change in Net Income from 2020 to 2022?",
+    "context": "Annual Data (in millions)\n2020 Net Income: $2,800.0\n2022 Net Income: $4,100.0",
+    "ground_truth": 46.43,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000143",
+    "domain": "finance",
+    "question": "What was the percentage change in Gross Margin Revenue from 2021 to 2023?",
+    "context": "Annual Data (in millions)\n2021 Gross Margin Revenue: $18,200.0\n2023 Gross Margin Revenue: $22,100.0",
+    "ground_truth": 21.43,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000144",
+    "domain": "finance",
+    "question": "What was the percentage change in EBIT from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 EBIT: $5,200.0\n2023 EBIT: $4,600.0",
+    "ground_truth": -11.54,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000145",
+    "domain": "finance",
+    "question": "What was the percentage change in Working Capital from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Working Capital: $8,400.0\n2023 Working Capital: $9,200.0",
+    "ground_truth": 9.52,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000146",
+    "domain": "finance",
+    "question": "What was the percentage change in Inventory from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Inventory: $4,560.0\n2023 Inventory: $5,120.0",
+    "ground_truth": 12.28,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000147",
+    "domain": "finance",
+    "question": "What was the percentage change in Accounts Receivable from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Accounts Receivable: $6,700.0\n2023 Accounts Receivable: $5,980.0",
+    "ground_truth": -10.75,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000148",
+    "domain": "finance",
+    "question": "What was the percentage change in Tax Expense from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Tax Expense: $2,100.0\n2023 Tax Expense: $1,750.0",
+    "ground_truth": -16.67,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000149",
+    "domain": "finance",
+    "question": "What was the percentage change in Dividends Paid from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Dividends Paid: $1,200.0\n2023 Dividends Paid: $1,400.0",
+    "ground_truth": 16.67,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000150",
+    "domain": "finance",
+    "question": "What was the percentage change in PP&E Net from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 PP&E Net: $18,000.0\n2023 PP&E Net: $16,500.0",
+    "ground_truth": -8.33,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000151",
+    "domain": "finance",
+    "question": "What was the percentage change in Stock-based Compensation from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Stock-based Compensation: $1,800.0\n2023 Stock-based Compensation: $2,200.0",
+    "ground_truth": 22.22,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000152",
+    "domain": "finance",
+    "question": "What was the percentage change in Current Liabilities from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Current Liabilities: $14,200.0\n2023 Current Liabilities: $13,100.0",
+    "ground_truth": -7.75,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000153",
+    "domain": "finance",
+    "question": "What was the percentage change in Total Equity from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Total Equity: $22,000.0\n2023 Total Equity: $24,600.0",
+    "ground_truth": 11.82,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000154",
+    "domain": "finance",
+    "question": "What was the percentage change in Deferred Revenue from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Deferred Revenue: $3,400.0\n2023 Deferred Revenue: $4,100.0",
+    "ground_truth": 20.59,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000155",
+    "domain": "finance",
+    "question": "What was the percentage change in Non-current Assets from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Non-current Assets: $52,000.0\n2023 Non-current Assets: $55,000.0",
+    "ground_truth": 5.77,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000156",
+    "domain": "finance",
+    "question": "What was the percentage change in Goodwill from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Goodwill: $9,800.0\n2023 Goodwill: $9,240.0",
+    "ground_truth": -5.71,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000157",
+    "domain": "finance",
+    "question": "What was the percentage change in Other Income from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Other Income: $450.0\n2023 Other Income: $380.0",
+    "ground_truth": -15.56,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000158",
+    "domain": "finance",
+    "question": "What was the percentage change in Amortization from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Amortization: $920.0\n2023 Amortization: $1,080.0",
+    "ground_truth": 17.39,
+    "unit": "percent",
+    "error_category": [
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000159",
+    "domain": "finance",
+    "question": "What was the percentage change in Prepaid Expenses from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Prepaid Expenses: $780.0\n2023 Prepaid Expenses: $640.0",
+    "ground_truth": -17.95,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000160",
+    "domain": "finance",
+    "question": "What was the percentage change in Minority Interest from 2022 to 2023?",
+    "context": "Annual Data (in millions)\n2022 Minority Interest: $890.0\n2023 Minority Interest: $760.0",
+    "ground_truth": -14.61,
+    "unit": "percent",
+    "error_category": [
+      "sign_error",
+      "percentage_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "percentage_change",
+      "yoy_change"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000161",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $2,340.0\nTotal Shareholders' Equity: $18,500.0",
+    "ground_truth": 12.65,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000162",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $4,180.0\nTotal Shareholders' Equity: $32,000.0",
+    "ground_truth": 13.06,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000163",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $1,890.0\nTotal Shareholders' Equity: $15,600.0",
+    "ground_truth": 12.12,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000164",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $6,200.0\nTotal Shareholders' Equity: $48,000.0",
+    "ground_truth": 12.92,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000165",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $3,450.0\nTotal Shareholders' Equity: $27,000.0",
+    "ground_truth": 12.78,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000166",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $1,250.0\nTotal Shareholders' Equity: $9,800.0",
+    "ground_truth": 12.76,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000167",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $5,100.0\nTotal Shareholders' Equity: $41,000.0",
+    "ground_truth": 12.44,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000168",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $2,780.0\nTotal Shareholders' Equity: $22,000.0",
+    "ground_truth": 12.64,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000169",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $7,800.0\nTotal Shareholders' Equity: $62,000.0",
+    "ground_truth": 12.58,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000170",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $1,680.0\nTotal Shareholders' Equity: $13,200.0",
+    "ground_truth": 12.73,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000171",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $4,560.0\nTotal Shareholders' Equity: $36,000.0",
+    "ground_truth": 12.67,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000172",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $2,100.0\nTotal Shareholders' Equity: $16,500.0",
+    "ground_truth": 12.73,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000173",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $8,900.0\nTotal Shareholders' Equity: $71,000.0",
+    "ground_truth": 12.54,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000174",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $3,200.0\nTotal Shareholders' Equity: $25,000.0",
+    "ground_truth": 12.8,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000175",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $1,450.0\nTotal Shareholders' Equity: $11,400.0",
+    "ground_truth": 12.72,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000176",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $5,800.0\nTotal Shareholders' Equity: $46,000.0",
+    "ground_truth": 12.61,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000177",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $2,650.0\nTotal Shareholders' Equity: $21,000.0",
+    "ground_truth": 12.62,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000178",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $9,400.0\nTotal Shareholders' Equity: $75,000.0",
+    "ground_truth": 12.53,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000179",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $3,700.0\nTotal Shareholders' Equity: $29,000.0",
+    "ground_truth": 12.76,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000180",
+    "domain": "finance",
+    "question": "What is the return on equity (ROE)?",
+    "context": "Financial Data (in millions)\nNet Income: $1,900.0\nTotal Shareholders' Equity: $15,000.0",
+    "ground_truth": 12.67,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000181",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $4,320.0\nAverage Total Assets: $67,800.0",
+    "ground_truth": 6.37,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000182",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $2,100.0\nAverage Total Assets: $34,000.0",
+    "ground_truth": 6.18,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000183",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $6,700.0\nAverage Total Assets: $98,000.0",
+    "ground_truth": 6.84,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000184",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $1,500.0\nAverage Total Assets: $24,000.0",
+    "ground_truth": 6.25,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000185",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $8,900.0\nAverage Total Assets: $134,000.0",
+    "ground_truth": 6.64,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000186",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $3,400.0\nAverage Total Assets: $52,000.0",
+    "ground_truth": 6.54,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000187",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $1,800.0\nAverage Total Assets: $28,500.0",
+    "ground_truth": 6.32,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000188",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $5,600.0\nAverage Total Assets: $84,000.0",
+    "ground_truth": 6.67,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000189",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $2,700.0\nAverage Total Assets: $43,000.0",
+    "ground_truth": 6.28,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000190",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $7,200.0\nAverage Total Assets: $108,000.0",
+    "ground_truth": 6.67,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000191",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $1,300.0\nAverage Total Assets: $20,000.0",
+    "ground_truth": 6.5,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000192",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $4,800.0\nAverage Total Assets: $73,000.0",
+    "ground_truth": 6.58,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000193",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $2,400.0\nAverage Total Assets: $38,000.0",
+    "ground_truth": 6.32,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000194",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $6,100.0\nAverage Total Assets: $91,000.0",
+    "ground_truth": 6.7,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000195",
+    "domain": "finance",
+    "question": "What is the return on assets (ROA) for the period?",
+    "context": "Financial Data (in millions)\nNet Income: $3,000.0\nAverage Total Assets: $47,000.0",
+    "ground_truth": 6.38,
+    "unit": "percent",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "sec_10k",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000196",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $14,320.0\nCurrent Liabilities: $9,870.0",
+    "ground_truth": 1.451,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000197",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $8,600.0\nCurrent Liabilities: $5,400.0",
+    "ground_truth": 1.593,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000198",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $22,000.0\nCurrent Liabilities: $14,000.0",
+    "ground_truth": 1.571,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000199",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $5,200.0\nCurrent Liabilities: $3,900.0",
+    "ground_truth": 1.333,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000200",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $31,000.0\nCurrent Liabilities: $19,000.0",
+    "ground_truth": 1.632,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000201",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $11,400.0\nCurrent Liabilities: $7,600.0",
+    "ground_truth": 1.5,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000202",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $4,800.0\nCurrent Liabilities: $3,600.0",
+    "ground_truth": 1.333,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000203",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $18,000.0\nCurrent Liabilities: $11,200.0",
+    "ground_truth": 1.607,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000204",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $7,200.0\nCurrent Liabilities: $5,200.0",
+    "ground_truth": 1.385,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000205",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $25,000.0\nCurrent Liabilities: $15,600.0",
+    "ground_truth": 1.603,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000206",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $9,100.0\nCurrent Liabilities: $6,200.0",
+    "ground_truth": 1.468,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000207",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $3,800.0\nCurrent Liabilities: $2,900.0",
+    "ground_truth": 1.31,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000208",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $16,000.0\nCurrent Liabilities: $10,200.0",
+    "ground_truth": 1.569,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000209",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $6,400.0\nCurrent Liabilities: $4,700.0",
+    "ground_truth": 1.362,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000210",
+    "domain": "finance",
+    "question": "What is the current ratio as of the balance sheet date?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $28,000.0\nCurrent Liabilities: $17,500.0",
+    "ground_truth": 1.6,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000211",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $8,920.0\nTotal Shareholders' Equity: $22,400.0",
+    "ground_truth": 0.398,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000212",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $4,200.0\nTotal Shareholders' Equity: $16,800.0",
+    "ground_truth": 0.25,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000213",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $12,600.0\nTotal Shareholders' Equity: $31,500.0",
+    "ground_truth": 0.4,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000214",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $2,800.0\nTotal Shareholders' Equity: $14,000.0",
+    "ground_truth": 0.2,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000215",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $18,000.0\nTotal Shareholders' Equity: $42,000.0",
+    "ground_truth": 0.429,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000216",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $6,300.0\nTotal Shareholders' Equity: $18,900.0",
+    "ground_truth": 0.333,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000217",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $3,500.0\nTotal Shareholders' Equity: $10,500.0",
+    "ground_truth": 0.333,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000218",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $9,800.0\nTotal Shareholders' Equity: $24,500.0",
+    "ground_truth": 0.4,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000219",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $5,600.0\nTotal Shareholders' Equity: $16,000.0",
+    "ground_truth": 0.35,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000220",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $14,000.0\nTotal Shareholders' Equity: $35,000.0",
+    "ground_truth": 0.4,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000221",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $7,000.0\nTotal Shareholders' Equity: $21,000.0",
+    "ground_truth": 0.333,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000222",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $2,100.0\nTotal Shareholders' Equity: $8,400.0",
+    "ground_truth": 0.25,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000223",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $11,200.0\nTotal Shareholders' Equity: $28,000.0",
+    "ground_truth": 0.4,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000224",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $4,900.0\nTotal Shareholders' Equity: $14,700.0",
+    "ground_truth": 0.333,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000225",
+    "domain": "finance",
+    "question": "What is the debt-to-equity ratio?",
+    "context": "Capital Structure (in millions)\nTotal Debt: $16,100.0\nTotal Shareholders' Equity: $40,250.0",
+    "ground_truth": 0.4,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error",
+      "scale_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000226",
+    "domain": "finance",
+    "question": "What is the interest coverage ratio for the period?",
+    "context": "Income Statement (in millions)\nEBIT: $5,670.0\nInterest Expense: $890.0",
+    "ground_truth": 6.37,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000227",
+    "domain": "finance",
+    "question": "What is the interest coverage ratio for the period?",
+    "context": "Income Statement (in millions)\nEBIT: $3,200.0\nInterest Expense: $640.0",
+    "ground_truth": 5.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000228",
+    "domain": "finance",
+    "question": "What is the interest coverage ratio for the period?",
+    "context": "Income Statement (in millions)\nEBIT: $8,900.0\nInterest Expense: $1,112.0",
+    "ground_truth": 8.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000229",
+    "domain": "finance",
+    "question": "What is the interest coverage ratio for the period?",
+    "context": "Income Statement (in millions)\nEBIT: $2,100.0\nInterest Expense: $525.0",
+    "ground_truth": 4.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000230",
+    "domain": "finance",
+    "question": "What is the interest coverage ratio for the period?",
+    "context": "Income Statement (in millions)\nEBIT: $11,000.0\nInterest Expense: $1,375.0",
+    "ground_truth": 8.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000231",
+    "domain": "finance",
+    "question": "What is the interest coverage ratio for the period?",
+    "context": "Income Statement (in millions)\nEBIT: $4,500.0\nInterest Expense: $900.0",
+    "ground_truth": 5.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000232",
+    "domain": "finance",
+    "question": "What is the interest coverage ratio for the period?",
+    "context": "Income Statement (in millions)\nEBIT: $1,800.0\nInterest Expense: $450.0",
+    "ground_truth": 4.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000233",
+    "domain": "finance",
+    "question": "What is the interest coverage ratio for the period?",
+    "context": "Income Statement (in millions)\nEBIT: $7,200.0\nInterest Expense: $800.0",
+    "ground_truth": 9.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000234",
+    "domain": "finance",
+    "question": "What is the interest coverage ratio for the period?",
+    "context": "Income Statement (in millions)\nEBIT: $3,800.0\nInterest Expense: $760.0",
+    "ground_truth": 5.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000235",
+    "domain": "finance",
+    "question": "What is the interest coverage ratio for the period?",
+    "context": "Income Statement (in millions)\nEBIT: $6,400.0\nInterest Expense: $914.0",
+    "ground_truth": 7.0,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000236",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $142.50\nEarnings Per Share (TTM): $8.75",
+    "ground_truth": 16.29,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000237",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $87.20\nEarnings Per Share (TTM): $5.40",
+    "ground_truth": 16.15,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000238",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $234.00\nEarnings Per Share (TTM): $14.20",
+    "ground_truth": 16.48,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000239",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $52.40\nEarnings Per Share (TTM): $3.80",
+    "ground_truth": 13.79,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000240",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $312.00\nEarnings Per Share (TTM): $18.60",
+    "ground_truth": 16.77,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000241",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $108.50\nEarnings Per Share (TTM): $7.20",
+    "ground_truth": 15.07,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000242",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $67.80\nEarnings Per Share (TTM): $4.50",
+    "ground_truth": 15.07,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000243",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $189.00\nEarnings Per Share (TTM): $11.80",
+    "ground_truth": 16.02,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000244",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $43.20\nEarnings Per Share (TTM): $3.10",
+    "ground_truth": 13.94,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000245",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $256.00\nEarnings Per Share (TTM): $15.40",
+    "ground_truth": 16.62,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000246",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $94.60\nEarnings Per Share (TTM): $6.30",
+    "ground_truth": 15.02,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000247",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $178.00\nEarnings Per Share (TTM): $10.60",
+    "ground_truth": 16.79,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000248",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $38.50\nEarnings Per Share (TTM): $2.80",
+    "ground_truth": 13.75,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000249",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $145.00\nEarnings Per Share (TTM): $9.20",
+    "ground_truth": 15.76,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000250",
+    "domain": "finance",
+    "question": "What is the price-to-earnings (P/E) ratio?",
+    "context": "Market Data\nCurrent Stock Price: $221.00\nEarnings Per Share (TTM): $13.40",
+    "ground_truth": 16.49,
+    "unit": "ratio",
+    "error_category": [
+      "ratio_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "ratio_calculation"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000251",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of Revenue from 2019 to 2023?",
+    "context": "Annual Revenue (in millions)\n2019: $12,400.0\n2023: $21,300.0",
+    "ground_truth": 14.48,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000252",
+    "domain": "finance",
+    "question": "What is the 3-year CAGR of Net Income from 2020 to 2023?",
+    "context": "Annual Net Income (in millions)\n2020: $2,800.0\n2023: $5,400.0",
+    "ground_truth": 24.47,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000253",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of EBITDA from 2019 to 2023?",
+    "context": "Annual EBITDA (in millions)\n2019: $8,200.0\n2023: $14,600.0",
+    "ground_truth": 15.51,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000254",
+    "domain": "finance",
+    "question": "What is the 3-year CAGR of Free Cash Flow from 2020 to 2023?",
+    "context": "Annual Free Cash Flow (in millions)\n2020: $3,100.0\n2023: $5,800.0",
+    "ground_truth": 23.22,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000255",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of Total Assets from 2019 to 2023?",
+    "context": "Annual Total Assets (in millions)\n2019: $52,000.0\n2023: $78,000.0",
+    "ground_truth": 10.67,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000256",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of R&D Spend from 2019 to 2023?",
+    "context": "Annual R&D Spend (in millions)\n2019: $2,100.0\n2023: $3,900.0",
+    "ground_truth": 16.74,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000257",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of Operating Income from 2019 to 2023?",
+    "context": "Annual Operating Income (in millions)\n2019: $4,100.0\n2023: $7,200.0",
+    "ground_truth": 15.12,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000258",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of Gross Profit from 2019 to 2023?",
+    "context": "Annual Gross Profit (in millions)\n2019: $9,800.0\n2023: $17,100.0",
+    "ground_truth": 14.93,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000259",
+    "domain": "finance",
+    "question": "What is the 3-year CAGR of EPS from 2020 to 2023?",
+    "context": "Annual EPS (in millions)\n2020: $3.2\n2023: $6.4",
+    "ground_truth": 25.99,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000260",
+    "domain": "finance",
+    "question": "What is the 3-year CAGR of Revenue from 2020 to 2023?",
+    "context": "Annual Revenue (in millions)\n2020: $18,200.0\n2023: $29,100.0",
+    "ground_truth": 16.93,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000261",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of Net Income from 2019 to 2023?",
+    "context": "Annual Net Income (in millions)\n2019: $1,800.0\n2023: $3,600.0",
+    "ground_truth": 18.92,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000262",
+    "domain": "finance",
+    "question": "What is the 3-year CAGR of EBITDA from 2020 to 2023?",
+    "context": "Annual EBITDA (in millions)\n2020: $6,200.0\n2023: $10,800.0",
+    "ground_truth": 20.32,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000263",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of Free Cash Flow from 2019 to 2023?",
+    "context": "Annual Free Cash Flow (in millions)\n2019: $2,400.0\n2023: $4,200.0",
+    "ground_truth": 15.02,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000264",
+    "domain": "finance",
+    "question": "What is the 3-year CAGR of Operating Cash Flow from 2020 to 2023?",
+    "context": "Annual Operating Cash Flow (in millions)\n2020: $5,100.0\n2023: $8,900.0",
+    "ground_truth": 20.39,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000265",
+    "domain": "finance",
+    "question": "What is the 3-year CAGR of SG&A Expense from 2020 to 2023?",
+    "context": "Annual SG&A Expense (in millions)\n2020: $7,200.0\n2023: $9,800.0",
+    "ground_truth": 10.82,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000266",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of Revenue from 2019 to 2023?",
+    "context": "Annual Revenue (in millions)\n2019: $9,400.0\n2023: $15,200.0",
+    "ground_truth": 12.77,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000267",
+    "domain": "finance",
+    "question": "What is the 3-year CAGR of Capital Expenditure from 2020 to 2023?",
+    "context": "Annual Capital Expenditure (in millions)\n2020: $1,800.0\n2023: $2,900.0",
+    "ground_truth": 17.23,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000268",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of Total Equity from 2019 to 2023?",
+    "context": "Annual Total Equity (in millions)\n2019: $14,200.0\n2023: $22,400.0",
+    "ground_truth": 12.07,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000269",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of Net Revenue from 2019 to 2023?",
+    "context": "Annual Net Revenue (in millions)\n2019: $22,000.0\n2023: $35,000.0",
+    "ground_truth": 12.31,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000270",
+    "domain": "finance",
+    "question": "What is the 4-year CAGR of EBIT from 2019 to 2023?",
+    "context": "Annual EBIT (in millions)\n2019: $3,800.0\n2023: $6,700.0",
+    "ground_truth": 15.23,
+    "unit": "percent",
+    "error_category": [
+      "arithmetic_error",
+      "percentage_error"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "growth_rate",
+      "multi_step_arithmetic"
+    ],
+    "source_type": "investor_presentation",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000271",
+    "domain": "finance",
+    "question": "What is the Total Assets reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nTotal Assets: $47,230.0",
+    "ground_truth": 47.23,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000272",
+    "domain": "finance",
+    "question": "What is the Long-term Debt reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nLong-term Debt: $17,020.0",
+    "ground_truth": 17.02,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000273",
+    "domain": "finance",
+    "question": "What is the Total Revenue reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nTotal Revenue: $89,400.0",
+    "ground_truth": 89.4,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000274",
+    "domain": "finance",
+    "question": "What is the Net PP&E reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nNet PP&E: $34,100.0",
+    "ground_truth": 34.1,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000275",
+    "domain": "finance",
+    "question": "What is the Goodwill reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nGoodwill: $12,500.0",
+    "ground_truth": 12.5,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000276",
+    "domain": "finance",
+    "question": "What is the Total Equity reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nTotal Equity: $28,000.0",
+    "ground_truth": 28.0,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000277",
+    "domain": "finance",
+    "question": "What is the Operating Cash Flow reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nOperating Cash Flow: $9,800.0",
+    "ground_truth": 9.8,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000278",
+    "domain": "finance",
+    "question": "What is the Capital Expenditure reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nCapital Expenditure: $4,200.0",
+    "ground_truth": 4.2,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000279",
+    "domain": "finance",
+    "question": "What is the Cash & Equivalents reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nCash & Equivalents: $6,780.0",
+    "ground_truth": 6.78,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000280",
+    "domain": "finance",
+    "question": "What is the Intangible Assets reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nIntangible Assets: $8,900.0",
+    "ground_truth": 8.9,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000281",
+    "domain": "finance",
+    "question": "What is the Total Liabilities reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nTotal Liabilities: $52,300.0",
+    "ground_truth": 52.3,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000282",
+    "domain": "finance",
+    "question": "What is the Current Assets reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nCurrent Assets: $14,300.0",
+    "ground_truth": 14.3,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000283",
+    "domain": "finance",
+    "question": "What is the Non-current Assets reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nNon-current Assets: $42,100.0",
+    "ground_truth": 42.1,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000284",
+    "domain": "finance",
+    "question": "What is the Total Assets reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nTotal Assets: $19,800.0",
+    "ground_truth": 19.8,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000285",
+    "domain": "finance",
+    "question": "What is the Net Income reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nNet Income: $7,800.0",
+    "ground_truth": 7.8,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000286",
+    "domain": "finance",
+    "question": "What is the Total Revenue reported, expressed in thousands?",
+    "context": "Balance Sheet (in millions)\nTotal Revenue: $456,800.0",
+    "ground_truth": 456800000,
+    "unit": "thousand_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000287",
+    "domain": "finance",
+    "question": "What is the Operating Expenses reported, expressed in thousands?",
+    "context": "Balance Sheet (in millions)\nOperating Expenses: $234,100.0",
+    "ground_truth": 234100000,
+    "unit": "thousand_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000288",
+    "domain": "finance",
+    "question": "What is the Gross Profit reported, expressed in thousands?",
+    "context": "Balance Sheet (in millions)\nGross Profit: $128,400.0",
+    "ground_truth": 128400000,
+    "unit": "thousand_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000289",
+    "domain": "finance",
+    "question": "What is the Net Income reported, expressed in thousands?",
+    "context": "Balance Sheet (in millions)\nNet Income: $45,200.0",
+    "ground_truth": 45200000,
+    "unit": "thousand_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000290",
+    "domain": "finance",
+    "question": "What is the Capital Expenditure reported, expressed in thousands?",
+    "context": "Balance Sheet (in millions)\nCapital Expenditure: $89,300.0",
+    "ground_truth": 89300000,
+    "unit": "thousand_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000291",
+    "domain": "finance",
+    "question": "What is the Cash from Operations reported, expressed in thousands?",
+    "context": "Balance Sheet (in millions)\nCash from Operations: $178,000.0",
+    "ground_truth": 178000000,
+    "unit": "thousand_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000292",
+    "domain": "finance",
+    "question": "What is the Total Assets reported, expressed in thousands?",
+    "context": "Balance Sheet (in millions)\nTotal Assets: $892,000.0",
+    "ground_truth": 892000000,
+    "unit": "thousand_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000293",
+    "domain": "finance",
+    "question": "What is the Long-term Debt reported, expressed in thousands?",
+    "context": "Balance Sheet (in millions)\nLong-term Debt: $342,000.0",
+    "ground_truth": 342000000,
+    "unit": "thousand_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000294",
+    "domain": "finance",
+    "question": "What is the Total Equity reported, expressed in thousands?",
+    "context": "Balance Sheet (in millions)\nTotal Equity: $560,000.0",
+    "ground_truth": 560000000,
+    "unit": "thousand_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000295",
+    "domain": "finance",
+    "question": "What is the R&D Expense reported, expressed in thousands?",
+    "context": "Balance Sheet (in millions)\nR&D Expense: $67,800.0",
+    "ground_truth": 67800000,
+    "unit": "thousand_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000296",
+    "domain": "finance",
+    "question": "What is the Inventory reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nInventory: $34,500.0",
+    "ground_truth": 34.5,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000297",
+    "domain": "finance",
+    "question": "What is the Accounts Receivable reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nAccounts Receivable: $28,900.0",
+    "ground_truth": 28.9,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000298",
+    "domain": "finance",
+    "question": "What is the Short-term Investments reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nShort-term Investments: $15,600.0",
+    "ground_truth": 15.6,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000299",
+    "domain": "finance",
+    "question": "What is the Deferred Tax Assets reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nDeferred Tax Assets: $9,200.0",
+    "ground_truth": 9.2,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000300",
+    "domain": "finance",
+    "question": "What is the Other Long-term Liabilities reported, expressed in billions?",
+    "context": "Balance Sheet (in millions)\nOther Long-term Liabilities: $7,800.0",
+    "ground_truth": 7.8,
+    "unit": "billion_usd",
+    "error_category": [
+      "magnitude_error",
+      "unit_conversion"
+    ],
+    "difficulty": "hard",
+    "reasoning_type": [
+      "unit_conversion",
+      "single_lookup"
+    ],
+    "source_type": "balance_sheet",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000301",
+    "domain": "finance",
+    "question": "What is the total Revenue across all quarters?",
+    "context": "Quarterly Revenue (in millions)\nQ1 2022: $3,240.0\nQ2 2022: $3,580.0\nQ3 2022: $3,920.0\nQ4 2022: $4,160.0",
+    "ground_truth": 14900,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000302",
+    "domain": "finance",
+    "question": "What is the total Operating Cash Flow across all quarters?",
+    "context": "Quarterly Operating Cash Flow (in millions)\nQ1: $2,100.0\nQ2: $2,800.0\nQ3: $2,400.0\nQ4: $3,100.0",
+    "ground_truth": 10400,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000303",
+    "domain": "finance",
+    "question": "What is the total Capital Expenditure across all quarters?",
+    "context": "Quarterly Capital Expenditure (in millions)\nQ1: $420.0\nQ2: $380.0\nQ3: $460.0\nQ4: $510.0",
+    "ground_truth": 1770,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000304",
+    "domain": "finance",
+    "question": "What is the total Net Income across all quarters?",
+    "context": "Quarterly Net Income (in millions)\nQ1: $1,100.0\nQ2: $1,350.0\nQ3: $1,200.0\nQ4: $1,500.0",
+    "ground_truth": 5150,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000305",
+    "domain": "finance",
+    "question": "What is the total R&D Expense across all quarters?",
+    "context": "Quarterly R&D Expense (in millions)\nQ1: $780.0\nQ2: $810.0\nQ3: $840.0\nQ4: $890.0",
+    "ground_truth": 3320,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000306",
+    "domain": "finance",
+    "question": "What is the total Revenue across all quarters?",
+    "context": "Quarterly Revenue (in millions)\nQ1 2023: $4,100.0\nQ2 2023: $4,380.0\nQ3 2023: $4,720.0\nQ4 2023: $5,040.0",
+    "ground_truth": 18240,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000307",
+    "domain": "finance",
+    "question": "What is the total SG&A Expense across all quarters?",
+    "context": "Quarterly SG&A Expense (in millions)\nQ1: $1,800.0\nQ2: $1,920.0\nQ3: $1,850.0\nQ4: $2,000.0",
+    "ground_truth": 7570,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000308",
+    "domain": "finance",
+    "question": "What is the total Free Cash Flow across all quarters?",
+    "context": "Quarterly Free Cash Flow (in millions)\nQ1: $680.0\nQ2: $920.0\nQ3: $780.0\nQ4: $1,100.0",
+    "ground_truth": 3480,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000309",
+    "domain": "finance",
+    "question": "What is the average quarterly Revenue across all quarters?",
+    "context": "Quarterly Revenue (in millions)\nQ1: $3,240.0\nQ2: $3,580.0\nQ3: $3,920.0\nQ4: $4,160.0",
+    "ground_truth": 3725.0,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000310",
+    "domain": "finance",
+    "question": "What is the average quarterly Capital Expenditure across all quarters?",
+    "context": "Quarterly Capital Expenditure (in millions)\nQ1: $420.0\nQ2: $380.0\nQ3: $460.0\nQ4: $510.0",
+    "ground_truth": 442.5,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000311",
+    "domain": "finance",
+    "question": "What is the average quarterly Net Income across all quarters?",
+    "context": "Quarterly Net Income (in millions)\nQ1: $1,100.0\nQ2: $1,350.0\nQ3: $1,200.0\nQ4: $1,500.0",
+    "ground_truth": 1287.5,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000312",
+    "domain": "finance",
+    "question": "What is the average quarterly Operating Cash Flow across all quarters?",
+    "context": "Quarterly Operating Cash Flow (in millions)\nQ1: $2,100.0\nQ2: $2,800.0\nQ3: $2,400.0\nQ4: $3,100.0",
+    "ground_truth": 2600.0,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000313",
+    "domain": "finance",
+    "question": "What is the maximum quarterly Revenue across all quarters?",
+    "context": "Quarterly Revenue (in millions)\nQ1: $3,240.0\nQ2: $3,580.0\nQ3: $3,920.0\nQ4: $4,160.0",
+    "ground_truth": 4160,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000314",
+    "domain": "finance",
+    "question": "What is the maximum quarterly Operating Cash Flow across all quarters?",
+    "context": "Quarterly Operating Cash Flow (in millions)\nQ1: $2,100.0\nQ2: $2,800.0\nQ3: $2,400.0\nQ4: $3,100.0",
+    "ground_truth": 3100,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000315",
+    "domain": "finance",
+    "question": "What is the maximum quarterly Free Cash Flow across all quarters?",
+    "context": "Quarterly Free Cash Flow (in millions)\nQ1: $680.0\nQ2: $920.0\nQ3: $780.0\nQ4: $1,100.0",
+    "ground_truth": 1100,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000316",
+    "domain": "finance",
+    "question": "What is the maximum quarterly Capital Expenditure across all quarters?",
+    "context": "Quarterly Capital Expenditure (in millions)\nQ1: $420.0\nQ2: $380.0\nQ3: $460.0\nQ4: $510.0",
+    "ground_truth": 510,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000317",
+    "domain": "finance",
+    "question": "What is the minimum quarterly Net Income across all quarters?",
+    "context": "Quarterly Net Income (in millions)\nQ1: $1,100.0\nQ2: $1,350.0\nQ3: $1,200.0\nQ4: $1,500.0",
+    "ground_truth": 1100,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000318",
+    "domain": "finance",
+    "question": "What is the minimum quarterly R&D Expense across all quarters?",
+    "context": "Quarterly R&D Expense (in millions)\nQ1: $780.0\nQ2: $810.0\nQ3: $840.0\nQ4: $890.0",
+    "ground_truth": 780,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000319",
+    "domain": "finance",
+    "question": "What is the minimum quarterly Revenue across all quarters?",
+    "context": "Quarterly Revenue (in millions)\nQ1: $3,240.0\nQ2: $3,580.0\nQ3: $3,920.0\nQ4: $4,160.0",
+    "ground_truth": 3240,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000320",
+    "domain": "finance",
+    "question": "What is the minimum quarterly SG&A Expense across all quarters?",
+    "context": "Quarterly SG&A Expense (in millions)\nQ1: $1,800.0\nQ2: $1,920.0\nQ3: $1,850.0\nQ4: $2,000.0",
+    "ground_truth": 1800,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000321",
+    "domain": "finance",
+    "question": "What is the total Depreciation Expense across all quarters?",
+    "context": "Quarterly Depreciation Expense (in millions)\nQ1: $340.0\nQ2: $355.0\nQ3: $360.0\nQ4: $370.0",
+    "ground_truth": 1425,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000322",
+    "domain": "finance",
+    "question": "What is the total Interest Expense across all quarters?",
+    "context": "Quarterly Interest Expense (in millions)\nQ1: $210.0\nQ2: $215.0\nQ3: $218.0\nQ4: $220.0",
+    "ground_truth": 863,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000323",
+    "domain": "finance",
+    "question": "What is the total Tax Expense across all quarters?",
+    "context": "Quarterly Tax Expense (in millions)\nQ1: $480.0\nQ2: $540.0\nQ3: $510.0\nQ4: $600.0",
+    "ground_truth": 2130,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000324",
+    "domain": "finance",
+    "question": "What is the total Stock Repurchase across all quarters?",
+    "context": "Quarterly Stock Repurchase (in millions)\nQ1: $800.0\nQ2: $950.0\nQ3: $700.0\nQ4: $1,100.0",
+    "ground_truth": 3550,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000325",
+    "domain": "finance",
+    "question": "What is the total Dividends Paid across all quarters?",
+    "context": "Quarterly Dividends Paid (in millions)\nQ1: $280.0\nQ2: $280.0\nQ3: $290.0\nQ4: $290.0",
+    "ground_truth": 1140,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000326",
+    "domain": "finance",
+    "question": "What is the total Gross Profit across all quarters?",
+    "context": "Quarterly Gross Profit (in millions)\nQ1: $1,800.0\nQ2: $1,980.0\nQ3: $2,100.0\nQ4: $2,250.0",
+    "ground_truth": 8130,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000327",
+    "domain": "finance",
+    "question": "What is the average quarterly Operating Expenses across all quarters?",
+    "context": "Quarterly Operating Expenses (in millions)\nQ1: $2,100.0\nQ2: $2,200.0\nQ3: $2,150.0\nQ4: $2,300.0",
+    "ground_truth": 2187.5,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000328",
+    "domain": "finance",
+    "question": "What is the maximum quarterly Gross Profit across all quarters?",
+    "context": "Quarterly Gross Profit (in millions)\nQ1: $1,800.0\nQ2: $1,980.0\nQ3: $2,100.0\nQ4: $2,250.0",
+    "ground_truth": 2250,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000329",
+    "domain": "finance",
+    "question": "What is the minimum quarterly Tax Expense across all quarters?",
+    "context": "Quarterly Tax Expense (in millions)\nQ1: $480.0\nQ2: $540.0\nQ3: $510.0\nQ4: $600.0",
+    "ground_truth": 480,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000330",
+    "domain": "finance",
+    "question": "What is the average quarterly Interest Expense across all quarters?",
+    "context": "Quarterly Interest Expense (in millions)\nQ1: $210.0\nQ2: $215.0\nQ3: $218.0\nQ4: $220.0",
+    "ground_truth": 215.8,
+    "unit": "million_usd",
+    "error_category": [
+      "aggregation_error"
+    ],
+    "difficulty": "medium",
+    "reasoning_type": [
+      "aggregation"
+    ],
+    "source_type": "earnings_release",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000331",
+    "domain": "finance",
+    "question": "What was the Loss from discontinued operations reported for the period?",
+    "context": "Financial Statement (in millions)\nLoss from discontinued operations: $(156.0)",
+    "ground_truth": -156.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000332",
+    "domain": "finance",
+    "question": "What was the Net loss attributable to shareholders reported for the period?",
+    "context": "Financial Statement (in millions)\nNet loss attributable to shareholders: $(151.0)",
+    "ground_truth": -151.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000333",
+    "domain": "finance",
+    "question": "What was the Free cash flow deficit reported for the period?",
+    "context": "Financial Statement (in millions)\nFree cash flow deficit: $(420.0)",
+    "ground_truth": -420.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000334",
+    "domain": "finance",
+    "question": "What was the Operating loss reported for the period?",
+    "context": "Financial Statement (in millions)\nOperating loss: $(234.0)",
+    "ground_truth": -234.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000335",
+    "domain": "finance",
+    "question": "What was the Impairment charge on goodwill reported for the period?",
+    "context": "Financial Statement (in millions)\nImpairment charge on goodwill: $(345.0)",
+    "ground_truth": -345.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000336",
+    "domain": "finance",
+    "question": "What was the Restructuring charge reported for the period?",
+    "context": "Financial Statement (in millions)\nRestructuring charge: $(189.0)",
+    "ground_truth": -189.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000337",
+    "domain": "finance",
+    "question": "What was the Foreign exchange loss reported for the period?",
+    "context": "Financial Statement (in millions)\nForeign exchange loss: $(78.0)",
+    "ground_truth": -78.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000338",
+    "domain": "finance",
+    "question": "What was the Derivative loss reported for the period?",
+    "context": "Financial Statement (in millions)\nDerivative loss: $(112.0)",
+    "ground_truth": -112.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000339",
+    "domain": "finance",
+    "question": "What was the Write-off of intangible assets reported for the period?",
+    "context": "Financial Statement (in millions)\nWrite-off of intangible assets: $(267.0)",
+    "ground_truth": -267.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000340",
+    "domain": "finance",
+    "question": "What was the Net change in cash (outflow) reported for the period?",
+    "context": "Financial Statement (in millions)\nNet change in cash (outflow): $(330.0)",
+    "ground_truth": -330.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000341",
+    "domain": "finance",
+    "question": "What was the Pension obligation increase reported for the period?",
+    "context": "Financial Statement (in millions)\nPension obligation increase: $(445.0)",
+    "ground_truth": -445.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000342",
+    "domain": "finance",
+    "question": "What was the Deferred tax liability reported for the period?",
+    "context": "Financial Statement (in millions)\nDeferred tax liability: $(198.0)",
+    "ground_truth": -198.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000343",
+    "domain": "finance",
+    "question": "What was the Impairment loss on PP&E reported for the period?",
+    "context": "Financial Statement (in millions)\nImpairment loss on PP&E: $(560.0)",
+    "ground_truth": -560.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000344",
+    "domain": "finance",
+    "question": "What was the Other comprehensive loss reported for the period?",
+    "context": "Financial Statement (in millions)\nOther comprehensive loss: $(89.0)",
+    "ground_truth": -89.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000345",
+    "domain": "finance",
+    "question": "What was the Income tax provision (loss year) reported for the period?",
+    "context": "Financial Statement (in millions)\nIncome tax provision (loss year): $(320.0)",
+    "ground_truth": -320.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000346",
+    "domain": "finance",
+    "question": "What was the EPS decline reported for the period?",
+    "context": "Financial Statement (in millions)\nEPS decline: $(1.2)",
+    "ground_truth": -1.23,
+    "unit": "usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000347",
+    "domain": "finance",
+    "question": "What was the DPO change (decrease) reported for the period?",
+    "context": "Financial Statement (in millions)\nDPO change (decrease): $(6.6)",
+    "ground_truth": -6.6,
+    "unit": "unitless",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000348",
+    "domain": "finance",
+    "question": "What was the Stock price decline from 52-week high reported for the period?",
+    "context": "Financial Statement (in millions)\nStock price decline from 52-week high: $(25.5)",
+    "ground_truth": -25.47,
+    "unit": "percent",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000349",
+    "domain": "finance",
+    "question": "What was the Operating cash flow deficit reported for the period?",
+    "context": "Financial Statement (in millions)\nOperating cash flow deficit: $(890.0)",
+    "ground_truth": -890.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  },
+  {
+    "id": "fvb_000350",
+    "domain": "finance",
+    "question": "What was the Capital loss on investments reported for the period?",
+    "context": "Financial Statement (in millions)\nCapital loss on investments: $(134.0)",
+    "ground_truth": -134.0,
+    "unit": "million_usd",
+    "error_category": [
+      "sign_error"
+    ],
+    "difficulty": "easy",
+    "reasoning_type": [
+      "single_lookup"
+    ],
+    "source_type": "income_statement",
+    "split": "train"
+  }
+]
