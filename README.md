@@ -21,7 +21,7 @@ Deterministic correction for AI-generated numbers — in the browser, in your ba
 
 <br />
 
-**[Extension](#chrome-extension) · [Features](#features) · [Architecture](#architecture) · [Quick Start](#quick-start) · [Results](#results) · [Research](#research) · [Contributing](#contributing)**
+**[Ecosystem](#finverify-ecosystem) · [Extension](#chrome-extension) · [SDK](#python-sdk) · [Benchmark](#benchmark) · [Features](#features) · [Architecture](#architecture) · [Quick Start](#quick-start) · [Results](#results) · [Research](#research) · [Contributing](#contributing)**
 
 <br />
 
@@ -36,6 +36,22 @@ Deterministic correction for AI-generated numbers — in the browser, in your ba
 | Rule-based correction, not another model guess | Every correction logged — rule, input, output | Apache 2.0, actively developed, open to contributors |
 
 </div>
+
+---
+
+## FinVerify Ecosystem
+
+FinVerify isn't a single backend anymore — it's a monorepo of interoperable components that all share the same verification core (the DVL). Start here, then go deeper via each component's own README.
+
+| Component | What it does |
+|---|---|
+| 🧩 [**finverify-extension**](finverify-extension) | Chrome extension providing inline financial verification inside AI chat UIs |
+| 🖥 [**finverify-terminal**](finverify-terminal) | Backend services — REST API, WebSocket server — plus the terminal UI and market dashboard |
+| 📦 [**finverify-sdk**](finverify-sdk) | Official Python SDK (`pip install finverify-sdk`) for integrating FinVerify into your own applications |
+| 📊 [**finverify-bench**](finverify-bench) | Benchmark suite and evaluation harness for deterministic financial verification |
+| 🔬 [**research**](research) | Papers, notebooks, experiments, and reproducibility assets |
+
+New here? Jump to [Quick Start](#quick-start) to run any of these locally, or [Repository Structure](#repository-structure) for the full layout.
 
 ---
 
@@ -123,6 +139,38 @@ Built as a monorepo workspace (`@finverify/core` shared package) with separate b
 
 ---
 
+## Python SDK
+
+The official Python client for FinVerify — for developers who want DVL verification inside their own applications, without going through the extension or terminal UI.
+
+```bash
+pip install finverify-sdk
+```
+
+| Capability | Description |
+|---|---|
+| **Sync + async clients** | `FinVerify` and `AsyncFinVerify`, identical public surface |
+| **Offline deterministic verification** | `verify_local()` runs the DVL correction rules in-process, no network call |
+| **Batch verification** | Verify multiple claims in one call |
+| **Typed models** | Dataclass response models, full type hints, `py.typed` marker |
+| **Automatic retries** | Exponential backoff with jitter on 429/5xx, honoring `Retry-After` |
+
+See [`finverify-sdk/README.md`](finverify-sdk/README.md) for the full API and [`finverify-sdk/CHANGELOG.md`](finverify-sdk/CHANGELOG.md) for release notes.
+
+---
+
+## Benchmark
+
+[**finverify-bench**](finverify-bench) is the evaluation side of FinVerify: a benchmark suite and harness for measuring deterministic financial verification, independent of any single model.
+
+- Reproducible evaluation harness for FinQA-derived and synthetic samples
+- Ground-truth-blind DVL scoring — corrections never see the answer key
+- Documented benchmark methodology in [`BENCHMARK_DESIGN.md`](finverify-bench/BENCHMARK_DESIGN.md)
+
+See [`finverify-bench/README.md`](finverify-bench/README.md) to run the harness yourself.
+
+---
+
 ## Features
 
 | Category | Highlights |
@@ -131,7 +179,7 @@ Built as a monorepo workspace (`@finverify/core` shared package) with separate b
 | **Browser Extension** | Inline trust badges and verification reports · Provider Adapter architecture · Monorepo workspace |
 | **Backend** | FastAPI REST + WebSocket API · Live market data verified through the DVL · SEC EDGAR & earnings-transcript ingestion · RAG pipeline (Pinecone + fallback) |
 | **Research** | FinVerifyBench — synthetic diagnostic benchmark · Reproducible FinQA evaluation harness · Published ablation study |
-| **Developer Experience** | Standalone SDK (`pip install finverify`) · Terminal UI · CI pipelines for backend and SDK |
+| **Developer Experience** | Standalone SDK (`pip install finverify-sdk`) · Terminal UI · CI pipelines for backend and SDK |
 | **Open Source** | Apache 2.0 · CONTRIBUTING guide, Code of Conduct, Security policy · Issues triaged by label |
 
 ---
@@ -204,11 +252,17 @@ npm run dev    # http://localhost:3000
 Installs the standalone Python SDK for local, offline verification.
 
 ```bash
-cd finverify-llm/finverify-terminal/sdk
-pip install -e .
+pip install finverify-sdk
 ```
 
-See `sdk/README.md` to use it against a hosted API instead.
+For local development against this repo instead:
+
+```bash
+cd finverify-llm/finverify-sdk
+pip install -e ".[dev]"
+```
+
+See [`finverify-sdk/README.md`](finverify-sdk/README.md) to use it against a hosted API instead of local, offline verification.
 
 </td><td width="50%" valign="top">
 
@@ -303,33 +357,37 @@ Negative results: CoT prompting −9.0pp, CoT fine-tuning −12.0pp, cross-doc R
 ```
 finverify-llm/
 ├── README.md                    # this file
-├── *.ipynb                      # research notebooks (FinQA experiments)
-├── *.pdf                        # paper drafts and supplementary material
+├── docs/                        # cross-component documentation, images
+├── artifacts/                   # build artifacts, exported reports
 ├── finverify-extension/         # Chrome Extension (monorepo)
 │   ├── packages/
 │   │   └── core/                 # @finverify/core — shared verification client
 │   ├── content/                  # content script (IIFE build)
 │   ├── background/                # background script (IIFE build)
 │   └── popup/                    # popup UI (ESM build)
-└── finverify-terminal/
-    ├── backend/
-    │   ├── app/
-    │   │   ├── main.py          # FastAPI app and route definitions
-    │   │   ├── dvl.py           # Deterministic Verification Layer
-    │   │   ├── router.py        # numerical vs advisory query classifier
-    │   │   ├── parser.py        # numeric extraction from LLM text
-    │   │   ├── market.py        # yfinance wrapper, DVL-verified metrics
-    │   │   └── models.py        # request/response schemas
-    │   ├── fcg/                 # Financial Constraint Graph, metric normalizer
-    │   ├── ingestion/           # SEC EDGAR and earnings-transcript ingestion
-    │   ├── rag/                 # retrieval pipeline (Pinecone + fallback search)
-    │   └── evals/               # cross-model evaluation harness
-    ├── frontend/
-    │   ├── app/                 # Next.js pages: terminal, market, metrics
-    │   ├── components/          # TrustScore, DVLReport, VerificationLog, etc.
-    │   └── lib/                 # API client, offline DVL fallback, history
-    └── sdk/
-        └── finverify/           # standalone `pip install finverify` package
+├── finverify-terminal/           # backend services + terminal/dashboard UI
+│   ├── backend/
+│   │   ├── app/
+│   │   │   ├── main.py          # FastAPI app and route definitions
+│   │   │   ├── dvl.py           # Deterministic Verification Layer
+│   │   │   ├── router.py        # numerical vs advisory query classifier
+│   │   │   ├── parser.py        # numeric extraction from LLM text
+│   │   │   ├── market.py        # yfinance wrapper, DVL-verified metrics
+│   │   │   └── models.py        # request/response schemas
+│   │   ├── fcg/                 # Financial Constraint Graph, metric normalizer
+│   │   ├── ingestion/           # SEC EDGAR and earnings-transcript ingestion
+│   │   ├── rag/                 # retrieval pipeline (Pinecone + fallback search)
+│   │   └── evals/               # cross-model evaluation harness
+│   └── frontend/
+│       ├── app/                 # Next.js pages: terminal, market, metrics
+│       ├── components/          # TrustScore, DVLReport, VerificationLog, etc.
+│       └── lib/                 # API client, offline DVL fallback, history
+├── finverify-sdk/                # standalone `pip install finverify-sdk` package
+│   └── finverify/                # SDK source — sync/async clients, typed models
+├── finverify-bench/               # benchmark suite and evaluation harness
+│   ├── BENCHMARK_DESIGN.md        # methodology and construction notes
+│   └── DVL_mapping/               # ground-truth-blind DVL evaluation mapping
+└── research/                     # papers, notebooks, experiments, reproducibility assets
 ```
 
 <details>
@@ -351,6 +409,8 @@ finverify-llm/
 | Terminal UI | `frontend/app/page.tsx` | Terminal-style query interface, three-panel layout |
 | Market mode | `frontend/app/market/page.tsx` | Live watchlist, verified metric cards, sparklines |
 | Metrics dashboard | `frontend/app/metrics/page.tsx` | Paper results, ablation study, error taxonomy |
+| Python SDK | `finverify-sdk/finverify/` | Sync/async client, typed models, `verify_local()` offline mode |
+| Benchmark suite | `finverify-bench/` | FinVerifyBench dataset, DVL evaluation mapping, design docs |
 
 </details>
 
