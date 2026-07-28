@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/images/hero-banner.png" alt="FinVerify Banner" width="100%" />
+
 <br />
 
 # FinVerify
@@ -10,7 +12,7 @@ Deterministic correction for AI-generated numbers — in the browser, in your ba
 
 <br />
 
-[**Live Demo**](#) &nbsp;•&nbsp; [**Docs**](finverify-terminal/README.md) &nbsp;•&nbsp; [**Paper**](#) &nbsp;•&nbsp; [**Model**](https://huggingface.co/aadi2026/finverify-lora) &nbsp;•&nbsp; [**Discussions**](https://github.com/aadityat23/finverify-llm/discussions)
+[**Live Demo**](https://finverify-llm.vercel.app/) &nbsp;•&nbsp; [**Docs**](finverify-terminal/README.md) &nbsp;•&nbsp; [**Paper**](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6856159) &nbsp;•&nbsp; [**Model**](https://huggingface.co/aadi2026/finverify-lora) &nbsp;•&nbsp; [**Discussions**](https://github.com/aadityat23/finverify-llm/discussions)
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](finverify-terminal/backend/requirements.txt)
