@@ -1,6 +1,7 @@
 import { createRoot, type Root } from "react-dom/client";
 import { resolveAdapter } from "@/adapters/registry";
 import type { ProviderAdapter } from "@/adapters/types";
+import { adapterDebugError, adapterDebugLog } from "@/adapters/shared/log";
 import { InlineBadge } from "@/ui/InlineBadge";
 
 interface TrackedEntry {
@@ -21,38 +22,38 @@ const tracked = new Map<HTMLElement, TrackedEntry>();
 
 function mountBadgeFor(adapter: ProviderAdapter, messageEl: HTMLElement): TrackedEntry {
   // TEMP DEBUG — remove after diagnosis
-  console.log("[FV-DEBUG] 5. mountBadgeFor() called for messageEl:", messageEl);
+  adapterDebugLog("[FV-DEBUG] 5. mountBadgeFor() called for messageEl:", messageEl);
 
   const container = document.createElement("span");
   container.setAttribute("data-finverify-badge", "true");
 
   const toolbar = adapter.findToolbar(messageEl);
   // TEMP DEBUG — remove after diagnosis
-  console.log("[FV-DEBUG] 6. adapter.findToolbar() result:", toolbar ? "FOUND" : "NULL", toolbar);
+  adapterDebugLog("[FV-DEBUG] 6. adapter.findToolbar() result:", toolbar ? "FOUND" : "NULL", toolbar);
 
   if (toolbar) {
     toolbar.appendChild(container);
     // TEMP DEBUG — remove after diagnosis
-    console.log("[FV-DEBUG] container appended into real toolbar", toolbar);
+    adapterDebugLog("[FV-DEBUG] container appended into real toolbar", toolbar);
   } else {
     // TEMP DEBUG — remove after diagnosis
-    console.log("[FV-DEBUG] 7. no toolbar found — using fallback mount point via adapter.mountPoint()");
+    adapterDebugLog("[FV-DEBUG] 7. no toolbar found — using fallback mount point via adapter.mountPoint()");
     const mountPoint = adapter.mountPoint(messageEl);
     // TEMP DEBUG — remove after diagnosis
-    console.log("[FV-DEBUG] 7b. fallback mount point resolved to:", mountPoint, "same as messageEl?", mountPoint === messageEl);
+    adapterDebugLog("[FV-DEBUG] 7b. fallback mount point resolved to:", mountPoint, "same as messageEl?", mountPoint === messageEl);
     mountPoint.appendChild(container);
     // TEMP DEBUG — remove after diagnosis
-    console.log("[FV-DEBUG] container appended into fallback mount point. Is container in document?", document.body.contains(container));
+    adapterDebugLog("[FV-DEBUG] container appended into fallback mount point. Is container in document?", document.body.contains(container));
   }
 
   let root: Root;
   try {
     root = createRoot(container);
     // TEMP DEBUG — remove after diagnosis
-    console.log("[FV-DEBUG] 8. createRoot() succeeded", { container });
+    adapterDebugLog("[FV-DEBUG] 8. createRoot() succeeded", { container });
   } catch (err) {
     // TEMP DEBUG — remove after diagnosis
-    console.error("[FV-DEBUG] 10. EXCEPTION in createRoot()", err);
+    adapterDebugError("[FV-DEBUG] 10. EXCEPTION in createRoot()", err);
     throw err; // rethrow — behavior unchanged, only observing
   }
 
@@ -69,12 +70,12 @@ function updateEntry(adapter: ProviderAdapter, messageEl: HTMLElement, entry: Tr
   if (!entry.anchoredInToolbar) {
     const toolbar = adapter.findToolbar(messageEl);
     // TEMP DEBUG — remove after diagnosis
-    console.log("[FV-DEBUG] 6b. re-attempt findToolbar() in updateEntry():", toolbar ? "FOUND" : "still NULL");
+    adapterDebugLog("[FV-DEBUG] 6b. re-attempt findToolbar() in updateEntry():", toolbar ? "FOUND" : "still NULL");
     if (toolbar) {
       toolbar.appendChild(entry.container);
       entry.anchoredInToolbar = true;
       // TEMP DEBUG — remove after diagnosis
-      console.log("[FV-DEBUG] container re-anchored into real toolbar on a later scan");
+      adapterDebugLog("[FV-DEBUG] container re-anchored into real toolbar on a later scan");
     }
   }
 
@@ -83,12 +84,12 @@ function updateEntry(adapter: ProviderAdapter, messageEl: HTMLElement, entry: Tr
     text = adapter.extractText(messageEl);
   } catch (err) {
     // TEMP DEBUG — remove after diagnosis
-    console.error("[FV-DEBUG] 10. EXCEPTION in adapter.extractText()", err);
+    adapterDebugError("[FV-DEBUG] 10. EXCEPTION in adapter.extractText()", err);
     throw err; // rethrow — behavior unchanged, only observing
   }
 
   // TEMP DEBUG — remove after diagnosis
-  console.log("[FV-DEBUG] extractText() length:", text.length, "unchanged since last render?", text === entry.lastText);
+  adapterDebugLog("[FV-DEBUG] extractText() length:", text.length, "unchanged since last render?", text === entry.lastText);
 
   if (text === entry.lastText) return; // guard against redundant re-renders
   entry.lastText = text;
@@ -96,10 +97,10 @@ function updateEntry(adapter: ProviderAdapter, messageEl: HTMLElement, entry: Tr
   try {
     entry.root.render(<InlineBadge text={text} />);
     // TEMP DEBUG — remove after diagnosis
-    console.log("[FV-DEBUG] 9. entry.root.render(<InlineBadge/>) called without throwing (does not confirm DOM output — check data-finverify-badge span's childElementCount separately)");
+    adapterDebugLog("[FV-DEBUG] 9. entry.root.render(<InlineBadge/>) called without throwing (does not confirm DOM output — check data-finverify-badge span's childElementCount separately)");
   } catch (err) {
     // TEMP DEBUG — remove after diagnosis
-    console.error("[FV-DEBUG] 10. EXCEPTION thrown synchronously from root.render()", err);
+    adapterDebugError("[FV-DEBUG] 10. EXCEPTION thrown synchronously from root.render()", err);
     throw err; // rethrow — behavior unchanged, only observing
   }
 }
@@ -108,7 +109,7 @@ function pruneRemoved(): void {
   for (const [messageEl, entry] of tracked) {
     if (!document.body.contains(messageEl)) {
       // TEMP DEBUG — remove after diagnosis
-      console.log("[FV-DEBUG] pruning tracked entry — messageEl no longer in document", messageEl);
+      adapterDebugLog("[FV-DEBUG] pruning tracked entry — messageEl no longer in document", messageEl);
       entry.root.unmount(); // triggers InlineBadge's cleanup effect, cancelling its VerificationSession
       tracked.delete(messageEl);
     }
@@ -123,18 +124,18 @@ function scan(adapter: ProviderAdapter): void {
     messages = adapter.findMessages(document);
   } catch (err) {
     // TEMP DEBUG — remove after diagnosis
-    console.error("[FV-DEBUG] 10. EXCEPTION in adapter.findMessages()", err);
+    adapterDebugError("[FV-DEBUG] 10. EXCEPTION in adapter.findMessages()", err);
     throw err; // rethrow — behavior unchanged, only observing
   }
 
   // TEMP DEBUG — remove after diagnosis
-  console.log("[FV-DEBUG] 4. adapter.findMessages() returned", messages.length, "message(s)", messages);
+  adapterDebugLog("[FV-DEBUG] 4. adapter.findMessages() returned", messages.length, "message(s)", messages);
 
   for (const messageEl of messages) {
     const existing = tracked.get(messageEl);
     if (existing) {
       // TEMP DEBUG — remove after diagnosis
-      console.log("[FV-DEBUG] messageEl already tracked — calling updateEntry()", messageEl);
+      adapterDebugLog("[FV-DEBUG] messageEl already tracked — calling updateEntry()", messageEl);
       updateEntry(adapter, messageEl, existing);
       continue;
     }
@@ -142,7 +143,7 @@ function scan(adapter: ProviderAdapter): void {
     // point if no toolbar exists yet — so verification starts on partial
     // text rather than waiting for the whole response.
     // TEMP DEBUG — remove after diagnosis
-    console.log("[FV-DEBUG] messageEl NOT yet tracked — will mount a new badge", messageEl);
+    adapterDebugLog("[FV-DEBUG] messageEl NOT yet tracked — will mount a new badge", messageEl);
     const entry = mountBadgeFor(adapter, messageEl);
     updateEntry(adapter, messageEl, entry);
   }
@@ -160,7 +161,7 @@ function scheduleScan(adapter: ProviderAdapter): void {
       scan(adapter);
     } catch (err) {
       // TEMP DEBUG — remove after diagnosis
-      console.error("[FV-DEBUG] 10. EXCEPTION escaped scan() inside scheduleScan()'s rAF callback", err);
+      adapterDebugError("[FV-DEBUG] 10. EXCEPTION escaped scan() inside scheduleScan()'s rAF callback", err);
       throw err; // rethrow — behavior unchanged, only observing
     }
   });
@@ -168,15 +169,15 @@ function scheduleScan(adapter: ProviderAdapter): void {
 
 export function startOrchestrator(): void {
   // TEMP DEBUG — remove after diagnosis
-  console.log("[FV-DEBUG] 2. startOrchestrator() entered", { hostname: window.location.hostname });
+  adapterDebugLog("[FV-DEBUG] 2. startOrchestrator() entered", { hostname: window.location.hostname });
 
   const adapter = resolveAdapter(window.location.hostname);
   // TEMP DEBUG — remove after diagnosis
-  console.log("[FV-DEBUG] 3. resolveAdapter() result:", adapter ? `"${adapter.id}" (verified=${adapter.verified})` : "NULL — no adapter for this hostname");
+  adapterDebugLog("[FV-DEBUG] 3. resolveAdapter() result:", adapter ? `"${adapter.id}" (verified=${adapter.verified})` : "NULL — no adapter for this hostname");
 
   if (!adapter) {
     // TEMP DEBUG — remove after diagnosis
-    console.log("[FV-DEBUG] startOrchestrator() exiting early — no adapter resolved, nothing further will run");
+    adapterDebugLog("[FV-DEBUG] startOrchestrator() exiting early — no adapter resolved, nothing further will run");
     return; // no verified adapter for this page — do nothing
   }
 
@@ -184,7 +185,7 @@ export function startOrchestrator(): void {
     scan(adapter);
   } catch (err) {
     // TEMP DEBUG — remove after diagnosis
-    console.error("[FV-DEBUG] 10. EXCEPTION escaped initial synchronous scan() call", err);
+    adapterDebugError("[FV-DEBUG] 10. EXCEPTION escaped initial synchronous scan() call", err);
     throw err; // rethrow — behavior unchanged, only observing
   }
 
@@ -194,12 +195,12 @@ export function startOrchestrator(): void {
   // elements, which childList/subtree alone would miss.
   observer.observe(document.body, { childList: true, subtree: true, characterData: true });
   // TEMP DEBUG — remove after diagnosis
-  console.log("[FV-DEBUG] MutationObserver attached to document.body");
+  adapterDebugLog("[FV-DEBUG] MutationObserver attached to document.body");
 
   // Belt-and-suspenders safety net: SPA navigation (switching
   // conversations) can occasionally replace large subtrees in ways that
   // don't fire the granular mutations above in every ChatGPT build.
   setInterval(() => scheduleScan(adapter), 4_000);
   // TEMP DEBUG — remove after diagnosis
-  console.log("[FV-DEBUG] fallback setInterval(4000ms) scheduled");
+  adapterDebugLog("[FV-DEBUG] fallback setInterval(4000ms) scheduled");
 }
