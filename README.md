@@ -103,7 +103,7 @@ FinVerify's flagship surface. It verifies numbers in AI chat output inline, with
 
 <br />
 
-**[ Screenshot — Chrome Extension Popup ]**
+<img src="docs/images/chrome-extension-popup.png" alt="Chrome Extension Popup" width="100%" />
 
 <sub>Default popup state, provider connected.</sub>
 
@@ -122,14 +122,14 @@ FinVerify's flagship surface. It verifies numbers in AI chat output inline, with
 
 <br />
 
-**[ Screenshot — Inline Trust Badge ]**
+<img src="docs/images/inline-trust-badge.png" alt="Inline Trust Badge" width="100%" />
 
 <sub>A HIGH / MEDIUM / LOW badge rendered next to an AI chat answer.</sub>
 
 <br />
 <br />
 
-**[ Screenshot — Verification Report ]**
+<img src="docs/images/verification-report.png" alt="Verification Report" width="100%" />
 
 <sub>Expanded badge showing the correction rule, original value, and corrected value.</sub>
 
@@ -302,14 +302,15 @@ curl http://localhost:8000/market/quotes?symbols=AAPL,TSLA
 
 <br />
 
-**[ Screenshot — Terminal ]**
+<img src="docs/images/terminal.png" alt="Terminal" width="100%" />
+
 
 <sub>Query flow in the terminal-style UI.</sub>
 
 <br />
 <br />
 
-**[ Screenshot — Market Dashboard ]**
+<img src="docs/images/market-dashboard.png" alt="Market Dashboard" width="100%" />
 
 <sub>Watchlist with verified metric cards and sparklines.</sub>
 
