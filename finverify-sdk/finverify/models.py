@@ -3,7 +3,7 @@ finverify.models — Typed response models
 ==========================================
 Design note: the SDK uses ``dataclasses`` rather than Pydantic for
 response models. This matches the convention already established in
-this repository's embedded SDK (``finverify-terminal/sdk/finverify/client.py``,
+this repository's embedded SDK (``finverify-terminal/sdk-legacy/finverify/client.py``,
 ``dvl.py``) and keeps the core package dependency-free — the backend
 itself uses Pydantic, but that is an internal implementation detail of
 the FastAPI service, not something a client of the service needs.

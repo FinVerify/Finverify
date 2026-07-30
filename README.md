@@ -17,6 +17,7 @@ Deterministic correction for AI-generated numbers — in the browser, in your ba
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](finverify-terminal/backend/requirements.txt)
 [![Next.js 14](https://img.shields.io/badge/next.js-14-black.svg)](finverify-terminal/frontend/package.json)
+<!-- TODO: confirm badge repo path — these point at aadityat23/finverify-llm, not FinVerify/Finverify. Update if the canonical org/repo has moved. Same applies to Discussions and Issues links in the Community section below. -->
 [![Backend Tests](https://github.com/aadityat23/finverify-llm/actions/workflows/backend-tests.yml/badge.svg?branch=main)](https://github.com/aadityat23/finverify-llm/actions/workflows/backend-tests.yml)
 [![SDK Tests](https://github.com/aadityat23/finverify-llm/actions/workflows/sdk-tests.yml/badge.svg?branch=main)](https://github.com/aadityat23/finverify-llm/actions/workflows/sdk-tests.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)

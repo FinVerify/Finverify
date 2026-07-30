@@ -2,7 +2,7 @@
 
 FinVerify's mission is to make financial AI output more trustworthy through deterministic verification and reproducible evaluation. That mission only holds up if the infrastructure around it — the API, the ingestion pipelines, the SDK, and the hosted demo — is itself trustworthy. We take the security of the FinVerify backend, frontend, and SDK seriously, and we appreciate the work of researchers and community members who help us find and fix issues before they affect users.
 
-This applies across every surface in the repository: the FastAPI backend (`finverify-terminal/backend`), the Next.js frontend (`finverify-terminal/frontend`), the standalone `finverify` Python SDK (`finverify-terminal/sdk`), and the data-ingestion pipelines that pull from SEC EDGAR and other external sources.
+This applies across every surface in the repository: the FastAPI backend (`finverify-terminal/backend`), the Next.js frontend (`finverify-terminal/frontend`), the standalone `finverify-sdk` Python SDK (`finverify-sdk/`, published to PyPI as `pip install finverify-sdk`), the archived legacy SDK prototype (`finverify-terminal/sdk-legacy/`, no longer actively maintained — kept for historical reference only), and the data-ingestion pipelines that pull from SEC EDGAR and other external sources.
 
 ## Reporting a Vulnerability
 

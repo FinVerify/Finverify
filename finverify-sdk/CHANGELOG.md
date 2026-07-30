@@ -19,7 +19,7 @@ Initial public release candidate.
   and `client.sample_queries()`.
 - `verify_local()` and `normalize_metric_name()` — zero-network,
   zero-dependency local verification, vendored from
-  `finverify-terminal/sdk/finverify/{dvl,normalizer}.py`.
+  `finverify-terminal/sdk-legacy/finverify/{dvl,normalizer}.py`.
 - Typed exception hierarchy (`FinVerifyError` and 9 subclasses) with a
   `retryable` flag per class.
 - Automatic retries with exponential backoff + full jitter for 429/5xx

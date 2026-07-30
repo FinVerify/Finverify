@@ -139,9 +139,9 @@ Cross-model evaluation code. The evaluator now calls `core.verify()` for DVL acc
 
 Regression and behavior tests covering the existing DVL, API, FCG, RAG, SEC, transcript, parser, and normalization functionality. The SEC ingestion test now mocks the shared engine rather than the removed legacy call path.
 
-### `finverify-terminal/bench/`
+### `finverify-terminal/smoke-tests/`
 
-The initial benchmark surface. `datasets/smoke.json` contains representative smoke cases, and `runner.py` executes them directly against the core engine.
+A CI regression smoke-check, distinct from the FinVerifyBench research dataset in `finverify-bench/`. `smoke.json` contains 2 representative cases run directly against the core engine to catch regressions; it is not a benchmark in the research/evaluation sense.
 
 ### Root documentation
 
@@ -469,8 +469,8 @@ The following items are intentionally not implemented in this overhaul:
 ### Benchmark and documentation
 
 - `ARCHITECTURE.md`: current architecture boundary documentation.
-- `bench/datasets/smoke.json`: smoke benchmark cases.
-- `bench/runner.py`: direct core-engine benchmark runner.
+- `smoke-tests/smoke.json`: smoke benchmark cases.
+- `smoke-tests/runner.py`: direct core-engine smoke-test runner.
 - `IMPLEMENTATION_REPORT.md`: this implementation audit.
 
 ## 12. Statistics

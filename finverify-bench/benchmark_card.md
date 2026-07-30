@@ -47,6 +47,8 @@ FinVerifyBench operationalizes the central finding of the FinVerify paper: that 
 
 *Multi-label — samples may carry more than one category.*
 
+> **Note:** The original design target was ≤20% per error category (see [`BENCHMARK_DESIGN.md` §5](BENCHMARK_DESIGN.md#5-statistical-balance-requirements-original-targets)). The realized distribution does not meet this target: `scale_error` (34.0%) and `ratio_error` (33.0%) significantly exceed it due to generator template weighting toward ratio/margin calculations. See `BENCHMARK_DESIGN.md` §5a for the full root-cause analysis.
+
 ### 3.2 Difficulty Distribution
 
 | Level | n | % | Description |
@@ -99,7 +101,9 @@ No proprietary financial data is included. All values are fictional but realisti
 - Every `ground_truth` is derived programmatically from its context parameters
 - `scripts/verify_calculations.py` re-derives answers from context numbers and flags discrepancies
 - `scripts/validate_dataset.py` checks schema, enum membership, and semantic consistency
-- 100% of samples pass both validation passes (0 failures at release)
+- 100% of samples pass both automated validation passes (0 failures at release)
+
+> **Human review status:** The automated checks above have been executed and pass at 100%. The human-review and inter-annotator agreement process described in `BENCHMARK_DESIGN.md` §7–8 has **not yet been executed** on the current 500-sample release. See `BENCHMARK_DESIGN.md` §8 for planned process details.
 
 ### 4.3 Quality Checks
 

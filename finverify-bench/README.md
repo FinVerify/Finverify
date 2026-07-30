@@ -2,6 +2,8 @@
 
 **A benchmark for structured numerical hallucinations in financial language models.**
 
+> **Not to be confused with `finverify-terminal/smoke-tests/`**, which is an internal CI regression check (2 smoke cases against the core engine). This directory (`finverify-bench/`) is the full 500-sample FinVerifyBench research dataset and evaluation harness.
+
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Benchmark v1.0](https://img.shields.io/badge/benchmark-v1.0-green.svg)](https://github.com/your-org/finverifybench)

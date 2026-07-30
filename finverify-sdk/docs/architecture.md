@@ -100,7 +100,7 @@ actually valid.
 Response models are plain `dataclasses`, not Pydantic, even though the
 FastAPI backend uses Pydantic internally. This was a deliberate choice
 to match the convention already established in this repository's
-embedded SDK (`finverify-terminal/sdk/finverify/client.py`, `dvl.py`),
+embedded SDK (`finverify-terminal/sdk-legacy/finverify/client.py`, `dvl.py`),
 and to keep this package's only hard dependency `httpx`. Every model
 class exposes `.from_dict()` and (where relevant) `.to_dict()`, so
 nothing that comes back from a typed method is a raw `dict` — the

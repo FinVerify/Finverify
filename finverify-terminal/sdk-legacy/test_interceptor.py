@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, 'finverify-terminal/sdk')
+sys.path.insert(0, 'finverify-terminal/sdk-legacy')
 
 from finverify import FinVerifyInterceptor, verify_local
 

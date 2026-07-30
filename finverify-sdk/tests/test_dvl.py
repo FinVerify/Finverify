@@ -1,7 +1,7 @@
 """
 Tests for finverify.dvl — Pure Python DVL verification.
 
-This is a pytest port of finverify-terminal/sdk/tests/test_dvl.py,
+This is a pytest port of finverify-terminal/sdk-legacy/tests/test_dvl.py,
 covering the same cases against the module as vendored into this SDK.
 """
 

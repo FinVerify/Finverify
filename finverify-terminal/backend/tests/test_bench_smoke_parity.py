@@ -8,7 +8,7 @@ from core.engine import verify
 from core.models import Claim
 
 
-SMOKE_DATASET = Path(__file__).resolve().parents[2] / "bench" / "smoke.json"
+SMOKE_DATASET = Path(__file__).resolve().parents[2] / "smoke-tests" / "smoke.json"
 
 
 def test_smoke_benchmark_cases_match_legacy_dvl_and_core_engine():
