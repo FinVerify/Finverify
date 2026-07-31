@@ -8,7 +8,7 @@
 
 ### The verification layer for financial AI.
 
-Deterministic correction for AI-generated numbers — in the browser, in your backend, in your terminal.
+Deterministic correction for AI-generated numbers in the browser, in your backend, in your terminal.
 
 <br />
 
@@ -24,7 +24,7 @@ Deterministic correction for AI-generated numbers — in the browser, in your ba
 
 <br />
 
-**[Ecosystem](#finverify-ecosystem) · [Extension](#chrome-extension) · [SDK](#python-sdk) · [Benchmark](#benchmark) · [Features](#features) · [Architecture](#architecture) · [Quick Start](#quick-start) · [Results](#results) · [Research](#research) · [Contributing](#contributing)**
+**[Ecosystem](#finverify-ecosystem) · [Extension](#chrome-extension) · [SDK](#python-sdk) · [Benchmark](#benchmark) · [Features](#features) · [Architecture](#architecture) · [Pipeline](#verification-pipeline) · [Core Components](#core-components) · [Quick Start](#quick-start) · [Results](#results) · [Research](#research) · [Contributing](#contributing)**
 
 <br />
 
@@ -44,7 +44,7 @@ Deterministic correction for AI-generated numbers — in the browser, in your ba
 
 ## FinVerify Ecosystem
 
-FinVerify isn't a single backend anymore — it's a monorepo of interoperable components that all share the same verification core (the DVL). Start here, then go deeper via each component's own README.
+FinVerify isn't a single backend anymore it's a monorepo of interoperable components that all share the same verification core (the DVL). Start here, then go deeper via each component's own README.
 
 | Component | What it does |
 |---|---|
@@ -63,6 +63,8 @@ New here? Jump to [Quick Start](#quick-start) to run any of these locally, or [R
 > LLMs answering financial questions are often directionally right and numerically wrong — a decimal point misplaced, a percentage reported as a raw fraction, a sign flipped. In a regulated or capital-allocation context, that's not a rounding error. It's a liability.
 
 Most fixes reach for more prompting. FinVerify reaches for a rule engine instead: the **Deterministic Verification Layer (DVL)**. Scale, sign, and magnitude errors are mechanically distinct from reasoning errors — they need a rule, not another model call.
+
+Underneath the DVL sits a **Numeric Canonicalizer** that parses raw numeric tokens into an unambiguous, Decimal-based representation before any correction rule runs, and a **Constraint Engine** that checks whether multiple claims are consistent with each other (e.g. does `GrossProfit` actually equal `Revenue − COGS`) using a dependency graph and dimensional analysis, not just single-number correction.
 
 <br />
 
@@ -178,7 +180,7 @@ See [`finverify-bench/README.md`](finverify-bench/README.md) to run the harness 
 
 | Category | Highlights |
 |---|---|
-| **Verification** | DVL — deterministic scale, sign, and magnitude correction · Financial Constraint Graph — accounting-identity checks · Trust Engine — delta-based confidence scoring |
+| **Verification** | DVL — deterministic scale, sign, and magnitude correction · Numeric Canonicalizer — Decimal-based numeric token parsing shared by DVL and the parser · Constraint Engine — dependency-graph + dimensional-analysis consistency checks across multiple claims · Batch Verification API — one shared constraint pass across a batch of claims · Trust Engine — delta-based confidence scoring |
 | **Browser Extension** | Inline trust badges and verification reports · Provider Adapter architecture · Monorepo workspace |
 | **Backend** | FastAPI REST + WebSocket API · Live market data verified through the DVL · SEC EDGAR & earnings-transcript ingestion · RAG pipeline (Pinecone + fallback) |
 | **Research** | FinVerifyBench — synthetic diagnostic benchmark · Reproducible FinQA evaluation harness · Published ablation study |
@@ -200,21 +202,66 @@ flowchart TD
     E --> F["UI (extension badge / terminal / dashboard)"]
 ```
 
-**Backend detail — core v1 pipeline**
+**Backend detail — single-claim pipeline**
 
 ```mermaid
 flowchart TD
     A[User Query] --> B{Query Classifier}
     B -->|advisory| C[LLM Only] --> D[Unverified Response]
     B -->|numerical| E["LLM Inference (Mistral-7B + QLoRA)"]
-    E --> F["DVL Pipeline: scale → sign → magnitude + audit log"]
-    F --> G["Trust Engine (delta-based)"]
-    G --> H[Verified Output + correction log]
+    E --> F["Numeric Canonicalizer: token → Decimal + unit"]
+    F --> G["DVL Pipeline: scale → sign → magnitude + audit log"]
+    G --> H["Trust Engine (delta-based)"]
+    H --> I[Verified Output + correction log]
 ```
 
-> **Why it matters** — every surface (extension, terminal, API) calls the same DVL. Verification logic lives in one place, not reimplemented per surface.
+**Multi-claim pipeline — Constraint Engine**
 
-This intentionally omits the Financial Constraint Graph, ingestion, and RAG subsystems — see [Repository Structure](#repository-structure) for those.
+```mermaid
+flowchart TD
+    A["Batch of claims (POST /v1/verify/batch)"] --> B["verify() per claim (DVL)"]
+    B --> C["Formula Parser + concepts.yaml"]
+    C --> D["Constraint Graph (dependency order, cycle detection)"]
+    D --> E["Dimensional Analysis (Currency / % / Ratio / PerShare / …)"]
+    E --> F["Constraint Verifier (tolerance-based comparison)"]
+    F --> G["BatchVerifyResponse: per-claim results + shared violations"]
+```
+
+> **Why it matters** — every surface (extension, terminal, API) calls the same DVL for single-claim correction. The Constraint Engine adds a second, independent check across claims: does `GrossProfit` actually equal `Revenue − COGS`, not just "is this one number formatted correctly."
+
+> **TODO (unverified in-repo):** the backend currently contains *two* constraint-checking code paths — `backend/fcg/constraint_engine.py` (older) and `backend/core/financial/constraints/` (newer, described above). Both have live test suites. This README describes the newer `constraints/` module since it's the one wired into `verify_batch()`; the relationship between the two, and whether `fcg/` is being deprecated, isn't documented in the repo and should be clarified rather than assumed.
+
+This diagram intentionally omits ingestion and RAG subsystems — see [Repository Structure](#repository-structure) for those.
+
+---
+
+## Verification Pipeline
+
+The full flow a claim goes through, end to end:
+
+1. **Input** — a claim arrives either from LLM output (extension, terminal query) or as a direct API call (`/verify`, `/v1/verify/batch`).
+2. **Claim Extraction** — the numeric assertion and its associated concept (e.g. "gross margin") are pulled out of the surrounding text.
+3. **Numeric Canonicalization** — the raw numeric token is parsed into a structured, unambiguous form (Decimal value + unit), rejecting ambiguous input rather than guessing.
+4. **DVL** — scale, sign, and magnitude correction rules run against the canonicalized value, with every correction logged.
+5. **Constraint Verification** *(multi-claim only)* — if two or more related claims are present, they're checked against each other via the dependency graph and dimensional analysis, producing `Violation` or `INDETERMINATE` results rather than silently passing.
+6. **Trust Engine** — a delta-based confidence score is computed from how much correction was needed.
+7. **Output** — a `VerificationResult` (or `BatchVerifyResponse` for batches) containing the corrected value, the trust score, and the full audit trail.
+
+---
+
+## Core Components
+
+**Numeric Canonicalizer** (`backend/numeric/canonicalizer.py`) — the single source of truth for turning a raw numeric token into a Decimal value with an explicit unit. Deliberately refuses to guess on ambiguous input (e.g. locale-ambiguous grouping, unclear scale words) rather than silently picking an interpretation. Lives outside `core/` specifically to avoid a circular import with `app.dvl`.
+
+**Constraint Engine** (`backend/core/financial/constraints/`) — a formula parser, a dependency graph (Kahn's algorithm, explicit cycle reporting), and a tolerance-based verifier that together check whether multiple financial claims are mutually consistent, independent of whether any single claim's number is "correct" in isolation.
+
+**Formula Engine** — the sole evaluator of parsed equations; the constraint parser deliberately only parses (produces an intermediate representation) and never evaluates, keeping evaluation logic in one place.
+
+**Trust Engine** — computes a delta-based HIGH / MEDIUM / LOW confidence score from how much a claim's raw value had to be corrected.
+
+**Transcript Ingestion** (`backend/ingestion/transcripts.py`) — extracts and verifies numerical claims from earnings-call transcripts.
+
+**Financial Constraint Graph** — see the TODO above: this term currently refers ambiguously to either `backend/fcg/constraint_engine.py` (older) or the dependency graph inside `backend/core/financial/constraints/graph.py` (newer). Not yet resolved in-repo.
 
 ---
 
@@ -378,7 +425,14 @@ finverify-llm/
 │   │   │   ├── parser.py        # numeric extraction from LLM text
 │   │   │   ├── market.py        # yfinance wrapper, DVL-verified metrics
 │   │   │   └── models.py        # request/response schemas
-│   │   ├── fcg/                 # Financial Constraint Graph, metric normalizer
+│   │   ├── numeric/             # Numeric Canonicalizer (Decimal-based token parsing)
+│   │   ├── core/
+│   │   │   ├── engine.py        # verify(), verify_batch()
+│   │   │   ├── math_engine/     # DVL rule engine
+│   │   │   └── financial/
+│   │   │       └── constraints/ # Formula Parser, Constraint Graph, Dimensional Analysis, Verifier
+│   │   ├── fcg/                 # TODO: older constraint-checking module — see note above on
+│   │   │                        # its relationship to core/financial/constraints/, unresolved in-repo
 │   │   ├── ingestion/           # SEC EDGAR and earnings-transcript ingestion
 │   │   ├── rag/                 # retrieval pipeline (Pinecone + fallback search)
 │   │   └── evals/               # cross-model evaluation harness
@@ -403,9 +457,12 @@ finverify-llm/
 |---|---|---|
 | Chrome Extension core | `finverify-extension/packages/core` | Shared verification client used across content/background/popup |
 | DVL engine | `backend/app/dvl.py` | Scale/sign/magnitude correction with audit logging |
+| Numeric Canonicalizer | `backend/numeric/canonicalizer.py` | Decimal-based numeric token parsing shared by DVL and the parser |
+| Constraint Engine | `backend/core/financial/constraints/` | Formula parsing, dependency graph, dimensional analysis, tolerance-based multi-claim verification |
+| Batch Verification | `backend/core/engine.py` (`verify_batch`) · `POST /v1/verify/batch` | One shared constraint pass across a batch of claims |
 | Query classifier | `backend/app/router.py` | Routes numerical vs advisory queries |
 | Market layer | `backend/app/market.py` | Live yfinance data, DVL-verified financial metrics |
-| Financial Constraint Graph | `backend/fcg/constraint_engine.py` | Multi-number accounting-identity and ratio-bound checks |
+| ~~Financial Constraint Graph~~ (legacy) | `backend/fcg/constraint_engine.py` | Older multi-number accounting-identity checker; TODO — relationship to the newer Constraint Engine above is not documented in-repo |
 | SEC EDGAR ingestion | `backend/ingestion/sec_edgar.py` | XBRL/fallback ingestion of 10-K/10-Q fundamentals |
 | Earnings transcript verification | `backend/ingestion/transcripts.py` | Regex extraction and DVL verification of earnings-call claims |
 | RAG pipeline | `backend/rag/pipeline.py` | Pinecone vector + keyword-overlap fallback retrieval |
@@ -417,6 +474,8 @@ finverify-llm/
 | Benchmark suite | `finverify-bench/` | FinVerifyBench dataset, DVL evaluation mapping, design docs |
 
 </details>
+
+> **Test suite size:** `finverify-terminal/backend/tests/` currently defines 224 test functions across 19 files (largest: `test_constraint_engine.py` with 37, `test_numeric_canonicalizer.py` with 23). This count was taken directly from the test files, not from a CI run — TODO: confirm the actual passing count from a real `pytest` run in CI, since the backend's heavier dependencies (torch, transformers) weren't installed for this audit.
 
 ---
 
@@ -467,8 +526,11 @@ Tracked through GitHub Milestones — here's where things stand, and where help 
 </td><td valign="top">
 
 **Verification Engine**
-- ✅ DVL, Financial Constraint Graph, Trust Engine
-- 🔧 Consolidating the DVL
+- ✅ DVL, Trust Engine
+- ✅ Numeric Canonicalizer
+- ✅ Constraint Engine (formula parser, dependency graph, dimensional analysis)
+- ✅ Batch Verification API
+- 🔧 Reconciling `backend/fcg/` (legacy) with the newer `core/financial/constraints/` module
 - 📋 Verification methods beyond scale/sign/magnitude
 
 </td></tr>
