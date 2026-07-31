@@ -51,6 +51,12 @@ export default async function RootLayout({
             <div className="flex items-center gap-5">
               <NavHealthIndicator />
               <a
+                href="/workspace"
+                className="text-[10px] text-t-green font-mono font-semibold tracking-wider hover:text-t-green/80 transition-colors"
+              >
+                WORKSPACE
+              </a>
+              <a
                 href="/dashboard"
                 className="text-[10px] text-t-cyan font-mono font-semibold tracking-wider hover:text-t-cyan/80 transition-colors"
               >

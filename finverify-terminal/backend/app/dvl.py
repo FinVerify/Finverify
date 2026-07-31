@@ -15,10 +15,24 @@ CRITICAL FIX (v1.1): Scale correction no longer fires blindly on 1-100 range.
 
 v1.2: Compound corrections — scale correction now looks ahead at sign
       to validate candidates that are correct after both corrections.
+
+v1.3: Canonical-aware ratio detection. `full_verify` accepts an optional
+      `canonical` (numeric.canonicalizer.CanonicalNumber) argument.
+      When the caller already knows how a value was represented in the
+      source text -- "25.31%" carries unit=PERCENT; "850 bps" carries
+      unit=BASIS_POINT -- DVL can consult that directly instead of
+      guessing ratio-ness purely from question phrasing (RATIO_KEYWORDS).
+      This is strictly additive: `canonical` defaults to None, and every
+      existing call site (which never passes it) behaves byte-for-byte
+      as before. See verify_canonical() below for the new, fully
+      canonical-aware entry point, which is the recommended path for any
+      new call site.
 """
 
 import logging
 from typing import Optional
+
+from numeric.canonicalizer import CanonicalNumber, Unit
 
 logger = logging.getLogger(__name__)
 
@@ -76,9 +90,23 @@ def full_verify(
     question: str,
     predicted: float,
     actual: Optional[float] = None,
+    canonical: Optional[CanonicalNumber] = None,
 ) -> tuple[float, list[dict], str, str]:
     """
     Run the full DVL pipeline on a predicted number.
+
+    `canonical`, if provided, is the CanonicalNumber the value was
+    originally parsed from (see numeric.canonicalizer /
+    app.parser.extract_canonical). When present and its unit is not
+    Unit.NONE, ratio-ness is read directly from that unit instead of
+    being guessed from RATIO_KEYWORDS in the question text, and the
+    scale_div100/scale_mul100 heuristic (which only makes sense for
+    plain percent-scale values) is skipped for basis points and
+    percentage points, which live on a different numeric scale entirely
+    (e.g. "850 bps" is correctly large, not an ambiguous-scale ratio).
+
+    This parameter is purely additive: when omitted (as in every
+    existing call site), behavior is byte-for-byte identical to v1.2.
 
     Returns
     -------
@@ -91,12 +119,18 @@ def full_verify(
     correction_log: list[dict] = []
     ambiguous = False
     q_lower = question.lower()
-    is_ratio = any(kw in q_lower for kw in RATIO_KEYWORDS)
+
+    skip_scale_heuristic = False
+    if canonical is not None and canonical.unit != Unit.NONE:
+        is_ratio = canonical.unit == Unit.PERCENT
+        skip_scale_heuristic = canonical.unit in (Unit.BASIS_POINT, Unit.PERCENTAGE_POINT)
+    else:
+        is_ratio = any(kw in q_lower for kw in RATIO_KEYWORDS)
 
     # ------------------------------------------------------------------
     # Step 1 — Scale correction (FIXED: respects ambiguous range)
     # ------------------------------------------------------------------
-    if is_ratio:
+    if is_ratio and not skip_scale_heuristic:
         if actual is not None:
             # WITH ground truth — we can validate
             if abs(value) > 100:
@@ -211,6 +245,76 @@ def full_verify(
 
     label, color = compute_trust(predicted, value, correction_log, ambiguous)
     return value, correction_log, label, color
+
+
+def verify_canonical(
+    question: str,
+    canonical: CanonicalNumber,
+    actual: Optional[float] = None,
+) -> "DVLVerificationResult":
+    """
+    Canonical-aware entry point. Recommended for any new call site that
+    already has a CanonicalNumber (e.g. from app.parser.extract_canonical)
+    rather than a bare float.
+
+    Unlike full_verify()'s frozen 4-tuple return (kept exactly as-is for
+    backward compatibility with existing callers and parity tests), this
+    returns a structured result that also carries currency and
+    scale_applied through, so callers can display or audit them without
+    re-deriving anything from the original raw string.
+    """
+    predicted = float(canonical.value)
+    verified_value, correction_log, label, color = full_verify(
+        question, predicted, actual, canonical=canonical
+    )
+    return DVLVerificationResult(
+        verified_value=verified_value,
+        correction_log=correction_log,
+        trust_label=label,
+        trust_color=color,
+        unit=canonical.unit,
+        currency=canonical.currency,
+        scale_applied=canonical.scale_applied,
+    )
+
+
+class DVLVerificationResult:
+    """Structured result for verify_canonical(). See that function's docstring."""
+
+    __slots__ = (
+        "verified_value",
+        "correction_log",
+        "trust_label",
+        "trust_color",
+        "unit",
+        "currency",
+        "scale_applied",
+    )
+
+    def __init__(
+        self,
+        verified_value: Optional[float],
+        correction_log: list[dict],
+        trust_label: str,
+        trust_color: str,
+        unit: Unit,
+        currency: Optional[str],
+        scale_applied: Optional[str],
+    ):
+        self.verified_value = verified_value
+        self.correction_log = correction_log
+        self.trust_label = trust_label
+        self.trust_color = trust_color
+        self.unit = unit
+        self.currency = currency
+        self.scale_applied = scale_applied
+
+    def __repr__(self) -> str:  # pragma: no cover - cosmetic
+        return (
+            f"DVLVerificationResult(verified_value={self.verified_value}, "
+            f"trust_label={self.trust_label!r}, unit={self.unit.value}, "
+            f"currency={self.currency}, scale_applied={self.scale_applied})"
+        )
 
 
 # ---------------------------------------------------------------------------
