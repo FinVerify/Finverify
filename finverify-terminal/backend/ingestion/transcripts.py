@@ -24,6 +24,26 @@ Claim types detected:
   - margin of X.X%        (margins)
   - revenue of $X.X B/M   (revenue figures)
 
+Numeric parsing (comma stripping, scale-word multiplication, currency
+symbols) previously reimplemented this logic independently -- its own
+SCALE_MAP, its own float() calls -- rather than sharing it with
+app.parser/app.dvl. It now delegates every parsed number to
+numeric.canonicalizer.canonicalize(), the same module the rest of the
+backend uses, eliminating that duplication.
+
+SCOPE NOTE: this refactor touches extraction only. DVL verification
+(verify_claims / build_question_from_claim) deliberately still passes
+plain floats to full_verify() rather than the new canonical-aware
+`canonical=` parameter. build_question_from_claim() carefully avoids
+injecting RATIO_KEYWORDS into the question text for growth_pct/
+decline_pct claims specifically so DVL never applies scale_div100 to a
+legitimate >100% YoY growth figure (e.g. "grew 154%" must stay 154.0,
+not become 1.54). Passing canonical=... with unit=PERCENT would
+reintroduce exactly that bug, since canonical-aware full_verify() infers
+is_ratio directly from unit=PERCENT regardless of question phrasing.
+Reconciling that would mean changing DVL's ratio semantics, which is out
+of scope for a transcript-ingestion-only PR -- flagged as a follow-up.
+
 Usage:
     python -m ingestion.transcripts                 # All tickers
     python -m ingestion.transcripts --ticker AAPL   # Single ticker
@@ -41,6 +61,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from core.engine import verify
 from core.models import Claim
+from numeric.canonicalizer import CanonicalizationError, Unit, canonicalize
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +102,11 @@ SCALE_MAP = {
     "million": 1e6, "M": 1e6, "mn": 1e6,
     "thousand": 1e3, "K": 1e3,
 }
+# NOTE: no longer used internally by extract_claims() -- scale-word
+# multiplication is now handled by numeric.canonicalizer, which supports
+# the full billion/bn/b/million/mn/m/thousand/k/trillion/tn/t set rather
+# than just this fixed table. Kept defined (and still exported) purely
+# for backward compatibility: existing code/tests import it directly.
 
 
 # ---------------------------------------------------------------------------
@@ -214,6 +240,17 @@ def extract_claims(text: str) -> list[dict]:
     """
     Extract numeric claims from transcript text using regex pipeline.
     Returns list of claim dicts with sentence context.
+
+    Regex matching (which substrings look like claims, and of what type)
+    is unchanged from the original implementation -- that part is a
+    genuinely separate concern from parsing the matched number correctly,
+    per the same fuzzy-scan/strict-canonicalize split used in
+    app.parser. What changed is what happens to a match once found:
+    every captured number now flows through numeric.canonicalizer
+    instead of a bespoke `.replace(",", "")` + SCALE_MAP lookup, so it
+    gets the same billion/bn/scientific-notation/locale handling as
+    everywhere else in the backend, instead of a third independent
+    (and narrower) implementation of the same problem.
     """
     claims = []
     seen_matches = set()  # Deduplicate overlapping patterns
@@ -231,17 +268,25 @@ def extract_claims(text: str) -> list[dict]:
             matches = re.finditer(pattern, sentence, re.IGNORECASE)
             for m in matches:
                 try:
-                    num_str = m.group(1).replace(",", "")
-                    value = float(num_str)
+                    token = _build_canonicalization_token(claim_type, m)
+                    canonical = canonicalize(token)
+                    value = float(canonical.value)
 
-                    # Apply scale multiplier for currency amounts
+                    # scale_label mirrors the old field exactly: the raw
+                    # matched scale word (e.g. "billion"), present only
+                    # for claim types whose pattern captures one.
                     scale_label = None
-                    if m.lastindex and m.lastindex >= 2:
+                    if claim_type in _SCALE_SUFFIX_CLAIM_TYPES and m.lastindex and m.lastindex >= 2:
                         scale_label = m.group(2)
-                        if scale_label and scale_label in SCALE_MAP:
-                            value *= SCALE_MAP[scale_label]
 
-                    # BPS → percentage conversion (the ambiguity DVL catches)
+                    # BPS → percentage conversion (the ambiguity DVL catches).
+                    # This division is a domain-semantic convention this
+                    # module owns, not something the canonicalizer does --
+                    # the canonicalizer deliberately keeps "240 bps" as a
+                    # literal value=240/unit=BASIS_POINT and refuses to
+                    # guess that a caller wants it divided by 100. See
+                    # numeric/canonicalizer.py's design note on never
+                    # conflating representation with semantics.
                     bps_original = None
                     if claim_type == 'bps':
                         bps_original = value
@@ -264,11 +309,85 @@ def extract_claims(text: str) -> list[dict]:
                     if scale_label:
                         claim["scale_label"] = scale_label
 
+                    # Additive metadata now available "for free" from the
+                    # canonicalizer -- not consumed downstream yet, but
+                    # exposed for future use (e.g. a future currency-
+                    # mismatch check) without re-deriving it from raw text.
+                    if canonical.currency:
+                        claim["currency"] = canonical.currency
+                    if canonical.unit != Unit.NONE:
+                        claim["unit"] = canonical.unit.value
+
                     claims.append(claim)
-                except (ValueError, IndexError):
+                except (CanonicalizationError, ValueError, IndexError):
                     continue
 
     return claims
+
+
+# Claim types whose pattern's optional group(2), if present, captured a
+# scale word ("billion", "B", "bn", ...) that should be appended to the
+# token before canonicalization.
+_SCALE_SUFFIX_CLAIM_TYPES = {"currency", "revenue"}
+
+# Claim types whose pattern requires a literal "$" immediately before the
+# captured number (excluded from the capture group itself).
+_DOLLAR_PREFIX_CLAIM_TYPES = {"currency", "currency_raw"}
+
+# Claim types whose pattern requires a literal "%" immediately after the
+# captured number (excluded from the capture group itself).
+_PERCENT_SUFFIX_CLAIM_TYPES = {"percentage", "growth_pct", "decline_pct"}
+
+
+def _build_canonicalization_token(claim_type: str, match: "re.Match") -> str:
+    """
+    Reconstruct the single numeric token the canonicalizer should parse
+    from a CLAIM_PATTERNS regex match. This mirrors exactly what the old
+    inline parsing did for each claim type -- including two pre-existing
+    quirks preserved deliberately, not "fixed," since this refactor is
+    scoped to eliminating duplicate parsing, not changing behavior:
+
+    - 'shares': the pattern anchors on "million|billion ... shares" in
+      the source sentence but never captures that word as a group, so
+      the scale was never applied to the parsed value even before this
+      refactor (e.g. "10.4 million shares" parses as 10.4, not
+      10,400,000). That's a real pre-existing limitation, worth its own
+      follow-up, but changing it here would be a behavior change outside
+      this PR's scope.
+    - 'eps', 'margin', 'ratio', 'return_metric': their patterns don't
+      capture a currency symbol or scale word either (even though "$"
+      or "%" may appear adjacent in the matched text), so the token is
+      just the bare number, exactly as before.
+    """
+    # CLAIM_PATTERNS' capture groups use a greedy [\d,.]+ character class,
+    # which can sweep in a stray trailing sentence-comma that has nothing
+    # to do with digit grouping -- e.g. "EPS was $1.64, up from $1.52..."
+    # captures "1.64," (comma included) because a comma immediately
+    # follows the number in the sentence. The old implementation's blind
+    # `.replace(",", "")` erased this as a side effect of stripping every
+    # comma indiscriminately. This is the narrow, equivalent fix: strip
+    # only a comma trailing with nothing after it, which is unambiguously
+    # punctuation (valid thousands-grouping commas are always followed by
+    # exactly three digits, never trail the string). This does NOT mask
+    # genuinely malformed interior grouping elsewhere in the token --
+    # the canonicalizer still rejects that.
+    token = match.group(1).rstrip(",")
+
+    if claim_type in _DOLLAR_PREFIX_CLAIM_TYPES:
+        token = "$" + token
+
+    if claim_type in _SCALE_SUFFIX_CLAIM_TYPES and match.lastindex and match.lastindex >= 2:
+        scale_word = match.group(2)
+        if scale_word:
+            token = f"{token} {scale_word}"
+
+    if claim_type in _PERCENT_SUFFIX_CLAIM_TYPES:
+        token = token + "%"
+
+    if claim_type == "bps":
+        token = token + " bps"
+
+    return token
 
 
 def build_question_from_claim(claim: dict) -> str:
