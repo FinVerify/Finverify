@@ -13,7 +13,6 @@ import {
 } from "@/components/workspace/RightColumnPanels";
 import WorkspaceBottomBar from "@/components/workspace/WorkspaceBottomBar";
 import MarketAlertBanner from "@/components/workspace/MarketAlertBanner";
-import HeroNetwork from "@/components/HeroNetwork"; // <-- ADD THIS
 
 // Root header ~44px + TickerBar ~32px = ~76px already consumed by root layout
 const ROOT_CHROME_HEIGHT = 76;
@@ -73,10 +72,6 @@ export default function WorkspacePage() {
 
         {/* ── Center Column ── */}
         <div className="flex flex-col min-h-0 overflow-hidden">
-          {/* 🌍 World Map - HeroNetwork */}
-          <div className="h-[140px] min-h-[140px] mb-[6px] bg-zinc-950/50 rounded border border-zinc-800/60 overflow-hidden">
-            <HeroNetwork />
-          </div>
           {/* Focus View */}
           <FocusView
             selectedSymbol={selectedSymbol}
