@@ -1,0 +1,9 @@
+{
+  "tolerance": 0.001,
+  "claims": [
+    {"metric": "Revenue", "value": 383285000000},
+    {"metric": "COGS", "value": 206210000000},
+    {"metric": "GrossProfit", "value": 177075000000},
+    {"metric": "GrossMargin", "value": 0.462, "actual_value": 0.462}
+  ]
+}

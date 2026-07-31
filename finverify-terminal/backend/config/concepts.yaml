@@ -2,6 +2,7 @@
   "concepts": {
     "Revenue": {
       "aliases": ["Net Sales", "Turnover", "Sales"],
+      "dimension": "currency",
       "xbrl_tags": [
         "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
         "us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax",
@@ -15,6 +16,7 @@
     },
     "CostOfGoodsSold": {
       "aliases": ["COGS", "Cost of Sales", "Cost of Revenue"],
+      "dimension": "currency",
       "xbrl_tags": [
         "us-gaap:CostOfGoodsSold",
         "us-gaap:CostOfGoodsAndServicesSold",
@@ -28,30 +30,35 @@
     },
     "GrossProfit": {
       "aliases": ["Gross Profit"],
+      "dimension": "currency",
       "xbrl_tags": ["us-gaap:GrossProfit"],
       "unit": "USD",
       "statement": "IncomeStatement"
     },
     "OperatingIncome": {
       "aliases": ["Operating Profit", "EBIT"],
+      "dimension": "currency",
       "xbrl_tags": ["us-gaap:OperatingIncomeLoss"],
       "unit": "USD",
       "statement": "IncomeStatement"
     },
     "NetIncome": {
       "aliases": ["Net Income Loss", "Net Earnings", "Earnings"],
+      "dimension": "currency",
       "xbrl_tags": ["us-gaap:NetIncomeLoss", "us-gaap:ProfitLoss"],
       "unit": "USD",
       "statement": "IncomeStatement"
     },
     "OperatingCashFlow": {
       "aliases": ["Cash Flow From Operations", "Operating Cash Flow"],
+      "dimension": "currency",
       "xbrl_tags": ["us-gaap:NetCashProvidedByUsedInOperatingActivities"],
       "unit": "USD",
       "statement": "CashFlowStatement"
     },
     "GrossMargin": {
       "aliases": ["Gross Profit Margin"],
+      "dimension": "percentage",
       "formula": "(Revenue - CostOfGoodsSold) / Revenue",
       "unit": "percentage",
       "statement": "IncomeStatement",
@@ -59,6 +66,7 @@
     },
     "OperatingMargin": {
       "aliases": ["Operating Profit Margin"],
+      "dimension": "percentage",
       "formula": "OperatingIncome / Revenue",
       "unit": "percentage",
       "statement": "IncomeStatement",
@@ -66,6 +74,7 @@
     },
     "RevenueYoYGrowth": {
       "aliases": ["Revenue Growth", "Revenue YoY", "Year over Year Revenue Growth"],
+      "dimension": "growth_rate",
       "formula": "(Revenue - Revenue_prior) / Revenue_prior",
       "unit": "percentage",
       "statement": "IncomeStatement",

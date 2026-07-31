@@ -4,6 +4,9 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .constraints.loader import load_equations_from_concepts
+from .constraints.models import Equation
+
 try:
     import yaml
 except ImportError:
@@ -18,6 +21,7 @@ class ConceptRegistry:
             else:
                 data = json.load(handle)
         self.concepts: dict[str, dict[str, Any]] = data.get("concepts", {})
+        self._equations_cache: tuple[Equation, ...] | None = None
         self._build_indexes()
 
     def _build_indexes(self) -> None:
@@ -41,3 +45,8 @@ class ConceptRegistry:
 
     def resolve_xbrl_tag(self, tag: str) -> str | None:
         return self.tag_map.get(tag.lower())
+
+    def load_equations(self) -> list[Equation]:
+        if self._equations_cache is None:
+            self._equations_cache = tuple(load_equations_from_concepts(self.concepts))
+        return list(self._equations_cache)

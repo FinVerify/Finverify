@@ -21,8 +21,16 @@ const ROUTES = [
 
 export default function HeroNetwork() {
   return (
-    <div className="hero-network" aria-label="Global financial hub network">
+    <div 
+      className="hero-network" 
+      aria-label="Global financial hub network"
+      style={{
+        filter: 'invert(1) brightness(0.6) saturate(0)',
+        opacity: 0.6,
+      }}
+    >
       <svg viewBox="0 0 600 200" role="img" aria-hidden="true">
+        {/* ... rest of your SVG content unchanged ... */}
         <g className="hero-map" fill="none" stroke="currentColor" strokeWidth="1">
           <path d="M22 61 54 36 92 31 122 47 144 42 159 58 143 73 126 75 113 91 88 86 72 101 45 94 31 78Z" />
           <path d="M158 105 183 101 204 119 214 145 204 177 187 165 181 140 165 124Z" />

@@ -1,9 +1,14 @@
 """Shared domain contracts for all FinVerify consumers."""
 
 from enum import Enum
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from pydantic import BaseModel, Field
+
+if TYPE_CHECKING:
+    from core.financial.constraints import ConstraintResult
+else:
+    ConstraintResult = Any
 
 
 class Entity(BaseModel):
@@ -111,6 +116,25 @@ class Claim(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
+class BatchClaim(BaseModel):
+    """A single claim in a batch verification request."""
+
+    question: str
+    raw_value: float
+    metric: Optional[str] = None
+    entity: Optional[str] = None
+    period: Optional[str] = None
+    actual_value: Optional[float] = None
+
+
+class BatchVerifyRequest(BaseModel):
+    """Batch verification request."""
+
+    claims: list[BatchClaim] = Field(default_factory=list)
+    include_constraints: bool = True
+    tolerance: Optional[float] = 1e-6
+
+
 class VerificationContext(BaseModel):
     """Shared state that flows through compile, retrieval, math, and trust."""
 
@@ -159,9 +183,17 @@ class VerificationResult(BaseModel):
     evidence: list[Evidence] = Field(default_factory=list)
     calculations: list[Calculation] = Field(default_factory=list)
     trust_score: TrustScore
+    constraint_result: Optional[ConstraintResult] = None
     mode: str = "numerical"
     verified: bool = False
 
     @property
     def question(self) -> str:
         return self.claim.question
+
+
+class BatchVerifyResponse(BaseModel):
+    """Batch verification response."""
+
+    results: list[VerificationResult] = Field(default_factory=list)
+    constraint_result: Optional[ConstraintResult] = None

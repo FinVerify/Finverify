@@ -52,8 +52,8 @@ from .models import (
     V1VerifyResponse,
 )
 from .parser import clean_llm_output
-from core.engine import verify
-from core.models import Claim
+from core.engine import verify, verify_batch as core_verify_batch
+from core.models import BatchVerifyRequest, BatchVerifyResponse, Claim
 from .evaluator import build_query_response
 from .financial import handle_financial_reasoning
 from .router import classify_query
@@ -416,6 +416,12 @@ async def v1_verify_endpoint(req: V1VerifyRequest, request: Request):
         dvl_version="1.0.0",
         timestamp=datetime.now(timezone.utc).isoformat(),
     )
+
+
+@app.post("/v1/verify/batch", response_model=BatchVerifyResponse)
+async def batch_verify_endpoint(request: BatchVerifyRequest) -> BatchVerifyResponse:
+    """Verify multiple claims in a single batch."""
+    return core_verify_batch(request)
 
 
 @app.get("/sample-queries", response_model=list[SampleQuery])

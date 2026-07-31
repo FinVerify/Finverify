@@ -1,6 +1,13 @@
 """Output stage for the shared verification result."""
 
+from typing import TYPE_CHECKING, Any
+
 from .models import Calculation, Claim, Evidence, VerificationContext, VerificationResult, TrustScore
+
+if TYPE_CHECKING:
+    from core.financial.constraints import ConstraintResult
+else:
+    ConstraintResult = Any
 
 
 def build_result(
@@ -10,6 +17,7 @@ def build_result(
     trust: TrustScore,
     evidence: list[Evidence],
     context: VerificationContext | None = None,
+    constraint_result: ConstraintResult | None = None,
 ) -> VerificationResult:
     from app.dvl import format_correction_log
 
@@ -30,5 +38,6 @@ def build_result(
             passed=verified_value is not None,
         )],
         trust_score=trust,
+        constraint_result=constraint_result,
         verified=verified_value is not None,
     )
