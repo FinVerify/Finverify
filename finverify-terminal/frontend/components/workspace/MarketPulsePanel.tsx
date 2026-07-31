@@ -1,34 +1,51 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { AreaChart, Area, ResponsiveContainer } from "recharts";
 import { getMarketIndices, type MarketQuote } from "@/lib/api";
 
 /**
- * MarketPulsePanel — Left column, top, 220px fixed.
- * Shows market indices with fallback data for instant render.
- * Ported from MarketContext.tsx's index-card rendering block.
- * Per §5.1 of UI_IMPLEMENTATION_PLAN.md.
+ * MarketPulsePanel — Rebuilt per visual parity spec §3.
+ * Shows timeframe tabs + sparkline area chart + SPX/NDX/VIX stat row.
  */
 
-const FALLBACK_INDICES: MarketQuote[] = [
-  { symbol: "SPY", display_name: "S&P 500", price: 5287.14, prev_close: 5245.0, change: 42.14, change_pct: 0.80, volume: 0, market_cap: 0 },
-  { symbol: "QQQ", display_name: "NASDAQ", price: 18431.28, prev_close: 18212.8, change: 218.48, change_pct: 1.20, volume: 0, market_cap: 0 },
-  { symbol: "^VIX", display_name: "VIX", price: 14.32, prev_close: 14.38, change: -0.06, change_pct: -0.42, volume: 0, market_cap: 0 },
-  { symbol: "TNX", display_name: "10Y Yield", price: 4.25, prev_close: 4.22, change: 0.03, change_pct: 0.71, volume: 0, market_cap: 0 },
-  { symbol: "BTC", display_name: "BTC", price: 63241.0, prev_close: 62800.0, change: 441.0, change_pct: 0.70, volume: 0, market_cap: 0 },
+const TIMEFRAMES = ["1D", "1W", "1M", "YTD", "1Y"];
+
+const FALLBACK_INDICES: { symbol: string; name: string; price: number; change_pct: number }[] = [
+  { symbol: "SPX", name: "SPX", price: 5287.14, change_pct: 0.88 },
+  { symbol: "NDX", name: "NDX", price: 18431.28, change_pct: 1.28 },
+  { symbol: "VIX", name: "VIX", price: 14.32, change_pct: -0.42 },
 ];
 
+function generateChartData(points: number = 60): { t: number; v: number }[] {
+  const data: { t: number; v: number }[] = [];
+  let val = 5200 + Math.random() * 50;
+  for (let i = 0; i < points; i++) {
+    val += (Math.random() - 0.45) * 15;
+    data.push({ t: i, v: val });
+  }
+  return data;
+}
+
 export default function MarketPulsePanel() {
-  const [indices, setIndices] = useState<MarketQuote[]>(FALLBACK_INDICES);
+  const [activeTimeframe, setActiveTimeframe] = useState("1D");
+  const [indices, setIndices] = useState(FALLBACK_INDICES);
+  const [chartData] = useState(() => generateChartData());
 
   useEffect(() => {
     const fetchIndices = async () => {
       try {
         const data = await getMarketIndices();
-        if (data.length > 0) setIndices(data);
-      } catch {
-        // Keep fallback data — no loading state needed
-      }
+        if (data.length > 0) {
+          const mapped = data.slice(0, 3).map((d: MarketQuote) => ({
+            symbol: d.display_name || d.symbol,
+            name: d.display_name || d.symbol,
+            price: d.price,
+            change_pct: d.change_pct,
+          }));
+          if (mapped.length >= 3) setIndices(mapped);
+        }
+      } catch { /* keep fallback */ }
     };
     fetchIndices();
     const interval = setInterval(fetchIndices, 30000);
@@ -37,50 +54,75 @@ export default function MarketPulsePanel() {
 
   return (
     <div className="panel flex flex-col h-full min-h-0">
-      <div className="panel-header">
-        <span className="label text-t-cyan">MARKET PULSE</span>
-        <span className="text-[9px] text-t-muted font-mono">INDICES</span>
+      {/* Header with timeframe tabs */}
+      <div className="flex items-center justify-between px-2 py-1.5 border-b border-t-border/50">
+        <div className="flex items-center gap-1.5">
+          <span className="text-t-green text-[9px]">▶</span>
+          <span className="text-[9px] font-mono font-bold text-t-secondary uppercase tracking-wider">
+            MARKET PULSE
+          </span>
+        </div>
+        <div className="flex items-center gap-0.5">
+          {TIMEFRAMES.map((tf) => (
+            <button
+              key={tf}
+              onClick={() => setActiveTimeframe(tf)}
+              className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded transition-colors ${
+                activeTimeframe === tf
+                  ? "bg-t-green/15 text-t-green"
+                  : "text-t-muted hover:text-t-secondary"
+              }`}
+            >
+              {tf}
+            </button>
+          ))}
+        </div>
       </div>
-      <div className="flex-1 overflow-y-auto p-1.5 space-y-1">
+
+      {/* Sparkline chart */}
+      <div className="h-[90px] px-1">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={chartData} margin={{ top: 5, right: 5, bottom: 0, left: 5 }}>
+            <defs>
+              <linearGradient id="marketPulseGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#00ff88" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#00ff88" stopOpacity={0.02} />
+              </linearGradient>
+            </defs>
+            <Area
+              type="monotone"
+              dataKey="v"
+              stroke="#00ff88"
+              strokeWidth={1.5}
+              fill="url(#marketPulseGradient)"
+              dot={false}
+              isAnimationActive={false}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Index stat row */}
+      <div className="grid grid-cols-3 gap-1 px-2 pb-2 pt-1">
         {indices.map((idx) => {
           const isUp = idx.change_pct >= 0;
           const color = isUp ? "text-t-green" : "text-t-red";
-          const name = idx.display_name || idx.symbol;
-
           return (
-            <div key={idx.symbol} className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-white/[0.02] transition-colors">
-              <div className="flex flex-col">
-                <span className="text-[9px] font-mono font-bold text-t-secondary uppercase tracking-wider">
-                  {name}
-                </span>
-                <span className="text-[12px] font-mono font-bold text-t-primary tabular-nums">
-                  {idx.price >= 1000
-                    ? idx.price.toLocaleString(undefined, { maximumFractionDigits: 2 })
-                    : idx.price.toFixed(2)}
-                </span>
+            <div key={idx.symbol} className="text-center">
+              <div className="text-[8px] font-mono text-t-muted uppercase tracking-wider">
+                {idx.name}
               </div>
-              <div className="flex flex-col items-end">
-                <span className={`text-[9px] font-mono font-bold ${color}`}>
-                  {isUp ? "▲" : "▼"} {isUp ? "+" : ""}{idx.change_pct.toFixed(2)}%
-                </span>
-                <span className={`text-[9px] font-mono tabular-nums ${color}`}>
-                  {isUp ? "+" : ""}{idx.change.toFixed(2)}
-                </span>
+              <div className="text-[12px] font-mono font-bold text-t-primary tabular-nums">
+                {idx.price >= 1000
+                  ? idx.price.toLocaleString(undefined, { maximumFractionDigits: 2 })
+                  : idx.price.toFixed(2)}
               </div>
-              {idx.stale && (
-                <span className="text-[8px] text-t-amber font-mono ml-1">STALE</span>
-              )}
+              <div className={`text-[9px] font-mono font-semibold tabular-nums ${color}`}>
+                {isUp ? "▲" : "▼"} {isUp ? "+" : ""}{idx.change_pct.toFixed(2)}%
+              </div>
             </div>
           );
         })}
-
-        {/* Verifications pending — placeholder per §5.1 */}
-        <div className="flex items-center justify-between px-2 py-1.5 border-t border-t-border/50 mt-1">
-          <span className="text-[9px] font-mono text-t-muted uppercase tracking-wider">
-            Verifications Pending
-          </span>
-          <span className="text-[9px] font-mono text-t-muted">—</span>
-        </div>
       </div>
     </div>
   );

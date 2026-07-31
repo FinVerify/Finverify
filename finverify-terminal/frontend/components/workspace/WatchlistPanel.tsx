@@ -12,14 +12,16 @@ import { getAllQuotes, isFinnhubConfigured, type FinnhubQuote } from "@/lib/mark
  * Per §5.2 of UI_IMPLEMENTATION_PLAN.md.
  */
 
-const DEFAULT_WATCHLIST = ["AAPL", "TSLA", "JPM", "NVDA", "MSFT", "GS"];
+const DEFAULT_WATCHLIST = ["AAPL", "TSLA", "NVDA", "MSFT", "AMZN", "GOOG", "JPM", "GS"];
 
 const FALLBACK_QUOTES: MarketQuote[] = [
-  { symbol: "AAPL", price: 192.34, prev_close: 190.13, change: 2.21, change_pct: 1.16, volume: 58_000_000, market_cap: 2_980_000_000_000 },
-  { symbol: "TSLA", price: 174.82, prev_close: 176.22, change: -1.40, change_pct: -0.79, volume: 112_000_000, market_cap: 556_000_000_000 },
+  { symbol: "AAPL", price: 333.43, prev_close: 338.19, change: -4.76, change_pct: -1.4, volume: 58_000_000, market_cap: 2_980_000_000_000 },
+  { symbol: "TSLA", price: 308.85, prev_close: 298.32, change: 10.53, change_pct: 3.5, volume: 112_000_000, market_cap: 556_000_000_000 },
+  { symbol: "NVDA", price: 905.25, prev_close: 885.84, change: 19.41, change_pct: 2.2, volume: 42_000_000, market_cap: 2_160_000_000_000 },
+  { symbol: "MSFT", price: 418.68, prev_close: 414.06, change: 4.62, change_pct: 1.1, volume: 22_000_000, market_cap: 3_140_000_000_000 },
+  { symbol: "AMZN", price: 223.12, prev_close: 218.74, change: 4.38, change_pct: 2.0, volume: 35_000_000, market_cap: 2_310_000_000_000 },
+  { symbol: "GOOG", price: 155.32, prev_close: 156.50, change: -1.18, change_pct: -0.7, volume: 28_000_000, market_cap: 1_940_000_000_000 },
   { symbol: "JPM", price: 198.45, prev_close: 197.50, change: 0.95, change_pct: 0.48, volume: 9_200_000, market_cap: 572_000_000_000 },
-  { symbol: "NVDA", price: 877.35, prev_close: 857.60, change: 19.75, change_pct: 2.30, volume: 42_000_000, market_cap: 2_160_000_000_000 },
-  { symbol: "MSFT", price: 422.86, prev_close: 420.72, change: 2.14, change_pct: 0.51, volume: 22_000_000, market_cap: 3_140_000_000_000 },
   { symbol: "GS", price: 467.20, prev_close: 465.80, change: 1.40, change_pct: 0.30, volume: 2_100_000, market_cap: 155_000_000_000 },
 ];
 
@@ -52,7 +54,7 @@ interface WatchlistPanelProps {
   sectorFilter?: string | null;
 }
 
-export default function WatchlistPanel({ selectedSymbol, onSelectSymbol, sectorFilter }: WatchlistPanelProps) {
+export default function WatchlistPanel({ selectedSymbol, onSelectSymbol }: WatchlistPanelProps) {
   const [quotes, setQuotes] = useState<MarketQuote[]>(FALLBACK_QUOTES);
   const [isLive, setIsLive] = useState(false);
 
@@ -78,14 +80,20 @@ export default function WatchlistPanel({ selectedSymbol, onSelectSymbol, sectorF
   return (
     <div className="panel flex flex-col h-full min-h-0">
       <div className="panel-header">
-        <span className="label text-t-green">
-          WATCHLIST — {isLive ? (
-            <span className="text-t-green">LIVE</span>
-          ) : (
-            <span className="text-t-muted">DEMO</span>
-          )}
-        </span>
-        <span className="text-[9px] text-t-muted font-mono">{quotes.length} SYMBOLS</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-t-green text-[9px]">◆</span>
+          <span className="label text-t-green">
+            WATCHLIST — {isLive ? (
+              <span className="text-t-green">LIVE</span>
+            ) : (
+              <span className="text-t-muted">DEMO</span>
+            )}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[8px] text-t-muted font-mono">{quotes.length} SYMBOLS</span>
+          <span className="text-[8px] text-t-muted hover:text-t-secondary cursor-pointer font-mono transition-colors">EDIT</span>
+        </div>
       </div>
 
       {/* Column labels */}

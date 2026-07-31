@@ -205,3 +205,40 @@ body.terminal-ambience {
 .live-pulse {
   animation: livePulse 2s ease-in-out infinite;
 }
+
+/* ─── Global Transaction Monitor animations ─── */
+@keyframes arcDash {
+  0% { stroke-dashoffset: 28; }
+  100% { stroke-dashoffset: 0; }
+}
+.arc-animated {
+  animation: arcDash 2.5s linear infinite;
+  stroke-dasharray: 6 8;
+}
+
+@keyframes nodePulse {
+  0%, 100% { r: inherit; opacity: 0.06; }
+  50% { opacity: 0.18; }
+}
+.node-pulse {
+  animation: livePulse 3s ease-in-out infinite;
+}
+
+/* Command input glow */
+.command-input-glow {
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.06), 0 0 4px rgba(0, 255, 136, 0.03);
+  transition: box-shadow 0.3s ease;
+}
+.command-input-glow:focus-within {
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.12), 0 0 6px rgba(0, 255, 136, 0.06);
+  border-color: rgba(0, 255, 136, 0.2);
+}
+
+/* Fade in utility */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}

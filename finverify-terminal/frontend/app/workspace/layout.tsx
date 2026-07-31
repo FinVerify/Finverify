@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ConnectionProvider } from "@/lib/connection";
 
 export const metadata: Metadata = {
   title: "FinVerify — Intelligence Workspace",
@@ -8,21 +7,14 @@ export const metadata: Metadata = {
 };
 
 /**
- * WorkspaceLayout — Dedicated layout for the Intelligence Workspace.
- * Provides a true h-screen, no-page-scroll frame separate from the root
- * layout's Terminal-oriented chrome (header + TickerBar).
- * Per §3.1 of UI_IMPLEMENTATION_PLAN.md.
+ * WorkspaceLayout — Now inherits root layout's header + TickerBar.
+ * Applies overflow-hidden so the workspace fills remaining viewport
+ * without page-level scroll, while still using the shared chrome.
  */
 export default function WorkspaceLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <ConnectionProvider>
-      <div className="h-screen w-screen overflow-hidden flex flex-col bg-t-bg">
-        {children}
-      </div>
-    </ConnectionProvider>
-  );
+  return <>{children}</>;
 }
