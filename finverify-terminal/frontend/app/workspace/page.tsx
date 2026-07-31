@@ -14,6 +14,8 @@ import {
 import WorkspaceBottomBar from "@/components/workspace/WorkspaceBottomBar";
 import MarketAlertBanner from "@/components/workspace/MarketAlertBanner";
 
+// HeroNetwork is NOT imported here – it lives inside GlobalTransactionMonitor
+
 // Root header ~44px + TickerBar ~32px = ~76px already consumed by root layout
 const ROOT_CHROME_HEIGHT = 76;
 
@@ -72,7 +74,6 @@ export default function WorkspacePage() {
 
         {/* ── Center Column ── */}
         <div className="flex flex-col min-h-0 overflow-hidden">
-          {/* Focus View */}
           <FocusView
             selectedSymbol={selectedSymbol}
             onDeselect={() => setSelectedSymbol(null)}
@@ -97,7 +98,7 @@ export default function WorkspacePage() {
         </div>
       </div>
 
-      {/* ── System Status Footer ── */}
+      {/* ── System Status Footer + Query Input ── */}
       <div className="hidden lg:block">
         <WorkspaceBottomBar onSelectSymbol={setSelectedSymbol} />
       </div>
