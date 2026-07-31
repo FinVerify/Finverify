@@ -42,8 +42,8 @@ function TrustBadge({ trust }: { trust: string }) {
     trust === "HIGH"
       ? "bg-t-green/10 text-t-green border-t-green/20"
       : trust === "MEDIUM"
-      ? "bg-t-amber/10 text-t-amber border-t-amber/20"
-      : "bg-t-red/10 text-t-red border-t-red/20";
+        ? "bg-t-amber/10 text-t-amber border-t-amber/20"
+        : "bg-t-red/10 text-t-red border-t-red/20";
   return (
     <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded border ${cls}`}>
       {trust}
@@ -116,9 +116,8 @@ function EvidencePanel({ symbol }: { symbol: string }) {
             </span>
             <TrustBadge trust={m.dvl_trust} />
           </div>
-          <div className={`text-[14px] font-mono font-bold tabular-nums ${
-            m.dvl_trust === "HIGH" ? "text-t-green" : m.dvl_trust === "MEDIUM" ? "text-t-amber" : "text-t-red"
-          }`}>
+          <div className={`text-[14px] font-mono font-bold tabular-nums ${m.dvl_trust === "HIGH" ? "text-t-green" : m.dvl_trust === "MEDIUM" ? "text-t-amber" : "text-t-red"
+            }`}>
             {formatValue(m.verified_value)}
           </div>
           <div className="flex items-center gap-1.5 mt-0.5 text-[7px] font-mono text-t-muted">
@@ -165,8 +164,7 @@ export default function FocusView({ selectedSymbol, onDeselect, onSelectSymbol }
   if (!selectedSymbol) {
     return (
       <div className="panel flex flex-col h-full min-h-0">
-        <GlobalTransactionMonitor onSelectSymbol={onSelectSymbol || (() => {})} />
-      </div>
+        <GlobalTransactionMonitor />      </div>
     );
   }
 
@@ -199,13 +197,12 @@ export default function FocusView({ selectedSymbol, onDeselect, onSelectSymbol }
           <span className={`text-[22px] font-mono font-bold tabular-nums ${band.color}`}>
             {integrityScore}
           </span>
-          <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded border ${
-            band.label === "HIGH"
+          <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded border ${band.label === "HIGH"
               ? "bg-t-green/10 text-t-green border-t-green/20"
               : band.label === "MEDIUM"
-              ? "bg-t-amber/10 text-t-amber border-t-amber/20"
-              : "bg-t-red/10 text-t-red border-t-red/20"
-          }`}>
+                ? "bg-t-amber/10 text-t-amber border-t-amber/20"
+                : "bg-t-red/10 text-t-red border-t-red/20"
+            }`}>
             {band.label}
           </span>
           <span className="text-[8px] font-mono text-t-amber border border-t-amber/20 bg-t-amber/[0.04] px-1 py-0.5 rounded">
@@ -220,11 +217,10 @@ export default function FocusView({ selectedSymbol, onDeselect, onSelectSymbol }
           <button
             key={key}
             onClick={() => setActiveTab(key)}
-            className={`flex-1 py-1.5 text-[9px] font-mono font-bold uppercase tracking-wider transition-colors ${
-              activeTab === key
+            className={`flex-1 py-1.5 text-[9px] font-mono font-bold uppercase tracking-wider transition-colors ${activeTab === key
                 ? "text-t-green border-b border-t-green bg-white/[0.02]"
                 : "text-t-muted hover:text-t-secondary"
-            }`}
+              }`}
           >
             {label}
           </button>
@@ -300,8 +296,8 @@ function IntegrityTab({ symbol, score }: { symbol: string; score: number }) {
           {score >= 80
             ? `${symbol} shows strong consistency across all verification dimensions. No significant discrepancies detected.`
             : score >= 50
-            ? `${symbol} has moderate integrity. Some verification signals require attention — check the Verification tab for flagged claims.`
-            : `${symbol} shows significant discrepancies. Multiple flagged claims detected — review the Verification and Evidence tabs.`
+              ? `${symbol} has moderate integrity. Some verification signals require attention — check the Verification tab for flagged claims.`
+              : `${symbol} shows significant discrepancies. Multiple flagged claims detected — review the Verification and Evidence tabs.`
           }
         </div>
       </div>
