@@ -5,16 +5,15 @@ import MarketPulsePanel from "@/components/workspace/MarketPulsePanel";
 import WatchlistPanel from "@/components/workspace/WatchlistPanel";
 import IntegrityMonitorPanel from "@/components/workspace/IntegrityMonitorPanel";
 import FocusView from "@/components/workspace/FocusView";
-import { NewsRadarPanel, FilingRadarPanel, EarningsRadarPanel, SectorMonitorPanel } from "@/components/workspace/RightColumnPanels";
+import {
+  NewsRadarPanel,
+  FilingRadarPanel,
+  EarningsRadarPanel,
+  SectorMonitorPanel,
+} from "@/components/workspace/RightColumnPanels";
 import WorkspaceBottomBar from "@/components/workspace/WorkspaceBottomBar";
 import MarketAlertBanner from "@/components/workspace/MarketAlertBanner";
-
-/**
- * WorkspacePage — The Intelligence Workspace main page.
- * Now inherits root layout header + TickerBar (no separate top bar).
- * Owns top-level state: selectedSymbol.
- * Renders: AlertBanner → 3-column grid (280px / fluid / 300px) → System Status Footer.
- */
+import HeroNetwork from "@/components/HeroNetwork"; // <-- ADD THIS
 
 // Root header ~44px + TickerBar ~32px = ~76px already consumed by root layout
 const ROOT_CHROME_HEIGHT = 76;
@@ -23,7 +22,10 @@ export default function WorkspacePage() {
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
 
   return (
-    <div className="flex flex-col overflow-hidden" style={{ height: `calc(100vh - ${ROOT_CHROME_HEIGHT}px)` }}>
+    <div
+      className="flex flex-col overflow-hidden"
+      style={{ height: `calc(100vh - ${ROOT_CHROME_HEIGHT}px)` }}
+    >
       {/* Viewport < 1024px notice */}
       <div className="lg:hidden flex-1 flex items-center justify-center p-8">
         <div className="panel p-6 text-center max-w-md">
@@ -34,7 +36,10 @@ export default function WorkspacePage() {
             The Intelligence Workspace requires a viewport of at least 1024px
             width for optimal information density.
           </div>
-          <a href="/market" className="text-[10px] font-mono text-t-cyan hover:underline">
+          <a
+            href="/market"
+            className="text-[10px] font-mono text-t-cyan hover:underline"
+          >
             → Open Market Mode instead
           </a>
         </div>
@@ -68,6 +73,11 @@ export default function WorkspacePage() {
 
         {/* ── Center Column ── */}
         <div className="flex flex-col min-h-0 overflow-hidden">
+          {/* 🌍 World Map - HeroNetwork */}
+          <div className="h-[140px] min-h-[140px] mb-[6px] bg-zinc-950/50 rounded border border-zinc-800/60 overflow-hidden">
+            <HeroNetwork />
+          </div>
+          {/* Focus View */}
           <FocusView
             selectedSymbol={selectedSymbol}
             onDeselect={() => setSelectedSymbol(null)}
