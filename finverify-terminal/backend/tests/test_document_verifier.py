@@ -8,6 +8,7 @@ import pytest
 
 from core.evidence import EvidenceRetriever
 from core.financial.concepts import ConceptRegistry
+from core.financial.constraints.models import ConstraintStatus
 from core.financial.document_verifier import _claim_to_batch_claim, verify_document
 from core.financial.mapper import StatementMapper
 from core.models import BatchClaim, Claim, Entity, Metric
@@ -111,6 +112,10 @@ def test_verify_document_exercises_constraints_via_verify_batch():
     # verify_batch()'s existing constraint machinery (ConceptRegistry.load_equations()
     # + ConstraintVerifier) should have something to evaluate.
     assert response.constraint_result is not None
+    assert response.constraint_result.status == ConstraintStatus.NOT_EVALUATED
+    assert response.constraint_result.consistent is None
+    assert response.constraint_result.coverage.derivable == 1
+    assert response.constraint_result.coverage.not_applicable == 2
     metric_names = {result.claim.metric.canonical_name for result in response.results if result.claim.metric}
     assert {"Revenue", "CostOfGoodsSold"}.issubset(metric_names)
 

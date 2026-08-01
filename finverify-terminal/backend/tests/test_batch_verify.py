@@ -13,6 +13,7 @@ from core import engine as core_engine
 from core.evidence import EvidenceRetriever
 from core.engine import verify_batch
 from core.financial.concepts import ConceptRegistry
+from core.financial.constraints.models import ConstraintStatus
 from core.models import BatchClaim, BatchVerifyRequest
 
 
@@ -57,6 +58,7 @@ def test_batch_consistent_claims():
     assert len(response.results) == 3
     assert all(result.constraint_result is None for result in response.results)
     assert response.constraint_result is not None
+    assert response.constraint_result.status == ConstraintStatus.CONSISTENT
     assert response.constraint_result.consistent is True
 
 
@@ -72,6 +74,7 @@ def test_batch_inconsistent_claims():
     response = verify_batch(request, evidence_retriever=EvidenceRetriever())
 
     assert response.constraint_result is not None
+    assert response.constraint_result.status == ConstraintStatus.INCONSISTENT
     assert response.constraint_result.consistent is False
     assert len(response.constraint_result.violations) > 0
 
@@ -134,6 +137,7 @@ def test_batch_aapl_10k():
 
     assert len(response.results) == 4
     assert response.constraint_result is not None
+    assert response.constraint_result.status == ConstraintStatus.CONSISTENT
     assert response.constraint_result.consistent is True
 
 
@@ -157,4 +161,5 @@ def test_batch_verify_endpoint(client, monkeypatch):
     assert response.status_code == 200
     payload = response.json()
     assert len(payload["results"]) == 3
+    assert payload["constraint_result"]["status"] == "consistent"
     assert payload["constraint_result"]["consistent"] is True

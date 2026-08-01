@@ -7,6 +7,7 @@ import logging
 from core import engine as core_engine
 from core.evidence import EvidenceRetriever
 from core.engine import verify
+from core.financial.constraints.models import ConstraintStatus
 from core.models import Claim, Metric
 
 
@@ -46,6 +47,7 @@ def test_multiple_consistent_claims_pass():
     )
 
     assert result.constraint_result is not None
+    assert result.constraint_result.status == ConstraintStatus.CONSISTENT
     assert result.constraint_result.consistent is True
     assert result.constraint_result.violations == []
     assert result.constraint_result.indeterminate == []
@@ -69,6 +71,7 @@ def test_multiple_inconsistent_claims_fail():
     )
 
     assert result.constraint_result is not None
+    assert result.constraint_result.status == ConstraintStatus.INCONSISTENT
     assert result.constraint_result.consistent is False
     assert len(result.constraint_result.violations) == 1
     violation = result.constraint_result.violations[0]

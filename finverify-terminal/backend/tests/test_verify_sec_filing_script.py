@@ -113,6 +113,8 @@ def test_run_prints_report_and_writes_json(stub_load_document, tmp_path, monkeyp
     assert "Claims extracted: 3" in captured.out
     assert "Claims verified:  3" in captured.out
     assert "Claims skipped:   0" in captured.out
+    assert "Consistency: NOT_EVALUATED" in captured.out
+    assert "Constraint coverage: 3 loaded - 0 verified, 0 violated, 0 indeterminate, 1 derivable, 2 not applicable" in captured.out
 
     assert output_path == tmp_path / "AAPL_2024-11-01.json"
     assert output_path.exists()
@@ -124,7 +126,16 @@ def test_run_prints_report_and_writes_json(stub_load_document, tmp_path, monkeyp
     assert payload["total_claims_extracted"] == 3
     assert payload["verified_claims_count"] == 3
     assert payload["skipped_claims"]["count"] == 0
-    assert payload["consistent"] is True
+    assert payload["constraint_status"] == "NOT_EVALUATED"
+    assert payload["constraint_coverage"] == {
+        "loaded": 3,
+        "verified": 0,
+        "violated": 0,
+        "indeterminate": 0,
+        "derivable": 1,
+        "not_applicable": 2,
+    }
+    assert payload["consistent"] is None
     assert payload["violations"] == []
     assert len(payload["claims"]) == 3
     assert "generated_at" in payload

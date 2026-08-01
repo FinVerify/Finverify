@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from core.financial.constraints.graph import ConstraintGraph
-from core.financial.constraints.models import Dependency, Equation, Variable
+from core.financial.constraints.models import ConstraintStatus, Dependency, Equation, Variable
 from core.financial.constraints.parser import FormulaParser
 from core.financial.constraints.verifier import ConstraintVerifier
 
@@ -90,7 +90,9 @@ def test_consistent_claims():
         }
     )
 
+    assert result.status == ConstraintStatus.CONSISTENT
     assert result.consistent is True
+    assert result.coverage.verified == 2
     assert result.violations == []
     assert result.indeterminate == []
 
@@ -112,7 +114,9 @@ def test_inconsistent_claims():
         }
     )
 
+    assert result.status == ConstraintStatus.INCONSISTENT
     assert result.consistent is False
+    assert result.coverage.violated == 1
     assert result.indeterminate == []
     assert len(result.violations) == 1
 
@@ -140,7 +144,10 @@ def test_indeterminate_claims():
         }
     )
 
-    assert result.consistent is True
+    assert result.status == ConstraintStatus.INDETERMINATE
+    assert result.consistent is None
+    assert result.coverage.verified == 1
+    assert result.coverage.indeterminate == 1
     assert result.violations == []
     assert result.indeterminate == ["GrossProfit"]
 
@@ -161,7 +168,10 @@ def test_mixed_violations_and_indeterminate():
         }
     )
 
+    assert result.status == ConstraintStatus.INCONSISTENT
     assert result.consistent is False
+    assert result.coverage.violated == 1
+    assert result.coverage.indeterminate == 1
     assert result.indeterminate == ["GrossProfit"]
     assert len(result.violations) == 1
     assert result.violations[0].metric == "GrossMargin"

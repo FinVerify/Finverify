@@ -15,13 +15,23 @@ from .dimensions import (
     parse_dimension,
 )
 from .graph import ConstraintGraph
-from .models import Equation, Violation
+from .models import (
+    ConstraintCoverage,
+    ConstraintStatus,
+    Equation,
+    EquationOutcome,
+    EquationStatus,
+    Violation,
+)
 from .parser import FormulaParser
 
 
 @dataclass(frozen=True)
 class ConstraintResult:
-    consistent: bool
+    status: ConstraintStatus
+    coverage: ConstraintCoverage
+    consistent: bool | None
+    outcomes: tuple[EquationOutcome, ...] = field(default_factory=tuple)
     violations: list[Violation] = field(default_factory=list)
     indeterminate: list[str] = field(default_factory=list)
     indeterminate_reasons: dict[str, str] = field(default_factory=dict)
@@ -66,13 +76,13 @@ class ConstraintVerifier:
         violations: list[Violation] = []
         indeterminate: list[str] = []
         indeterminate_reasons: dict[str, str] = {}
+        outcomes: list[EquationOutcome] = []
 
         for equation in self._ordered_equations:
             target = equation.target.name
             expected_dimension = equation.dimension or equation.target.dimension
             target_claim = normalized_claims.get(target)
-            if target_claim is None or target_claim["value"] is None:
-                continue
+            target_reported = target_claim is not None and target_claim["value"] is not None
 
             dependency_values: dict[str, float] = {}
             missing_dependency = False
@@ -84,8 +94,41 @@ class ConstraintVerifier:
                 dependency_values[dependency] = float(dependency_claim["value"])
 
             if missing_dependency:
-                indeterminate.append(target)
-                indeterminate_reasons[target] = "Missing dependency values"
+                if target_reported:
+                    reason = "Missing dependency values"
+                    indeterminate.append(target)
+                    indeterminate_reasons[target] = reason
+                    outcomes.append(
+                        EquationOutcome(
+                            target=target,
+                            status=EquationStatus.INDETERMINATE,
+                            formula=equation.formula,
+                            dependencies=dependency_values,
+                            reason=reason,
+                        )
+                    )
+                else:
+                    outcomes.append(
+                        EquationOutcome(
+                            target=target,
+                            status=EquationStatus.NOT_APPLICABLE,
+                            formula=equation.formula,
+                            dependencies=dependency_values,
+                            reason="Target not reported and dependency values are incomplete",
+                        )
+                    )
+                continue
+
+            if not target_reported:
+                outcomes.append(
+                    EquationOutcome(
+                        target=target,
+                        status=EquationStatus.DERIVABLE,
+                        formula=equation.formula,
+                        dependencies=dependency_values,
+                        reason="Target not reported but dependency values are complete",
+                    )
+                )
                 continue
 
             try:
@@ -105,8 +148,18 @@ class ConstraintVerifier:
                     )
                 expected = self._formula_engine.evaluate(equation.formula, dependency_values)
             except (DimensionMismatchError, KeyError, ZeroDivisionError) as exc:
+                reason = str(exc)
                 indeterminate.append(target)
-                indeterminate_reasons[target] = str(exc)
+                indeterminate_reasons[target] = reason
+                outcomes.append(
+                    EquationOutcome(
+                        target=target,
+                        status=EquationStatus.INDETERMINATE,
+                        formula=equation.formula,
+                        dependencies=dependency_values,
+                        reason=reason,
+                    )
+                )
                 continue
 
             actual = float(target_claim["value"])
@@ -115,10 +168,20 @@ class ConstraintVerifier:
                 expected_dimension,
                 actual_dimension,
             ):
-                indeterminate.append(target)
-                indeterminate_reasons[target] = (
+                reason = (
                     f"Dimension mismatch: expected {expected_dimension.value}, "
                     f"got {actual_dimension.value}"
+                )
+                indeterminate.append(target)
+                indeterminate_reasons[target] = reason
+                outcomes.append(
+                    EquationOutcome(
+                        target=target,
+                        status=EquationStatus.INDETERMINATE,
+                        formula=equation.formula,
+                        dependencies=dependency_values,
+                        reason=reason,
+                    )
                 )
                 continue
 
@@ -132,9 +195,59 @@ class ConstraintVerifier:
                         dependencies=dependency_values,
                     )
                 )
+                outcomes.append(
+                    EquationOutcome(
+                        target=target,
+                        status=EquationStatus.VIOLATION,
+                        formula=equation.formula,
+                        dependencies=dependency_values,
+                        expected=expected,
+                        actual=actual,
+                    )
+                )
+                continue
+
+            outcomes.append(
+                EquationOutcome(
+                    target=target,
+                    status=EquationStatus.VERIFIED,
+                    formula=equation.formula,
+                    dependencies=dependency_values,
+                    expected=expected,
+                    actual=actual,
+                )
+            )
+
+        coverage = ConstraintCoverage(
+            loaded=len(outcomes),
+            verified=sum(1 for outcome in outcomes if outcome.status == EquationStatus.VERIFIED),
+            violated=sum(1 for outcome in outcomes if outcome.status == EquationStatus.VIOLATION),
+            indeterminate=sum(1 for outcome in outcomes if outcome.status == EquationStatus.INDETERMINATE),
+            derivable=sum(1 for outcome in outcomes if outcome.status == EquationStatus.DERIVABLE),
+            not_applicable=sum(1 for outcome in outcomes if outcome.status == EquationStatus.NOT_APPLICABLE),
+        )
+
+        if coverage.violated > 0:
+            status = ConstraintStatus.INCONSISTENT
+        elif coverage.indeterminate > 0:
+            status = ConstraintStatus.INDETERMINATE
+        elif coverage.verified > 0:
+            status = ConstraintStatus.CONSISTENT
+        else:
+            status = ConstraintStatus.NOT_EVALUATED
+
+        if status == ConstraintStatus.CONSISTENT:
+            consistent = True
+        elif status == ConstraintStatus.INCONSISTENT:
+            consistent = False
+        else:
+            consistent = None
 
         return ConstraintResult(
-            consistent=not violations,
+            status=status,
+            coverage=coverage,
+            outcomes=tuple(outcomes),
+            consistent=consistent,
             violations=violations,
             indeterminate=indeterminate,
             indeterminate_reasons=indeterminate_reasons,

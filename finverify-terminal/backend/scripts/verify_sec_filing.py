@@ -108,6 +108,8 @@ def build_report(
         },
         "verified_claims_count": verified_count,
         "claims": claims_summary,
+        "constraint_status": constraint_result.status.value.upper() if constraint_result is not None else None,
+        "constraint_coverage": constraint_dict.get("coverage") if constraint_dict else None,
         "consistent": constraint_result.consistent if constraint_result is not None else None,
         "violations": constraint_dict.get("violations", []) if constraint_dict else [],
         "indeterminate": constraint_dict.get("indeterminate", []) if constraint_dict else [],
@@ -131,12 +133,21 @@ def print_report(report: dict) -> None:
     skipped = report["skipped_claims"]
     print(f"Claims skipped:   {skipped['count']}" + (f" ({skipped['reason']})" if skipped["reason"] else ""))
     print("-" * 60)
-    if report["consistent"] is None:
+    if report["constraint_status"] is None:
         print("Consistency: NOT EVALUATED (fewer than 2 verifiable claims, or constraints disabled)")
-    elif report["consistent"]:
-        print("Consistency: CONSISTENT")
     else:
-        print("Consistency: INCONSISTENT")
+        print(f"Consistency: {report['constraint_status']}")
+        coverage = report["constraint_coverage"]
+        if coverage is not None:
+            print(
+                "Constraint coverage: "
+                f"{coverage['loaded']} loaded - "
+                f"{coverage['verified']} verified, "
+                f"{coverage['violated']} violated, "
+                f"{coverage['indeterminate']} indeterminate, "
+                f"{coverage['derivable']} derivable, "
+                f"{coverage['not_applicable']} not applicable"
+            )
     violations = report["violations"]
     if violations:
         print(f"Violations ({len(violations)}):")

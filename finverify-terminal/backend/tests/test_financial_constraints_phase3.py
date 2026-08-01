@@ -15,7 +15,7 @@ from core.financial.constraints import (
     FormulaParser,
     infer_dimension,
 )
-from core.financial.constraints.models import Dependency, Equation, Variable
+from core.financial.constraints.models import ConstraintStatus, Dependency, Equation, Variable
 from core.financial.constraints.verifier import ConstraintVerifier
 
 
@@ -125,7 +125,8 @@ def test_verifier_with_dimension_mismatch():
         }
     )
 
-    assert result.consistent is True
+    assert result.status == ConstraintStatus.INDETERMINATE
+    assert result.consistent is None
     assert result.violations == []
     assert result.indeterminate == ["InvalidMetric"]
     assert "Cannot add currency and percentage" in result.indeterminate_reasons["InvalidMetric"]

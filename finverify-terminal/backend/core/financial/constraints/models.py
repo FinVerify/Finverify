@@ -2,12 +2,28 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
-from typing import Any, Mapping
+from dataclasses import asdict, dataclass, field
+from enum import Enum
+from typing import Any, Mapping, Optional
 
 from .dimensions import Dimension
 
 IRNode = dict[str, Any]
+
+
+class EquationStatus(str, Enum):
+    VERIFIED = "verified"
+    VIOLATION = "violation"
+    INDETERMINATE = "indeterminate"
+    DERIVABLE = "derivable"
+    NOT_APPLICABLE = "not_applicable"
+
+
+class ConstraintStatus(str, Enum):
+    CONSISTENT = "consistent"
+    INCONSISTENT = "inconsistent"
+    INDETERMINATE = "indeterminate"
+    NOT_EVALUATED = "not_evaluated"
 
 
 @dataclass(frozen=True)
@@ -80,6 +96,31 @@ class Violation:
     formula: str
     dependencies: Mapping[str, float]
     reason: str | None = None
+
+
+@dataclass(frozen=True)
+class EquationOutcome:
+    target: str
+    status: EquationStatus
+    formula: str
+    dependencies: Mapping[str, float] = field(default_factory=dict)
+    expected: Optional[float] = None
+    actual: Optional[float] = None
+    reason: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class ConstraintCoverage:
+    loaded: int
+    verified: int
+    violated: int
+    indeterminate: int
+    derivable: int
+    not_applicable: int
+
+    @property
+    def applicable(self) -> int:
+        return self.verified + self.violated + self.indeterminate
 
 
 def _collect_variable_names(node: IRNode, names: set[str]) -> None:
