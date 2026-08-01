@@ -56,6 +56,55 @@
       "unit": "USD",
       "statement": "CashFlowStatement"
     },
+    "Assets": {
+      "aliases": ["Total Assets"],
+      "dimension": "currency",
+      "xbrl_tags": ["us-gaap:Assets"],
+      "unit": "USD",
+      "statement": "BalanceSheet"
+    },
+    "Liabilities": {
+      "aliases": ["Total Liabilities"],
+      "dimension": "currency",
+      "xbrl_tags": ["us-gaap:Liabilities"],
+      "unit": "USD",
+      "statement": "BalanceSheet"
+    },
+    "StockholdersEquity": {
+      "aliases": ["Shareholders' Equity", "Stockholders' Equity"],
+      "dimension": "currency",
+      "xbrl_tags": ["us-gaap:StockholdersEquity"],
+      "unit": "USD",
+      "statement": "BalanceSheet"
+    },
+    "CashAndCashEquivalents": {
+      "aliases": ["Cash and Cash Equivalents"],
+      "dimension": "currency",
+      "xbrl_tags": ["us-gaap:CashAndCashEquivalentsAtCarryingValue"],
+      "unit": "USD",
+      "statement": "BalanceSheet"
+    },
+    "EarningsPerShareBasic": {
+      "aliases": ["Basic EPS"],
+      "dimension": "per_share",
+      "xbrl_tags": ["us-gaap:EarningsPerShareBasic"],
+      "unit": "USD/shares",
+      "statement": "IncomeStatement"
+    },
+    "EarningsPerShareDiluted": {
+      "aliases": ["Diluted EPS"],
+      "dimension": "per_share",
+      "xbrl_tags": ["us-gaap:EarningsPerShareDiluted"],
+      "unit": "USD/shares",
+      "statement": "IncomeStatement"
+    },
+    "SharesOutstanding": {
+      "aliases": ["Diluted Shares Outstanding"],
+      "dimension": "count",
+      "xbrl_tags": ["us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"],
+      "unit": "shares",
+      "statement": "IncomeStatement"
+    },
     "GrossMargin": {
       "aliases": ["Gross Profit Margin"],
       "dimension": "percentage",
