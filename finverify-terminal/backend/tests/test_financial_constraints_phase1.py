@@ -60,6 +60,7 @@ def test_concept_registry_load_equations_is_deterministic():
     second = registry.load_equations()
 
     assert [equation.target.name for equation in first] == [
+        "Assets",
         "GrossMargin",
         "OperatingMargin",
         "RevenueYoYGrowth",

@@ -114,8 +114,9 @@ def test_verify_document_exercises_constraints_via_verify_batch():
     assert response.constraint_result is not None
     assert response.constraint_result.status == ConstraintStatus.NOT_EVALUATED
     assert response.constraint_result.consistent is None
+    assert response.constraint_result.coverage.loaded == 4
     assert response.constraint_result.coverage.derivable == 1
-    assert response.constraint_result.coverage.not_applicable == 2
+    assert response.constraint_result.coverage.not_applicable == 3
     metric_names = {result.claim.metric.canonical_name for result in response.results if result.claim.metric}
     assert {"Revenue", "CostOfGoodsSold"}.issubset(metric_names)
 

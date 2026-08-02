@@ -173,14 +173,16 @@ def test_audit_ticker_reports_coverage_funnel(stub_sec_boundaries):
     }
 
     constraints = result["constraints"]
-    assert constraints["equations_loaded"] == 3
-    assert constraints["equations_target_present"] == 0
+    assert constraints["equations_loaded"] == 4
+    assert constraints["equations_target_present"] == 1
+    assert constraints["equations_indeterminate"] == 1
     assert constraints["equations_evaluated"].startswith("NOT OBSERVABLE")
 
     constraint_result = result["constraint_result"]
     assert constraint_result["consistent"] is None
     assert constraint_result["violations_count"] == 0
-    assert constraint_result["indeterminate_count"] == 0
+    assert constraint_result["indeterminate_count"] == 1
+    assert constraint_result["indeterminate"] == ["Assets"]
 
     trust = result["trust"]
     assert trust["HIGH"] == 0

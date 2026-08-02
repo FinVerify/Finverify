@@ -59,14 +59,23 @@
     "Assets": {
       "aliases": ["Total Assets"],
       "dimension": "currency",
+      "formula": "LiabilitiesAndStockholdersEquity",
       "xbrl_tags": ["us-gaap:Assets"],
       "unit": "USD",
-      "statement": "BalanceSheet"
+      "statement": "BalanceSheet",
+      "requires": ["LiabilitiesAndStockholdersEquity"]
     },
     "Liabilities": {
       "aliases": ["Total Liabilities"],
       "dimension": "currency",
       "xbrl_tags": ["us-gaap:Liabilities"],
+      "unit": "USD",
+      "statement": "BalanceSheet"
+    },
+    "LiabilitiesAndStockholdersEquity": {
+      "aliases": ["Total Liabilities and Stockholders' Equity"],
+      "dimension": "currency",
+      "xbrl_tags": ["us-gaap:LiabilitiesAndStockholdersEquity"],
       "unit": "USD",
       "statement": "BalanceSheet"
     },

@@ -70,6 +70,13 @@ def make_phase63_company_facts() -> dict:
                         ]
                     }
                 },
+                "LiabilitiesAndStockholdersEquity": {
+                    "units": {
+                        "USD": [
+                            _annual_entry("2023-10-01", "2024-09-30", "2024-11-01", 364_980_000_000.0, "0000320193-24-000123", 2024),
+                        ]
+                    }
+                },
                 "StockholdersEquity": {
                     "units": {
                         "USD": [
@@ -145,6 +152,7 @@ def test_new_xbrl_tag_mappings_resolve_correctly():
     expected_mappings = {
         "us-gaap:Assets": "Assets",
         "us-gaap:Liabilities": "Liabilities",
+        "us-gaap:LiabilitiesAndStockholdersEquity": "LiabilitiesAndStockholdersEquity",
         "us-gaap:StockholdersEquity": "StockholdersEquity",
         "us-gaap:CashAndCashEquivalentsAtCarryingValue": "CashAndCashEquivalents",
         "us-gaap:EarningsPerShareBasic": "EarningsPerShareBasic",
@@ -156,12 +164,12 @@ def test_new_xbrl_tag_mappings_resolve_correctly():
         assert registry.resolve_xbrl_tag(tag) == concept
 
 
-def test_registry_contains_thirteen_xbrl_backed_concepts():
+def test_registry_contains_fourteen_xbrl_backed_concepts():
     registry = ConceptRegistry(CONFIG_PATH)
 
     xbrl_backed_concepts = [name for name, spec in registry.concepts.items() if spec.get("xbrl_tags")]
 
-    assert len(xbrl_backed_concepts) == 13
+    assert len(xbrl_backed_concepts) == 14
 
 
 def test_statement_mapper_maps_new_concepts_with_expected_statements_and_units():
@@ -186,6 +194,7 @@ def test_statement_mapper_maps_new_concepts_with_expected_statements_and_units()
     expected_specs = {
         "Assets": ("BalanceSheet", "USD", "currency", "us-gaap:Assets"),
         "Liabilities": ("BalanceSheet", "USD", "currency", "us-gaap:Liabilities"),
+        "LiabilitiesAndStockholdersEquity": ("BalanceSheet", "USD", "currency", "us-gaap:LiabilitiesAndStockholdersEquity"),
         "StockholdersEquity": ("BalanceSheet", "USD", "currency", "us-gaap:StockholdersEquity"),
         "CashAndCashEquivalents": ("BalanceSheet", "USD", "currency", "us-gaap:CashAndCashEquivalentsAtCarryingValue"),
         "EarningsPerShareBasic": ("IncomeStatement", "USD/shares", "per_share", "us-gaap:EarningsPerShareBasic"),
@@ -201,7 +210,7 @@ def test_statement_mapper_maps_new_concepts_with_expected_statements_and_units()
         assert registry.get_concept(concept)["dimension"] == dimension
 
 
-def test_balance_sheet_contains_assets_liabilities_and_stockholders_equity():
+def test_balance_sheet_contains_assets_liabilities_and_equity_total():
     registry = ConceptRegistry(CONFIG_PATH)
     mapper = StatementMapper(registry)
 
@@ -220,7 +229,7 @@ def test_balance_sheet_contains_assets_liabilities_and_stockholders_equity():
     balance_sheet = document.statements["BalanceSheet"]
     concepts = {item.concept for item in balance_sheet.items}
 
-    assert {"Assets", "Liabilities", "StockholdersEquity"}.issubset(concepts)
+    assert {"Assets", "Liabilities", "LiabilitiesAndStockholdersEquity", "StockholdersEquity"}.issubset(concepts)
 
 
 def test_real_concepts_yaml_has_no_duplicate_xbrl_tags():
@@ -258,10 +267,10 @@ def test_concept_expansion_does_not_change_constraint_semantics():
     response = verify_document(document, evidence_retriever=EvidenceRetriever())
 
     assert response.constraint_result is not None
-    assert response.constraint_result.status == ConstraintStatus.NOT_EVALUATED
-    assert response.constraint_result.consistent is None
-    assert response.constraint_result.coverage.loaded == 3
-    assert response.constraint_result.coverage.verified == 0
+    assert response.constraint_result.status == ConstraintStatus.CONSISTENT
+    assert response.constraint_result.consistent is True
+    assert response.constraint_result.coverage.loaded == 4
+    assert response.constraint_result.coverage.verified == 1
     assert response.constraint_result.coverage.violated == 0
     assert response.constraint_result.coverage.indeterminate == 0
     assert response.constraint_result.coverage.derivable == 2
