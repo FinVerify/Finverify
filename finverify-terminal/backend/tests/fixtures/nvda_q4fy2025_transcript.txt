@@ -1,0 +1,33 @@
+NVIDIA Announces Financial Results for Fourth Quarter and Fiscal 2025
+Source: NVIDIA Corporation, Form 8-K Exhibit 99.1 (filed with the SEC, Feb. 26, 2025)
+https://www.sec.gov/Archives/edgar/data/1045810/000104581025000021/q4fy25pr.htm
+
+SANTA CLARA, Calif. Feb. 26, 2025. NVIDIA today reported revenue for the fourth quarter ended January 26, 2025, of $39.3 billion, up 12% from the previous quarter and up 78% from a year ago.
+
+For the quarter, GAAP earnings per diluted share was $0.89, up 14% from the previous quarter and up 82% from a year ago. Non-GAAP earnings per diluted share was $0.89, up 10% from the previous quarter and up 71% from a year ago.
+
+For fiscal 2025, revenue was $130.5 billion, up 114% from a year ago. GAAP earnings per diluted share was $2.94, up 147% from a year ago. Non-GAAP earnings per diluted share was $2.99, up 130% from a year ago.
+
+NVIDIA will pay its next quarterly cash dividend of $0.01 per share on April 2, 2025, to all shareholders of record on March 12, 2025.
+
+NVIDIA's outlook for the first quarter of fiscal 2026 is as follows. Revenue is expected to be $43.0 billion, plus or minus 2%. GAAP and non-GAAP gross margins are expected to be 70.6% and 71.0%, respectively, plus or minus 50 basis points. GAAP and non-GAAP operating expenses are expected to be approximately $5.2 billion and $3.6 billion, respectively. GAAP and non-GAAP tax rates are expected to be 17.0%, plus or minus 1%, excluding any discrete items.
+
+Data Center fourth-quarter revenue was a record $35.6 billion, up 16% from the previous quarter and up 93% from a year ago. Full-year Data Center revenue rose 142% to a record $115.2 billion.
+
+Fourth-quarter Gaming revenue was $2.5 billion, down 22% from the previous quarter and down 11% from a year ago. Full-year Gaming revenue rose 9% to $11.4 billion.
+
+Professional Visualization fourth-quarter revenue was $511 million, up 5% from the previous quarter and up 10% from a year ago. Full-year Professional Visualization revenue rose 21% to $1.9 billion.
+
+Automotive fourth-quarter revenue was $570 million, up 27% from the previous quarter and up 103% from a year ago. Full-year Automotive revenue rose 55% to $1.7 billion.
+
+GAAP gross margin was 73.0% for the quarter, down 1.6 points from the previous quarter and down 3.0 points from a year ago. Non-GAAP gross margin was 73.5% for the quarter, down 1.5 points from the previous quarter.
+
+GAAP operating income was $24.0 billion for the quarter, up 10% from the previous quarter and up 77% from a year ago. Non-GAAP operating income was $25.5 billion for the quarter, up 10% from the previous quarter.
+
+GAAP net income was $22.1 billion for the quarter, up 14% from the previous quarter and up 80% from a year ago. Non-GAAP net income was $22.1 billion for the quarter, up 10% from the previous quarter.
+
+Free cash flow was $15.5 billion for the quarter, down from $16.8 billion in the previous quarter.
+
+For fiscal 2025, GAAP gross margin was 75.0%, up 2.3 points from a year ago. GAAP operating income was $81.5 billion for the year, up 147% from a year ago. GAAP net income was $72.9 billion for the year, up 145% from a year ago.
+
+Full-year free cash flow was $60.7 billion.

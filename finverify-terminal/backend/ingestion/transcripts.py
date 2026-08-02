@@ -74,7 +74,34 @@ CLAIM_PATTERNS = [
     # Currency amounts: $94.9 billion, $24.2M, $1.64
     (r'\$\s*([\d,.]+)\s*(billion|million|thousand|B|M|K|bn|mn)', 'currency'),
     # Standalone dollar amounts (e.g., EPS $1.64)
-    (r'\$\s*([\d,.]+)(?!\s*(?:billion|million|thousand|B|M|K|bn|mn))', 'currency_raw'),
+    #
+    # PHASE 7A BUG FIX (found via real-data validation on NVDA's Q4 FY2025
+    # 8-K exhibit text): the greedy [\d,.]+ backtracks against the trailing
+    # negative lookahead one character at a time. For any "$NNN million" /
+    # "$NNN billion" style figure where trimming the LAST captured digit
+    # leaves a remaining digit directly before the scale word (e.g. "$511
+    # million" -> backtrack "511" -> "51", with "1 million" left over), the
+    # lookahead only inspects the text immediately after the *shortened*
+    # match, sees "1 million" (which doesn't start with "million"), and
+    # incorrectly accepts a spurious short match ("$51" instead of no match
+    # at all). "$94.9 billion" and "$1.64," were unaffected only by chance
+    # (canonicalization rejects the trailing-dot backtrack residue, or no
+    # backtrack was needed because a comma follows). This is a real,
+    # general extraction bug, not specific to one transcript -- it fires
+    # for any 3+ digit "$X hundred million/billion" figure. Fixed by
+    # letting the lookahead skip over any leftover digits before checking
+    # for the scale word, so backtracking can no longer sneak a partial
+    # digit match past it. Note the lookahead skips [\d,.]* (not just \d*):
+    # a digit-only skip still leaves decimal figures like "$39.3 billion"
+    # vulnerable one backtrack step later (at "39", the leftover ".3" isn't
+    # digits so a digit-only lookahead misses it) -- confirmed against the
+    # real NVDA transcript before settling on [\d,.]*. The full currency
+    # amount is still captured correctly by the 'currency' pattern above;
+    # this pattern is only meant to catch genuinely standalone dollar
+    # amounts (e.g. "EPS $1.64"). Regression test:
+    # tests/test_transcript_verification.py::
+    # test_currency_raw_no_spurious_match_before_scale_word
+    (r'\$\s*([\d,.]+)(?!\s*[\d,.]*\s*(?:billion|million|thousand|B|M|K|bn|mn))', 'currency_raw'),
     # Percentage values: 25.31%, up 5%
     (r'([\d,.]+)\s*%', 'percentage'),
     # Basis points: 240 basis points, 50 bps

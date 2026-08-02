@@ -209,14 +209,37 @@ def test_exact_parity_claim_counts_locked_per_ticker():
     dropped, before the trailing-comma fix in
     _build_canonicalization_token(). See
     test_trailing_comma_artifact_still_recovers_real_value().
+
+    PHASE 7A UPDATE: counts for AAPL (-2), NVDA (-1), and GS (-2) dropped
+    again after fixing a second, previously-unaddressed instance of the
+    same currency_raw backtracking behavior described in
+    _is_known_phantom_truncated_match() above. That carve-out only
+    covered the case where the backtracked residue was rejected by the
+    canonicalizer (a trailing decimal point, e.g. "$46."). It missed the
+    case where the residue is itself a syntactically valid number that
+    the canonicalizer happily accepts -- e.g. "$153 billion" backtracks
+    to "$15" (153 -> 15, with "3 billion" left over, which doesn't start
+    with "billion" so the old lookahead let it through), silently
+    producing a wrong, real-looking phantom claim (15.0) instead of being
+    rejected outright. This was only caught via real-data validation
+    against NVDA's actual Q4 FY2025 8-K exhibit text ("$570 million" ->
+    phantom "$57"), then confirmed present in AAPL ("$153 billion" ->
+    phantom "$15", "$29 billion" -> phantom "$2") and GS ("$351 million"
+    -> phantom "$35", "$934 million" -> phantom "$93") samples too. Fixed
+    at the regex level in CLAIM_PATTERNS' currency_raw pattern (see its
+    definition and comment in ingestion/transcripts.py) rather than
+    relying on the canonicalizer to reject it, since not every backtrack
+    residue is invalid. TSLA/JPM/MSFT counts are unaffected because none
+    of their sample sentences happen to contain a "$NNN million/billion"
+    figure whose backtrack residue is itself a valid number.
     """
     expected_counts = {
-        "AAPL": 36,
+        "AAPL": 34,
         "TSLA": 32,
         "JPM": 37,
-        "NVDA": 44,
+        "NVDA": 43,
         "MSFT": 42,
-        "GS": 48,
+        "GS": 46,
     }
     for ticker, expected in expected_counts.items():
         claims = extract_claims(SAMPLE_TRANSCRIPTS[ticker])
