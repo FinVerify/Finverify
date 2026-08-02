@@ -1,6 +1,6 @@
 """Magnitude correction extracted from the legacy DVL formatting pass."""
 
-from app.dvl import RATIO_KEYWORDS, is_correct
+from app.dvl import has_ratio_keyword, is_correct
 
 from ...models import Claim, RuleResult, VerificationContext
 
@@ -25,7 +25,7 @@ class MagnitudeRule:
             return RuleResult(applied=False, reason="No value available for magnitude evaluation")
 
         actual = claim.actual_value
-        is_ratio = any(keyword in claim.question.lower() for keyword in RATIO_KEYWORDS)
+        is_ratio = has_ratio_keyword(claim.question)
 
         for factor in self._MAGNITUDE_FACTORS:
             corrected = value * factor

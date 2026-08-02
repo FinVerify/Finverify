@@ -30,6 +30,7 @@ v1.3: Canonical-aware ratio detection. `full_verify` accepts an optional
 """
 
 import logging
+import re
 from typing import Optional
 
 from numeric.canonicalizer import CanonicalNumber, Unit
@@ -45,6 +46,28 @@ RATIO_KEYWORDS: list[str] = [
     "change", "increase", "decrease", "percent", "percentage",
     "rate", "loss",
 ]
+
+def _normalize_ratio_text(text: str) -> str:
+    """Normalize natural-language and CamelCase metric text for keyword checks."""
+    text = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text)
+    text = text.replace("_", " ").replace("-", " ")
+    return re.sub(r"\s+", " ", text).strip().lower()
+
+
+def has_ratio_keyword(text: str) -> bool:
+    """
+    Detect ratio-like questions without matching accidental substrings.
+
+    This keeps canonical names like ``GrossMargin`` working via CamelCase
+    splitting, while avoiding false positives such as ``Corporation`` matching
+    the ``ratio`` keyword.
+    """
+    normalized = _normalize_ratio_text(text)
+    if not normalized:
+        return False
+    tokens = normalized.split()
+    return any(token.startswith(keyword) for token in tokens for keyword in RATIO_KEYWORDS)
+
 
 # ---------------------------------------------------------------------------
 # Core helpers
@@ -125,7 +148,7 @@ def full_verify(
         is_ratio = canonical.unit == Unit.PERCENT
         skip_scale_heuristic = canonical.unit in (Unit.BASIS_POINT, Unit.PERCENTAGE_POINT)
     else:
-        is_ratio = any(kw in q_lower for kw in RATIO_KEYWORDS)
+        is_ratio = has_ratio_keyword(question)
 
     # ------------------------------------------------------------------
     # Step 1 — Scale correction (FIXED: respects ambiguous range)

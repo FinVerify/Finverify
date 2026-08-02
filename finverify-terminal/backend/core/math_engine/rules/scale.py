@@ -1,6 +1,6 @@
 """Scale correction extracted from the legacy DVL formatting pass."""
 
-from app.dvl import RATIO_KEYWORDS, _is_correct_with_sign_lookahead
+from app.dvl import _is_correct_with_sign_lookahead, has_ratio_keyword
 
 from ...models import Claim, RuleResult, VerificationContext
 
@@ -22,8 +22,7 @@ class ScaleRule:
         if value is None:
             return RuleResult(applied=False, reason="No value available for scale evaluation")
 
-        q_lower = claim.question.lower()
-        is_ratio = any(keyword in q_lower for keyword in RATIO_KEYWORDS)
+        is_ratio = has_ratio_keyword(claim.question)
         if not is_ratio:
             return RuleResult(applied=False, reason="Question is not ratio-like")
 

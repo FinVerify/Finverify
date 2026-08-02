@@ -90,6 +90,48 @@ def test_batch_single_claim_skips_constraints():
     assert response.constraint_result is None
 
 
+def test_batch_verify_preserves_absolute_assets_value_for_corporation_question():
+    request = BatchVerifyRequest(
+        claims=[
+            BatchClaim(
+                question="What is Assets for Microsoft Corporation (FY2024)?",
+                raw_value=758_376_000_000,
+                metric="Assets",
+                entity="Microsoft Corporation",
+                period="2024",
+            )
+        ],
+        include_constraints=False,
+    )
+
+    response = verify_batch(request, evidence_retriever=EvidenceRetriever())
+
+    assert len(response.results) == 1
+    assert response.results[0].verified_value == pytest.approx(758_376_000_000, rel=0, abs=1e-6)
+    assert response.results[0].correction_log == []
+
+
+def test_batch_verify_still_applies_scale_correction_for_camel_case_ratio_metric():
+    request = BatchVerifyRequest(
+        claims=[
+            BatchClaim(
+                question="What is GrossMargin for Microsoft Corporation (FY2024)?",
+                raw_value=0.4,
+                metric="GrossMargin",
+                entity="Microsoft Corporation",
+                period="2024",
+            )
+        ],
+        include_constraints=False,
+    )
+
+    response = verify_batch(request, evidence_retriever=EvidenceRetriever())
+
+    assert len(response.results) == 1
+    assert response.results[0].verified_value == pytest.approx(40.0, rel=0, abs=1e-9)
+    assert [entry["rule"] for entry in response.results[0].correction_log] == ["scale_mul100"]
+
+
 def test_batch_dimension_mismatch(monkeypatch, tmp_path, caplog):
     config_path = tmp_path / "concepts.json"
     config_path.write_text(
