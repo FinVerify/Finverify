@@ -202,6 +202,10 @@ def test_batch_claim_from_transcript_claim_preserves_ticker():
     assert batch_claim.ticker == "NVDA"
     assert batch_claim.cik is None
     assert batch_claim.period == "Q4 FY2025"
+    assert batch_claim.period_struct is not None
+    assert batch_claim.period_struct.kind == "quarterly"
+    assert batch_claim.period_struct.fiscal_year == 2025
+    assert batch_claim.period_struct.fiscal_quarter == 4
 
 
 # ---------------------------------------------------------------------------
@@ -217,6 +221,7 @@ def _make_result(
     evidence_mode: str | None = "missing",
     correction_log: list | None = None,
     metric: str | None = None,
+    period: str | None = None,
 ) -> VerificationResult:
     from core.models import Metric
 
@@ -224,6 +229,7 @@ def _make_result(
         question="What was the value?",
         raw_value=raw_value,
         metric=Metric(name=metric, canonical_name=metric) if metric else None,
+        period=period,
     )
     return VerificationResult(
         claim=claim,
@@ -263,20 +269,21 @@ def test_mapped_claim_matching_real_evidence_value_is_verified():
     """The one case that should actually be labeled VERIFIED: a real
     primary-source value exists for the mapped metric AND it numerically
     matches the claim -- absence-of-contradiction alone is not enough."""
-    evidence = [Evidence(source=Source(name="SEC EDGAR", kind="primary_filing", authority=1.0), claim="q", value=39_331_000_000.0, locator="Revenue")]
-    result = _make_result(raw_value=39_300_000_000.0, evidence_mode="retrieved", evidence=evidence, metric="Revenue")
-    status, note = verify_transcript._claim_status({"raw_value": 39_300_000_000.0}, result, metric="Revenue")
+    evidence = [Evidence(source=Source(name="SEC EDGAR", kind="primary_filing", authority=1.0), claim="q", value=39_331_000_000.0, locator="Revenue", period="Q4 FY2025")]
+    result = _make_result(raw_value=39_300_000_000.0, evidence_mode="retrieved", evidence=evidence, metric="Revenue", period="Q4 FY2025")
+    status, note = verify_transcript._claim_status({"raw_value": 39_300_000_000.0, "sentence": "Revenue was $39.3 billion for the quarter."}, result, metric="Revenue")
     assert status == "VERIFIED"
 
 
 def test_mapped_claim_mismatching_evidence_value_is_unresolved_not_contradicted():
     """A value far from the known primary figure is reported UNRESOLVED,
-    not an invented 'CONTRADICTED' status -- Phase 7A does not implement
-    period-aware matching, so a mismatch may just mean a different period."""
-    evidence = [Evidence(source=Source(name="SEC EDGAR", kind="primary_filing", authority=1.0), claim="q", value=130_497_000_000.0, locator="Revenue")]
-    result = _make_result(raw_value=39_300_000_000.0, evidence_mode="retrieved", evidence=evidence, metric="Revenue")
-    status, note = verify_transcript._claim_status({"raw_value": 39_300_000_000.0}, result, metric="Revenue")
+    not an invented 'CONTRADICTED' status -- even with a matched period,
+    a numeric mismatch remains UNRESOLVED."""
+    evidence = [Evidence(source=Source(name="SEC EDGAR", kind="primary_filing", authority=1.0), claim="q", value=130_497_000_000.0, locator="Revenue", period="Q4 FY2025")]
+    result = _make_result(raw_value=39_300_000_000.0, evidence_mode="retrieved", evidence=evidence, metric="Revenue", period="Q4 FY2025")
+    status, note = verify_transcript._claim_status({"raw_value": 39_300_000_000.0, "sentence": "Revenue was $39.3 billion for the quarter."}, result, metric="Revenue")
     assert status == "UNRESOLVED"
+    assert "matched period" in note
 
 
 def test_engine_verified_flag_alone_never_drives_status():
@@ -366,6 +373,9 @@ def test_build_report_preserves_original_claim_context():
     assert claim_report["unit"] == "USD/shares"
     assert claim_report["currency"] == "USD"
     assert claim_report["raw_value"] == pytest.approx(0.89)
+    assert "claim_period" in claim_report
+    assert "claim_period_struct" in claim_report
+    assert "evidence_periods" in claim_report
 
 
 # ---------------------------------------------------------------------------

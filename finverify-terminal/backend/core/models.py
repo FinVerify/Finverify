@@ -4,6 +4,7 @@ from enum import Enum
 from typing import TYPE_CHECKING, Any, Optional
 
 from pydantic import BaseModel, Field
+from core.financial.document import FinancialPeriod
 
 if TYPE_CHECKING:
     from core.financial.constraints import ConstraintResult
@@ -112,6 +113,7 @@ class Claim(BaseModel):
     entity: Optional[Entity] = None
     metric: Optional[Metric] = None
     period: Optional[str] = None
+    period_struct: Optional[FinancialPeriod] = None
     model_source: Optional[str] = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -126,6 +128,7 @@ class BatchClaim(BaseModel):
     ticker: Optional[str] = None
     cik: Optional[str] = None
     period: Optional[str] = None
+    period_struct: Optional[FinancialPeriod] = None
     actual_value: Optional[float] = None
 
 
@@ -144,6 +147,7 @@ class VerificationContext(BaseModel):
     entity: Optional[Entity] = None
     metric: Optional[Metric] = None
     period: Optional[str] = None
+    period_struct: Optional[FinancialPeriod] = None
     provider: Optional[str] = None
     provider_metadata: dict[str, Any] = Field(default_factory=dict)
     evidence_mode: Optional[str] = None

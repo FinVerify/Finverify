@@ -1,15 +1,16 @@
 """Canonical financial document models."""
 
 from datetime import date
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
 
 class FinancialPeriod(BaseModel):
-    start_date: date
-    end_date: date
-    fiscal_year: int
+    kind: Literal["annual", "quarterly", "instant", "unknown", "future"] = "unknown"
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    fiscal_year: Optional[int] = None
     fiscal_quarter: Optional[int] = None
 
 

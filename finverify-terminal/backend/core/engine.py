@@ -40,6 +40,7 @@ def verify(claim: Claim | dict, *, evidence_retriever: Optional[EvidenceRetrieve
         entity=compiled.entity,
         metric=compiled.metric,
         period=compiled.period,
+        period_struct=compiled.period_struct,
         metadata=dict(compiled.metadata),
         current_value=compiled.raw_value,
     )
@@ -255,6 +256,7 @@ def _build_batch_claim(batch_claim: BatchClaim) -> Claim:
         metric=metric,
         entity=entity,
         period=batch_claim.period,
+        period_struct=batch_claim.period_struct,
     )
 
 

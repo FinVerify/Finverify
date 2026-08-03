@@ -52,6 +52,7 @@ import argparse
 import json
 import re
 import sys
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
@@ -61,6 +62,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core.engine import verify_batch  # noqa: E402
 from core.financial.concepts import ConceptRegistry  # noqa: E402
+from core.financial.document import FinancialPeriod  # noqa: E402
+from core.financial.period import parse_period_string, periods_compatible  # noqa: E402
 from core.models import BatchClaim, BatchVerifyRequest, BatchVerifyResponse, VerificationResult  # noqa: E402
 from ingestion.transcripts import build_question_from_claim, extract_claims  # noqa: E402
 
@@ -154,6 +157,85 @@ def _map_claim_to_metric(claim: dict) -> Optional[str]:
     return None
 
 
+@dataclass(frozen=True)
+class MatchedEvidence:
+    value: float
+    locator: Optional[str]
+    period: Optional[str]
+    period_struct: Optional[FinancialPeriod]
+
+
+def _statement_period_type(metric: Optional[str]) -> Optional[str]:
+    if not metric:
+        return None
+    concept = _concept_registry().get_concept(metric)
+    statement = concept.get("statement")
+    if statement == "BalanceSheet":
+        return "instant"
+    if statement in {"IncomeStatement", "CashFlowStatement"}:
+        return "duration"
+    return None
+
+
+def _merge_period_hint(primary: Optional[FinancialPeriod], fallback: Optional[FinancialPeriod]) -> Optional[FinancialPeriod]:
+    if primary is None:
+        return fallback
+    if fallback is None or primary.kind in {"future", "unknown"}:
+        return primary
+
+    merged = primary.model_copy(deep=True) if hasattr(primary, "model_copy") else primary.copy(deep=True)
+    if merged.fiscal_year is None:
+        merged.fiscal_year = fallback.fiscal_year
+    if merged.kind == "quarterly" and merged.fiscal_quarter is None:
+        merged.fiscal_quarter = fallback.fiscal_quarter
+    if merged.kind == "instant":
+        if merged.end_date is None:
+            merged.end_date = fallback.end_date
+        if merged.start_date is None:
+            merged.start_date = fallback.start_date
+    return merged
+
+
+def _format_period(period: Optional[FinancialPeriod]) -> Optional[str]:
+    if period is None:
+        return None
+    if period.kind == "future":
+        return "future"
+    if period.kind == "quarterly" and period.fiscal_year is not None and period.fiscal_quarter is not None:
+        return f"Q{period.fiscal_quarter} FY{period.fiscal_year}"
+    if period.kind == "annual" and period.fiscal_year is not None:
+        return f"FY{period.fiscal_year}"
+    if period.kind == "instant" and period.end_date is not None:
+        return period.end_date.isoformat()
+    return None
+
+
+def _serialize_period(period: Optional[FinancialPeriod]) -> Optional[dict]:
+    if period is None:
+        return None
+    return {
+        "kind": period.kind,
+        "fiscal_year": period.fiscal_year,
+        "fiscal_quarter": period.fiscal_quarter,
+        "start_date": period.start_date.isoformat() if period.start_date is not None else None,
+        "end_date": period.end_date.isoformat() if period.end_date is not None else None,
+    }
+
+
+def _claim_period_struct(claim: dict, metric: Optional[str], transcript_period: Optional[str]) -> Optional[FinancialPeriod]:
+    statement_period_type = _statement_period_type(metric)
+    sentence_period = parse_period_string(claim.get("sentence"), statement_period_type=statement_period_type)
+    fallback_period = parse_period_string(transcript_period, statement_period_type=statement_period_type)
+
+    if sentence_period is not None:
+        if sentence_period.kind not in {"unknown"}:
+            return _merge_period_hint(sentence_period, fallback_period)
+        return sentence_period
+    if fallback_period is not None:
+        return fallback_period
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Adapter: transcript claim dict -> BatchClaim
 # ---------------------------------------------------------------------------
@@ -167,13 +249,16 @@ def _batch_claim_from_transcript_claim(
     """Thin adapter. Reuses build_question_from_claim() (existing,
     ingestion/transcripts.py) for the question text so DVL's RATIO_KEYWORDS
     safety logic is exercised identically to the demo path."""
+    metric = _map_claim_to_metric(claim)
+    period_struct = _claim_period_struct(claim, metric, period)
     return BatchClaim(
         question=build_question_from_claim(claim),
         raw_value=claim["raw_value"],
-        metric=_map_claim_to_metric(claim),
+        metric=metric,
         entity=ticker,
         ticker=ticker,
-        period=period,
+        period=_format_period(period_struct) or period,
+        period_struct=period_struct,
     )
 
 
@@ -213,6 +298,31 @@ def _canonical_concept(name: Optional[str], registry: ConceptRegistry) -> Option
     return registry.resolve_alias(name)
 
 
+def _primary_evidence_matches(result: VerificationResult, metric: str) -> list[MatchedEvidence]:
+    """Collect canonical-metric-matching primary evidence with parsed periods."""
+    registry = _concept_registry()
+    canonical_metric = _canonical_concept(metric, registry)
+    if canonical_metric is None:
+        return []
+
+    statement_period_type = _statement_period_type(metric)
+    matches: list[MatchedEvidence] = []
+    for item in result.evidence:
+        if item.source.kind != "primary_filing":
+            continue
+        canonical_locator = _canonical_concept(item.locator, registry)
+        if canonical_locator is not None and canonical_locator == canonical_metric and item.value is not None:
+            matches.append(
+                MatchedEvidence(
+                    value=item.value,
+                    locator=item.locator,
+                    period=item.period,
+                    period_struct=parse_period_string(item.period, statement_period_type=statement_period_type),
+                )
+            )
+    return matches
+
+
 def _primary_evidence_values(result: VerificationResult, metric: str) -> list[float]:
     """Collect primary-filing evidence values whose concept identity matches
     `metric`.
@@ -235,19 +345,25 @@ def _primary_evidence_values(result: VerificationResult, metric: str) -> list[fl
     resolve to None and never match, so this stays exactly as conservative
     as before for anything not explicitly declared equivalent.
     """
-    registry = _concept_registry()
-    canonical_metric = _canonical_concept(metric, registry)
-    if canonical_metric is None:
-        return []
+    return [match.value for match in _primary_evidence_matches(result, metric)]
 
-    values: list[float] = []
-    for item in result.evidence:
-        if item.source.kind != "primary_filing":
-            continue
-        canonical_locator = _canonical_concept(item.locator, registry)
-        if canonical_locator is not None and canonical_locator == canonical_metric and item.value is not None:
-            values.append(item.value)
-    return values
+
+def _resolved_claim_period(claim: dict, result: VerificationResult, metric: str) -> Optional[FinancialPeriod]:
+    statement_period_type = _statement_period_type(metric)
+    if result.claim.period_struct is not None:
+        return result.claim.period_struct
+    if claim.get("period_struct") is not None:
+        return claim["period_struct"]
+
+    sentence_period = parse_period_string(claim.get("sentence"), statement_period_type=statement_period_type)
+    fallback_period = parse_period_string(result.claim.period or claim.get("period"), statement_period_type=statement_period_type)
+    if sentence_period is not None:
+        if sentence_period.kind not in {"unknown"}:
+            return _merge_period_hint(sentence_period, fallback_period)
+        return sentence_period
+    if fallback_period is not None:
+        return fallback_period
+    return None
 
 
 def _claim_status(claim: dict, result: VerificationResult, metric: Optional[str]) -> tuple[str, str]:
@@ -273,24 +389,67 @@ def _claim_status(claim: dict, result: VerificationResult, metric: Optional[str]
             "No primary-source (SEC) evidence available locally for this ticker",
         )
 
-    evidence_values = _primary_evidence_values(result, metric)
-    if not evidence_values:
+    evidence_matches = _primary_evidence_matches(result, metric)
+    if not evidence_matches:
         return (
             "UNRESOLVED",
             f"Evidence retrieved for this ticker, but none tagged for metric '{metric}'",
         )
 
+    claim_period = _resolved_claim_period(claim, result, metric)
     claim_value = result.verified_value if result.verified_value is not None else claim["raw_value"]
-    for evidence_value in evidence_values:
+    saw_period_match = False
+    saw_period_mismatch = False
+    saw_period_unknown = False
+    mismatched_periods: list[str] = []
+    unresolved_periods: list[str] = []
+
+    for evidence_match in evidence_matches:
+        compatibility = periods_compatible(claim_period, evidence_match.period_struct)
+        evidence_period_label = evidence_match.period or _format_period(evidence_match.period_struct) or "unknown"
+
+        if compatibility == "MISMATCH":
+            saw_period_mismatch = True
+            mismatched_periods.append(evidence_period_label)
+            continue
+        if compatibility == "UNKNOWN":
+            saw_period_unknown = True
+            unresolved_periods.append(evidence_period_label)
+            continue
+
+        saw_period_match = True
+        evidence_value = evidence_match.value
         if evidence_value == 0:
             continue
         if abs(claim_value - evidence_value) / abs(evidence_value) <= 0.01:
-            return "VERIFIED", f"Matches primary-source value {evidence_value:,.4g} for {metric}"
+            period_label = _format_period(claim_period) or result.claim.period or claim.get("period") or "matched period"
+            return "VERIFIED", f"Matches primary-source value {evidence_value:,.4g} for {metric} in {period_label}"
+
+    if saw_period_match:
+        return (
+            "UNRESOLVED",
+            f"No known primary-source value for '{metric}' matches this claim within tolerance in the matched period",
+        )
+
+    if saw_period_unknown:
+        claim_period_label = _format_period(claim_period) or result.claim.period or claim.get("period") or "unknown"
+        evidence_summary = ", ".join(sorted(set(unresolved_periods))) if unresolved_periods else "unknown"
+        return (
+            "UNRESOLVED",
+            f"Period undetermined for '{metric}' (claim={claim_period_label}, evidence={evidence_summary})",
+        )
+
+    if saw_period_mismatch:
+        claim_period_label = _format_period(claim_period) or result.claim.period or claim.get("period") or "unknown"
+        evidence_summary = ", ".join(sorted(set(mismatched_periods))) if mismatched_periods else "unknown"
+        return (
+            "UNRESOLVED",
+            f"Period mismatch for '{metric}' (claim={claim_period_label}, evidence={evidence_summary})",
+        )
 
     return (
         "UNRESOLVED",
-        f"No known primary-source value for '{metric}' matches this claim within tolerance "
-        "(may be a different fiscal period; Phase 7A does not implement period-aware matching)",
+        f"No known primary-source value for '{metric}' matches this claim within tolerance",
     )
 
 
@@ -349,6 +508,17 @@ def build_report(
             "trust_label": result.trust_score.label,
             "status": status,
             "note": note,
+            "claim_period": result.claim.period,
+            "claim_period_struct": _serialize_period(result.claim.period_struct),
+            "evidence_periods": [
+                {
+                    "locator": item.locator,
+                    "value": item.value,
+                    "period": item.period,
+                    "source_kind": item.source.kind,
+                }
+                for item in result.evidence
+            ],
         })
 
     return {

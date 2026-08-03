@@ -47,11 +47,13 @@ def _make_result(
     evidence: list[Evidence] | None = None,
     evidence_mode: str | None = "retrieved",
     metric: str | None = None,
+    period: str | None = "FY2025",
 ) -> VerificationResult:
     claim = Claim(
         question="What was the value?",
         raw_value=raw_value,
         metric=Metric(name=metric, canonical_name=metric) if metric else None,
+        period=period,
     )
     return VerificationResult(
         claim=claim,
@@ -64,12 +66,13 @@ def _make_result(
     )
 
 
-def _primary_evidence(locator: str, value: float) -> Evidence:
+def _primary_evidence(locator: str, value: float, *, period: str | None = "FY2025") -> Evidence:
     return Evidence(
         source=Source(name="SEC EDGAR", kind="primary_filing", authority=1.0),
         claim="q",
         value=value,
         locator=locator,
+        period=period,
     )
 
 
