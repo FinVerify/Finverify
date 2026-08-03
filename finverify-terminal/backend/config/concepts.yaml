@@ -15,7 +15,7 @@
       "validation": "Must be > 0"
     },
     "CostOfGoodsSold": {
-      "aliases": ["COGS", "Cost of Sales", "Cost of Revenue"],
+      "aliases": ["COGS", "Cost of Sales", "Cost of Revenue", "cost_of_revenue"],
       "dimension": "currency",
       "xbrl_tags": [
         "us-gaap:CostOfGoodsSold",
@@ -29,21 +29,21 @@
       "validation": "Must be > 0"
     },
     "GrossProfit": {
-      "aliases": ["Gross Profit"],
+      "aliases": ["Gross Profit", "gross_profit"],
       "dimension": "currency",
       "xbrl_tags": ["us-gaap:GrossProfit"],
       "unit": "USD",
       "statement": "IncomeStatement"
     },
     "OperatingIncome": {
-      "aliases": ["Operating Profit", "EBIT"],
+      "aliases": ["Operating Profit", "EBIT", "operating_income"],
       "dimension": "currency",
       "xbrl_tags": ["us-gaap:OperatingIncomeLoss"],
       "unit": "USD",
       "statement": "IncomeStatement"
     },
     "NetIncome": {
-      "aliases": ["Net Income Loss", "Net Earnings", "Earnings"],
+      "aliases": ["Net Income Loss", "Net Earnings", "Earnings", "net_income"],
       "dimension": "currency",
       "xbrl_tags": ["us-gaap:NetIncomeLoss", "us-gaap:ProfitLoss"],
       "unit": "USD",
@@ -57,7 +57,7 @@
       "statement": "CashFlowStatement"
     },
     "Assets": {
-      "aliases": ["Total Assets"],
+      "aliases": ["Total Assets", "total_assets"],
       "dimension": "currency",
       "formula": "LiabilitiesAndStockholdersEquity",
       "xbrl_tags": ["us-gaap:Assets"],
@@ -80,7 +80,7 @@
       "statement": "BalanceSheet"
     },
     "StockholdersEquity": {
-      "aliases": ["Shareholders' Equity", "Stockholders' Equity"],
+      "aliases": ["Shareholders' Equity", "Stockholders' Equity", "stockholders_equity"],
       "dimension": "currency",
       "xbrl_tags": ["us-gaap:StockholdersEquity"],
       "unit": "USD",
@@ -94,14 +94,14 @@
       "statement": "BalanceSheet"
     },
     "EarningsPerShareBasic": {
-      "aliases": ["Basic EPS"],
+      "aliases": ["Basic EPS", "eps_basic"],
       "dimension": "per_share",
       "xbrl_tags": ["us-gaap:EarningsPerShareBasic"],
       "unit": "USD/shares",
       "statement": "IncomeStatement"
     },
     "EarningsPerShareDiluted": {
-      "aliases": ["Diluted EPS"],
+      "aliases": ["Diluted EPS", "eps_diluted"],
       "dimension": "per_share",
       "xbrl_tags": ["us-gaap:EarningsPerShareDiluted"],
       "unit": "USD/shares",

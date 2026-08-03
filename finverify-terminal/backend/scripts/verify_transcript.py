@@ -53,12 +53,14 @@ import json
 import re
 import sys
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core.engine import verify_batch  # noqa: E402
+from core.financial.concepts import ConceptRegistry  # noqa: E402
 from core.models import BatchClaim, BatchVerifyRequest, BatchVerifyResponse, VerificationResult  # noqa: E402
 from ingestion.transcripts import build_question_from_claim, extract_claims  # noqa: E402
 
@@ -187,13 +189,63 @@ def _evidence_mode(result: VerificationResult) -> Optional[str]:
     return None
 
 
+@lru_cache(maxsize=1)
+def _concept_registry() -> ConceptRegistry:
+    """Shared ConceptRegistry instance, loaded from the same config/concepts.yaml
+    used everywhere else (core.engine._load_constraint_registry(),
+    core.financial.service.FinancialDocumentService). This is the repository's
+    existing canonical-concept-identity mechanism (concept name + declared
+    aliases + XBRL tags -> one canonical name via ConceptRegistry.resolve_alias);
+    Phase 7C reuses it rather than inventing a second, transcript-local alias
+    table."""
+    config_path = Path(__file__).parent.parent / "config" / "concepts.yaml"
+    return ConceptRegistry(config_path)
+
+
+def _canonical_concept(name: Optional[str], registry: ConceptRegistry) -> Optional[str]:
+    """Resolve a metric/locator string to its canonical concept name via the
+    registry's alias index, or None if it isn't a recognized concept or alias
+    at all. Deterministic dict lookup only -- no fuzzy or substring matching,
+    so an unrecognized identifier stays unresolved rather than being guessed
+    at."""
+    if not name:
+        return None
+    return registry.resolve_alias(name)
+
+
 def _primary_evidence_values(result: VerificationResult, metric: str) -> list[float]:
+    """Collect primary-filing evidence values whose concept identity matches
+    `metric`.
+
+    PHASE 7C: this used to compare `Evidence.locator` and `metric` as raw,
+    lower-cased strings. That only ever worked for Revenue by coincidence --
+    the transcript side's canonical name ("Revenue") and the SEC ingestion
+    side's ad hoc metric_name key ("revenue") happen to be identical up to
+    case. Every other concept legitimately fails: SEC ingestion's
+    XBRL_METRICS (ingestion/sec_edgar.py) stores snake_case keys like
+    "eps_diluted" / "operating_income" / "net_income", which never
+    string-equals a canonical concept name like "EarningsPerShareDiluted" /
+    "OperatingIncome" / "NetIncome" -- even though real matching evidence
+    exists. Both sides are now canonicalized through the same
+    ConceptRegistry.resolve_alias() index (config/concepts.yaml) before
+    comparison, so a real concept match no longer depends on the two
+    identifier vocabularies agreeing by accident. The snake_case ingestion
+    keys are declared as aliases in concepts.yaml precisely so this
+    resolves; concepts with no such alias (e.g. an unrecognized locator)
+    resolve to None and never match, so this stays exactly as conservative
+    as before for anything not explicitly declared equivalent.
+    """
+    registry = _concept_registry()
+    canonical_metric = _canonical_concept(metric, registry)
+    if canonical_metric is None:
+        return []
+
     values: list[float] = []
     for item in result.evidence:
         if item.source.kind != "primary_filing":
             continue
-        locator = (item.locator or "").strip().lower()
-        if locator == metric.strip().lower() and item.value is not None:
+        canonical_locator = _canonical_concept(item.locator, registry)
+        if canonical_locator is not None and canonical_locator == canonical_metric and item.value is not None:
             values.append(item.value)
     return values
 
