@@ -170,6 +170,7 @@ def _batch_claim_from_transcript_claim(
         raw_value=claim["raw_value"],
         metric=_map_claim_to_metric(claim),
         entity=ticker,
+        ticker=ticker,
         period=period,
     )
 

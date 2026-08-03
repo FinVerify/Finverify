@@ -9,8 +9,8 @@ inside `verify_batch()` / `verify()`. Its only jobs are:
 
 See `_claim_to_batch_claim()` for the one piece of real logic here: adapting
 `Claim` (which has `entity: Entity`, `metric: Metric`, `metadata: dict`) into
-`BatchClaim` (which has `entity: str`, `metric: str`, and no `metadata` field
-at all).
+`BatchClaim` (which has `entity: str`, optional `ticker` / `cik`, `metric: str`,
+and no `metadata` field at all).
 """
 
 from __future__ import annotations
@@ -84,7 +84,8 @@ def _claim_to_batch_claim(claim: Claim) -> BatchClaim | None:
 
     `BatchClaim.metric` / `.entity` are plain strings, so `Claim.metric`
     (a `Metric` object) and `Claim.entity` (an `Entity` object) are flattened
-    to their name.
+    to their name. Entity provenance needed for SEC routing (`ticker` / `cik`)
+    is preserved in the dedicated optional `BatchClaim` fields.
 
     `Claim.metadata` -- source, statement, filing_type, filing_date, xbrl_tag,
     source_url -- has nowhere to go on `BatchClaim` (it has no `metadata`
@@ -107,6 +108,8 @@ def _claim_to_batch_claim(claim: Claim) -> BatchClaim | None:
         raw_value=claim.raw_value,
         metric=metric_name,
         entity=entity_name,
+        ticker=claim.entity.ticker if claim.entity is not None else None,
+        cik=claim.entity.cik if claim.entity is not None else None,
         period=claim.period,
         actual_value=claim.actual_value,
     )

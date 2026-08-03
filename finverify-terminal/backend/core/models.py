@@ -123,6 +123,8 @@ class BatchClaim(BaseModel):
     raw_value: float
     metric: Optional[str] = None
     entity: Optional[str] = None
+    ticker: Optional[str] = None
+    cik: Optional[str] = None
     period: Optional[str] = None
     actual_value: Optional[float] = None
 

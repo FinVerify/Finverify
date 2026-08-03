@@ -11,10 +11,11 @@ from fastapi.testclient import TestClient
 from app.main import app
 from core import engine as core_engine
 from core.evidence import EvidenceRetriever
-from core.engine import verify_batch
+from core.engine import _build_batch_claim, verify_batch
 from core.financial.concepts import ConceptRegistry
 from core.financial.constraints.models import ConstraintStatus
-from core.models import BatchClaim, BatchVerifyRequest
+from core.models import BatchClaim, BatchVerifyRequest, Claim, Entity
+from providers.sec import SECProvider
 
 
 FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
@@ -88,6 +89,86 @@ def test_batch_single_claim_skips_constraints():
 
     assert len(response.results) == 1
     assert response.constraint_result is None
+
+
+def test_batch_claim_entity_only_payload_still_parses():
+    request = BatchVerifyRequest.model_validate(
+        {
+            "claims": [
+                {
+                    "question": "What is Revenue for Microsoft Corporation?",
+                    "raw_value": 123,
+                    "entity": "Microsoft Corporation",
+                }
+            ]
+        }
+    )
+
+    assert len(request.claims) == 1
+    assert request.claims[0].entity == "Microsoft Corporation"
+    assert request.claims[0].ticker is None
+    assert request.claims[0].cik is None
+
+
+def test_build_batch_claim_preserves_backward_compatible_entity_name_only():
+    claim = _build_batch_claim(
+        BatchClaim(
+            question="What is Revenue for Microsoft Corporation?",
+            raw_value=123,
+            entity="Microsoft Corporation",
+        )
+    )
+
+    assert claim.entity is not None
+    assert claim.entity.name == "Microsoft Corporation"
+    assert claim.entity.ticker is None
+    assert claim.entity.cik is None
+
+
+def test_build_batch_claim_preserves_ticker():
+    claim = _build_batch_claim(
+        BatchClaim(
+            question="What is Revenue for Microsoft Corporation?",
+            raw_value=123,
+            entity="Microsoft Corporation",
+            ticker="MSFT",
+        )
+    )
+
+    assert claim.entity is not None
+    assert claim.entity.name == "Microsoft Corporation"
+    assert claim.entity.ticker == "MSFT"
+    assert claim.entity.cik is None
+
+
+def test_build_batch_claim_preserves_cik():
+    claim = _build_batch_claim(
+        BatchClaim(
+            question="What is Revenue for Microsoft Corporation?",
+            raw_value=123,
+            entity="Microsoft Corporation",
+            cik="0000789019",
+        )
+    )
+
+    assert claim.entity is not None
+    assert claim.entity.name == "Microsoft Corporation"
+    assert claim.entity.ticker is None
+    assert claim.entity.cik == "0000789019"
+
+
+def test_sec_provider_can_handle_ticker_and_cik_without_network():
+    provider = SECProvider()
+
+    assert provider.can_handle(
+        Claim(question="q", raw_value=1.0, entity=Entity(name="Microsoft Corporation", ticker="MSFT"))
+    ) is True
+    assert provider.can_handle(
+        Claim(question="q", raw_value=1.0, entity=Entity(name="Microsoft Corporation", cik="0000789019"))
+    ) is True
+    assert provider.can_handle(
+        Claim(question="q", raw_value=1.0, entity=Entity(name="Microsoft Corporation"))
+    ) is False
 
 
 def test_batch_verify_preserves_absolute_assets_value_for_corporation_question():

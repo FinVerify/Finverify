@@ -9,6 +9,8 @@ import pytest
 from core.evidence import EvidenceRetriever
 from core.financial.concepts import ConceptRegistry
 from core.financial.constraints.models import ConstraintStatus
+from core.engine import _build_batch_claim
+from core.financial.claim_extractor import extract_claims
 from core.financial.document_verifier import _claim_to_batch_claim, verify_document
 from core.financial.mapper import StatementMapper
 from core.models import BatchClaim, Claim, Entity, Metric
@@ -140,7 +142,7 @@ def test_verify_document_drops_claims_without_raw_value(monkeypatch):
     assert response.results[0].claim.question == "What is Revenue for Apple Inc.?"
 
 
-def test_claim_to_batch_claim_drops_metadata_and_flattens_entity_and_metric():
+def test_claim_to_batch_claim_drops_metadata_flattens_entity_and_preserves_provenance():
     claim = Claim(
         question="What is Revenue for Apple Inc. (FY2024)?",
         raw_value=391_035_000_000.0,
@@ -157,8 +159,23 @@ def test_claim_to_batch_claim_drops_metadata_and_flattens_entity_and_metric():
     assert batch_claim.raw_value == claim.raw_value
     assert batch_claim.metric == "Revenue"
     assert batch_claim.entity == "Apple Inc."
+    assert batch_claim.ticker == "AAPL"
+    assert batch_claim.cik == "0000320193"
     assert batch_claim.period == "2024"
     assert not hasattr(batch_claim, "metadata")
+
+
+def test_document_claim_round_trip_preserves_entity_provenance():
+    document = make_aapl_document()
+    original_claim = next(claim for claim in extract_claims(document) if claim.entity is not None)
+
+    batch_claim = _claim_to_batch_claim(original_claim)
+    rebuilt_claim = _build_batch_claim(batch_claim)
+
+    assert rebuilt_claim.entity is not None
+    assert rebuilt_claim.entity.name == original_claim.entity.name
+    assert rebuilt_claim.entity.ticker == "AAPL"
+    assert rebuilt_claim.entity.cik == "0000320193"
 
 
 def test_claim_to_batch_claim_returns_none_for_missing_raw_value():

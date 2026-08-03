@@ -193,6 +193,17 @@ def test_unmappable_claim_types_stay_unmapped():
         assert verify_transcript._map_claim_to_metric(claim) is None
 
 
+def test_batch_claim_from_transcript_claim_preserves_ticker():
+    claim = _claim("revenue", "Revenue was $39.3 billion for the quarter.", "revenue was $39.3 billion", 39_300_000_000.0)
+
+    batch_claim = verify_transcript._batch_claim_from_transcript_claim(claim, "NVDA", "Q4 FY2025")
+
+    assert batch_claim.entity == "NVDA"
+    assert batch_claim.ticker == "NVDA"
+    assert batch_claim.cik is None
+    assert batch_claim.period == "Q4 FY2025"
+
+
 # ---------------------------------------------------------------------------
 # 3. Honest verification status (_claim_status)
 # ---------------------------------------------------------------------------

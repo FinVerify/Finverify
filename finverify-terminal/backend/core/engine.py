@@ -239,7 +239,15 @@ def _resolve_result_metric(result: VerificationResult, registry: "ConceptRegistr
 
 def _build_batch_claim(batch_claim: BatchClaim) -> Claim:
     metric = Metric(name=batch_claim.metric, canonical_name=batch_claim.metric) if batch_claim.metric else None
-    entity = Entity(name=batch_claim.entity) if batch_claim.entity else None
+    entity = (
+        Entity(
+            name=batch_claim.entity,
+            ticker=batch_claim.ticker,
+            cik=batch_claim.cik,
+        )
+        if batch_claim.entity
+        else None
+    )
     return Claim(
         question=batch_claim.question,
         raw_value=batch_claim.raw_value,
