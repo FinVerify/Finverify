@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 from verification.enumeration.ledger import EnumerationError, candidate_id, enumerate_manifest, write_candidate_ledger
 from verification.enumeration.manifest import ManifestError
 from verification.enumeration.numeric import find_targets
+from verification.enumeration.pdf_parser import parse_pdf
 
 
 def _write_manifest(tmp_path, entries):
@@ -134,7 +135,7 @@ def test_pdf_page_provenance_and_multiple_values(tmp_path):
     assert candidates[-1].parser_metadata["page_number"] == 2
 
 
-def test_a1_reproduces_binary_pdf_stream_as_visible_text_and_candidate(tmp_path):
+def test_a1_binary_pdf_stream_is_excluded_without_losing_page_text(tmp_path):
     pdf = (
         b"%PDF-1.4\n"
         b"1 0 obj << /Type /Page >>\n"
@@ -144,12 +145,32 @@ def test_a1_reproduces_binary_pdf_stream_as_visible_text_and_candidate(tmp_path)
     )
     manifest, source_root = _write_manifest(tmp_path, [("S-PDF-A1", "defect.pdf", "pdf", pdf)])
     candidates, issues = enumerate_manifest(manifest, source_root=source_root)
+    repeated_candidates, repeated_issues = enumerate_manifest(manifest, source_root=source_root)
+    blocks, block_issues = parse_pdf(pdf)
 
     assert not issues
-    phantom = [candidate for candidate in candidates if candidate.target_raw_text == "987"]
-    assert len(phantom) == 1
-    assert phantom[0].raw_source_span == "binary phantom 987"
-    assert phantom[0].source_locator == "page/0/block/1"
+    assert not repeated_issues
+    assert not block_issues
+    assert [block.text for block in blocks] == ["ExampleCorp revenue was $123 million."]
+    assert [candidate.target_raw_text for candidate in candidates] == ["$123 million"]
+    assert not any(candidate.target_raw_text == "987" for candidate in candidates)
+    assert [candidate.to_dict() for candidate in candidates] == [candidate.to_dict() for candidate in repeated_candidates]
+    assert candidates[0].source_locator == "page/0/block/0"
+
+
+def test_pdf_without_recoverable_page_text_preserves_parse_issue():
+    pdf = (
+        b"%PDF-1.4\n"
+        b"1 0 obj << /Type /Page >> endobj\n"
+        b"2 0 obj << /Subtype /Image /Length 9 >>\n"
+        b"stream\n\x00\xffgarbage\nendstream\nendobj\n"
+    )
+    blocks, issues = parse_pdf(pdf)
+
+    assert blocks == []
+    assert [(issue.issue_type, issue.description) for issue in issues] == [
+        ("pdf_text_unavailable", "No deterministic PDF text operators were recovered; OCR was not attempted")
+    ]
 
 
 def test_manifest_hash_success_mismatch_and_missing_artifact(tmp_path):
