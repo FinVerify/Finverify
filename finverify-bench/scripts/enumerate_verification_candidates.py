@@ -18,9 +18,15 @@ def main() -> int:
     parser.add_argument("--issues", required=True, type=Path)
     parser.add_argument("--source-root", type=Path)
     parser.add_argument("--source-id", action="append", dest="source_ids")
+    parser.add_argument("--authorize-production", action="store_true")
     args = parser.parse_args()
     try:
-        candidates, issues = enumerate_manifest(args.manifest, source_root=args.source_root, source_ids=args.source_ids)
+        candidates, issues = enumerate_manifest(
+            args.manifest,
+            source_root=args.source_root,
+            source_ids=args.source_ids,
+            allow_production=args.authorize_production,
+        )
         write_candidate_ledger(args.output, candidates)
         write_issue_ledger(args.issues, issues)
     except (EnumerationError, ManifestError, OSError) as exc:

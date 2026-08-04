@@ -203,6 +203,29 @@ def test_production_manifest_guard_refuses_before_source_access():
     assert not issues.exists()
 
 
+def test_production_authorization_defaults_false():
+    import inspect
+    assert inspect.signature(enumerate_manifest).parameters["allow_production"].default is False
+
+
+def test_explicit_authorization_permits_guard_but_not_real_corpus(monkeypatch, tmp_path):
+    manifest, source_root = _write_manifest(tmp_path, [("S-AUTH", "doc.html", "html", b"<p>Fictional $6M.</p>")])
+    monkeypatch.setattr("verification.enumeration.ledger.is_canonical_production_manifest", lambda *_args, **_kwargs: True)
+    candidates, issues = enumerate_manifest(manifest, source_root=source_root, allow_production=True)
+    assert not issues
+    assert [candidate.target_raw_text for candidate in candidates] == ["$6M"]
+
+
+def test_authorization_does_not_bypass_hash_validation(monkeypatch, tmp_path):
+    manifest, source_root = _write_manifest(tmp_path, [("S-BAD-AUTH", "doc.html", "html", b"<p>Fictional $6M.</p>")])
+    manifest_data = json.loads(manifest.read_text(encoding="utf-8"))
+    manifest_data["artifacts"][0]["sha256"] = "0" * 64
+    manifest.write_text(json.dumps(manifest_data), encoding="utf-8")
+    monkeypatch.setattr("verification.enumeration.ledger.is_canonical_production_manifest", lambda *_args, **_kwargs: True)
+    with pytest.raises(ManifestError, match="SHA-256 mismatch"):
+        enumerate_manifest(manifest, source_root=source_root, allow_production=True)
+
+
 def test_enumerator_has_no_verifier_or_model_dependency():
     package_text = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / "verification" / "enumeration").glob("*.py"))
     assert "core.engine" not in package_text

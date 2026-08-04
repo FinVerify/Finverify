@@ -83,9 +83,10 @@ def enumerate_manifest(
     *,
     source_root: Optional[Path] = None,
     source_ids: Optional[List[str]] = None,
+    allow_production: bool = False,
 ) -> Tuple[List[RawCandidate], List[ParseIssue]]:
     manifest = load_manifest(manifest_path)
-    if is_canonical_production_manifest(manifest_path, manifest):
+    if is_canonical_production_manifest(manifest_path, manifest) and not allow_production:
         raise EnumerationError("production Phase 9B corpus enumeration is blocked before freeze")
     artifacts = manifest_artifacts(manifest)
     wanted = set(source_ids) if source_ids else None
