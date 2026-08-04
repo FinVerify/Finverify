@@ -3,13 +3,17 @@
 **Document:** `ELIGIBILITY_IMPLEMENTATION_SPEC_v1.md`  
 **Phase:** 9C-F  
 **Status:** specification-only implementation contract  
-**Governing policy:** `SOURCE_ELIGIBILITY_v1.md` v1.0  
+**Governing policy:** `SOURCE_ELIGIBILITY_v1.md` v1.0, supplemented by
+`SOURCE_ELIGIBILITY_AMENDMENT_1.md`
 **Reserved Phase 9D seed:** `20260804`
 
-This document operationalizes the frozen source-eligibility policy. It does
-not amend that policy, the experiment specification, the enumerator, or the
-verifier. If a conflict is found, the earlier frozen governing specification
-controls and this document must be amended before implementation.
+This document operationalizes the jointly applicable frozen sources
+`SOURCE_ELIGIBILITY_v1.md` and `SOURCE_ELIGIBILITY_AMENDMENT_1.md`. The parent
+protocol remains historically immutable; Amendment 1 supplements only its
+three explicitly authorized areas: duplicate equivalence, source grouping, and
+pre-sampling Controlled challenge dimensions. This document does not amend the
+parent protocol, Amendment 1, the experiment specification, the enumerator, or
+the verifier.
 
 ## 1. Purpose and scope
 
@@ -249,63 +253,157 @@ adjudication ID, and final decision are retained.
 
 ## 9. Duplicate equivalence
 
-Duplicate resolution occurs only after eligibility and adjudication. Two
-occurrences are equivalent only when they represent the same fact using:
+Duplicate resolution occurs only after eligibility and adjudication. The
+normalized comparison tuple is exactly:
 
 ```text
 Entity, Concept, Period, Scope, Accounting Basis, Temporal Frame,
 Value Role, normalized Value
 ```
 
-Equal numbers alone do not imply duplication. Different periods, scopes,
-concepts, GAAP/non-GAAP bases, actual/guidance frames, or roles remain
-distinct. Equivalent display scales may be merged only when source identity
-and reporting precision establish the same fact; FinVerify tolerance is never
-the sole criterion.
+The source-derived value is retained unchanged beside its normalized value.
+For textual fields, normalization is Unicode NFKC, trim, collapse internal
+Unicode whitespace to one ASCII space, and Unicode case-fold. No stemming,
+synonym expansion, legal-suffix removal, ontology, fuzzy matching, alias
+inference, embedding, LLM, external lookup, or verifier information is used.
 
-All equivalent occurrences retain a stable `fact_cluster_id` in the complete
-ledger. Exactly one is `canonical_occurrence: true`. Selection is mechanical:
+The comparison states are `UNKNOWN`, `UNSPECIFIED`, and `NOT_APPLICABLE`.
+`UNKNOWN` never matches any value, including another `UNKNOWN`.
+`UNSPECIFIED` never matches an explicit value, `UNKNOWN`, or another
+`UNSPECIFIED`. `NOT_APPLICABLE` matches only `NOT_APPLICABLE`. This is the
+conservative Amendment 1 contract for missing or unresolved identity.
+
+The dimension-specific normalized values are:
+
+- **Entity:** source-explicit issuer identity from canonical metadata or
+  permitted source context; no corporate ontology or parent/subsidiary aliasing.
+- **Concept:** exact normalized source concept label. Amendment 1 freezes no
+  alias table; different labels remain separate.
+- **Period:** exact period kind and explicit fiscal/calendar interval or
+  relative label plus its explicit reporting-event anchor. No inference from
+  neighboring numbers.
+- **Scope:** exact explicit company/consolidated or segment/business qualifier
+  and path. Missing is `UNSPECIFIED`; company and segment scopes do not merge.
+- **Accounting Basis:** exact explicit label such as `gaap`, `non_gaap`,
+  `reported`, `adjusted`, or `other:<label>`; it is never inferred.
+- **Temporal Frame:** exact explicit `actual`, `guidance`, `comparison`, or
+  `other:<label>`; actual, comparison, and guidance do not merge.
+- **Value Role:** exact source-supported role from the frozen taxonomy:
+  `current`, `comparison`, `year_over_year_change`, `sequential_change`,
+  `range_lower`, `range_upper`, `guidance_center`, `tolerance`, or
+  `financial_change_amount`.
+- **Normalized Value:** exact canonical decimal/rational value including sign
+  and semantic unit. Equivalent explicit scales may share an exact base-unit
+  value; binary floating-point equality, numeric closeness, and verifier
+  tolerance are not used. Original scale, unit, precision, and text remain.
+
+Two occurrences are duplicate-equivalent if and only if every tuple component
+has a determinate comparison value, every normalized component is exactly
+equal, source evidence supports the same underlying financial fact, and no
+materially different interpretation remains. They remain separate if any
+component differs; if any component is `UNKNOWN` or `UNSPECIFIED`; if source
+precision does not establish the same fact; or if equality requires semantic
+inference, fuzzy matching, numerical closeness, or researcher arithmetic.
+
+All equivalent occurrences retain a stable `fact_cluster_id`; none is deleted.
+Exactly one canonical occurrence is selected using the unchanged Section 40
+hierarchy, applied mechanically in order and using later criteria only as
+tie-breakers:
 
 1. most direct authoritative financial reporting context;
 2. formal financial-statement table over repeated narrative restatement;
 3. lower frozen `source_id`;
 4. earliest deterministic locator in the same artifact.
 
-Unresolved precision or identity requires adjudication, not outcome-based
-choice. Non-canonical provenance remains preserved.
+Non-canonical provenance remains preserved. No new canonical preference is
+introduced here.
 
 ## 10. Source groups
 
-`source_group_id` is a leakage-relevant cluster of artifacts with substantial
-overlapping facts from one issuer and reporting event. Release/presentation,
-release/supplement, release/transcript, and overlapping Q4/annual materials
-are grouped when their coverage materially overlaps. Grouping uses source
-provenance and reporting coverage, never verifier behavior.
+`source_group_id` is a leakage-relevant cluster of artifacts representing the
+same issuer reporting event. Amendment 1 defines substantial overlap by
+source-explicit event identity/coverage, not by candidate frequency, numeric
+intersection, percentage threshold, eligibility outcome, or verifier behavior.
 
-Before any split, `source_group_manifest.json` maps every artifact to exactly
-one stable group and records member IDs/hashes, reporting event, rationale,
-review/adjudication provenance, and protocol version. Duplicate fact clusters
-must not cross groups. If source/fact overlap would split one cluster, merge
-groups before splitting. This phase does not assign DEV/TEST or sample.
+For each artifact, construct an event descriptor from frozen source metadata:
+
+```text
+issuer_key
+reporting_event_key
+reporting_period_coverage
+artifact_role
+```
+
+`issuer_key` uses the exact source-explicit Entity normalization in Section 9.
+`reporting_event_key` is the exact source-explicit release/event identifier or,
+if absent, the exact normalized tuple of issuer, reporting period/event date,
+and reporting-event type. No date or event is inferred from candidate numbers.
+An unresolved issuer or event creates no automatic overlap edge.
+
+Two artifacts must share a group when they have the same determinate issuer and
+reporting-event keys, or when frozen source metadata explicitly identifies them
+as covering the same issuer reporting event/coverage despite different artifact
+roles or formats. They must remain separate when issuer or event differs, or
+when overlap would require inference from candidate contents. An unresolved
+event is recorded for source-provenance review and is not merged by default.
+
+Build an undirected graph of artifacts using those mandatory edges. The groups
+are its transitive connected components: if A overlaps B and B overlaps C, all
+three share a group. The deterministic identifier is:
+
+```text
+sg1_ + SHA256("finverify-source-group-v1\n" +
+              sorted member source_ids joined by "\n")
+```
+
+The digest is lowercase hexadecimal. `source_group_manifest.json` records
+every member's source ID, canonical path/hash, issuer/event descriptor, edge
+rationale, protocol/amendment version, and review provenance. Every artifact
+maps to exactly one group. Duplicate fact clusters must not cross groups; if
+source/fact overlap would split one cluster, merge before splitting. This
+phase does not assign DEV/TEST or sample.
 
 ## 11. Controlled-parent eligibility
 
-No perturbation is generated here. A Controlled parent must first be an
-eligible, deduplicated, source-backed canonical occurrence. The ledger keeps
-separate fields `natural_eligible` and `controlled_parent_eligible`. The
-latter is true only when:
+No perturbation is generated here. Before production parent eligibility is
+evaluated, Amendment 1 freezes the complete challengeable identity-dimension
+set:
+
+```text
+concept, period, entity, scope, accounting_basis, temporal_frame, value_role
+```
+
+Concept and Period are primary perturbations. Entity, Scope, Accounting Basis,
+Temporal Frame, and Value Role are diagnostic perturbations. This set is
+supported by the frozen experiment design and source protocol. Value is not a
+challengeable identity shift: it remains invariant in a controlled pair.
+Raw/corrected provenance is separate and is not a controlled identity shift.
+No additional dimension may be added here.
+
+A Controlled parent must first be an eligible, deduplicated, source-backed
+canonical occurrence. The ledger keeps separate `natural_eligible`,
+`controlled_parent_eligible`, and `challengeable_dimensions` fields. The last
+is the deterministic subset of the frozen seven dimensions explicitly
+recoverable for that parent under the source evidence rules.
+
+`controlled_parent_eligible` is true only when:
 
 1. `natural_eligible` is true;
 2. the occurrence is canonical for its eligible fact cluster;
 3. Value, Entity, Concept, and Period are independently recoverable;
 4. evidence supports the unperturbed parent; and
-5. any dimension intended for a later challenge is explicitly recoverable.
+5. at least one frozen challengeable dimension is explicitly recoverable and
+   supports a financially meaningful authorized challenge.
 
-The last condition is conditional on a later declared challenge; it does not
-turn diagnostic dimensions into universal gates. Parent eligibility precedes
-parent sampling and derivative generation and never depends on attack success
-or difficulty. All qualifying unique candidates form the complete
-`controlled_parent_pool`; no smaller interesting subset is created.
+A parent need not recover every challengeable dimension. Phase 9D may choose
+only among the already-authorized dimensions in that parent's recorded subset;
+the dimension actually selected for a sampled parent is distinct from the
+dimension being challengeable in the complete parent pool. Phase 9D may not
+add a dimension or retroactively change parent eligibility. Eligibility is
+decided before parent sampling and perturbation generation and never depends
+on perturbation success, FinVerify behavior, model behavior, or future sample
+identity. All qualifying unique candidates form the complete
+`controlled_parent_pool`.
 
 ## 12. Review ledger and outputs
 
@@ -316,8 +414,11 @@ every raw occurrence exactly once. It copies all raw fields and adds:
 eligibility_status, primary_exclusion_code, secondary_exclusion_codes,
 ambiguity_status, review_workflow_status, review_method, reviewer_id,
 review_timestamp, adjudication_id, entity, concept, period, scope,
-accounting_basis, temporal_frame, value_role, evidence, fact_cluster_id,
-canonical_occurrence, source_group_id, natural_eligible,
+accounting_basis, temporal_frame, value_role,
+entity_normalized, concept_normalized, period_normalized, scope_normalized,
+accounting_basis_normalized, temporal_frame_normalized, value_role_normalized,
+normalized_value_key, evidence, fact_cluster_id, canonical_occurrence,
+source_group_id, challengeable_dimensions, natural_eligible,
 controlled_parent_eligible, protocol_version
 ```
 
@@ -360,11 +461,12 @@ The trigger is exactly:
 N_unique_natural_eligible < 60 OR N_controlled_parent_eligible < 15
 ```
 
-If triggered, report it. Do not relax rules, resample, cherry-pick exclusions,
-inspect FinVerify, or silently expand. Expansion preserves the original
-corpus, adds authoritative hashed sources, assigns groups, runs the same
-extractor, applies the same policy, and reassesses the same trigger. If both
-thresholds are satisfied, expansion is prohibited for that benchmark version.
+If triggered, report corpus expansion required. Do not relax eligibility,
+resample, cherry-pick excluded records, select expansion sources, acquire
+sources automatically, inspect FinVerify, or perform Phase 9D sampling.
+Expansion-source acquisition and ordering remain a separately frozen
+subsequent procedure. If both thresholds are satisfied, expansion is
+prohibited for that benchmark version.
 
 The 60–80 Natural and approximately 15–25 Controlled-parent targets are
 sampling/design targets, not eligibility criteria.
@@ -380,10 +482,26 @@ Future implementation tests use synthetic fixtures only and cover: exact input
 hash/freeze validation; malformed JSONL/schema/offset rejection; Run-1
 rejection; deterministic exclusions and precedence; semantic-review routing;
 no FinVerify/model/network dependency; default-deny production access;
-duplicate equivalence and canonical choice; source-group isolation;
-Controlled-parent eligibility; evidence construction; deterministic
-serialization and repeated byte identity; expansion triggers; no silent
-deletion; and funnel accounting. Tests must not inspect the Run-2 ledger.
+deterministic serialization and repeated byte identity; expansion triggers; no
+silent deletion; and funnel accounting. Tests must not inspect the Run-2 ledger.
+
+Amendment 1 behavior must be tested directly. Duplicate fixtures cover lexical
+case/whitespace normalization; different Entity labels remaining separate;
+equal numeric values with different Concepts remaining separate; different
+Periods; consolidated versus segment Scope; GAAP versus non-GAAP; `UNKNOWN`,
+`UNSPECIFIED`, and `NOT_APPLICABLE` semantics; exact normalized-value
+comparison; and repeated equivalent fact clustering without deletion.
+
+Source-group fixtures cover same issuer plus same event; different issuers;
+different events; one event represented by multiple artifact roles/formats;
+explicit amended/restated event relationships; transitive grouping; and
+deterministic `source_group_id` construction.
+
+Controlled-parent fixtures cover required Value/Entity/Concept/Period;
+recoverable and non-recoverable challenge dimensions; multiple recoverable
+dimensions; a recoverable dimension not ultimately sampled; and parent
+eligibility independent of Phase 9D selection or any outcome. No perturbation
+is generated by these eligibility tests.
 
 An implementation defect is failure to execute a frozen rule, such as accepting
 the wrong hash, losing provenance, nondeterministic serialization, silent
@@ -408,13 +526,14 @@ construction decisions consistently.
 | 9–14, 26 | atomicity, explicit values, normalization, no derivation | A |
 | 15–25 | financial scope, identity, diagnostic-only dimensions, roles | A |
 | 27–36 | evidence, review states, adjudication, reason codes | A/B |
-| 37–43 | duplicate identity, clusters, canonical choice, source groups | A/B |
-| 44–47 | Natural and Controlled-parent boundaries | A |
+| 37–43 + Amendment 1 A/B | duplicate identity, clusters, canonical choice, source groups | A/B |
+| 44–47 + Amendment 1 C | Natural and Controlled-parent boundaries | A |
 | 48–54 | targets, triggers, seed, Phase 9D boundary | A |
 | 57–64 | hashes, no deletion, funnel, change control, freeze boundary | A/B |
 | paths, encodings, ordering, serialization | neutral execution mechanics | B |
 
 - [x] Derived from `SOURCE_ELIGIBILITY_v1.md` without changing policy.
+- [x] Jointly governed by `SOURCE_ELIGIBILITY_v1.md` and Amendment 1.
 - [x] Verifier-blind; no Run-2 candidates were inspected for rule design.
 - [x] Preserves raw IDs, spans, offsets, hashes, and provenance.
 - [x] Defines evidence, atomicity, exclusions, duplicates, groups, and pools.
