@@ -1,0 +1,19 @@
+﻿{
+  "phase": "9C-A3",
+  "artifact": "post_A2_canonical_raw_enumeration",
+  "enumerator_commit": "252afe742cecae4f53a5f92d65fa35f25d2538bb",
+  "candidate_count": 14118,
+  "parse_issue_count": 0,
+  "raw_candidate_ledger": {
+    "relative_path": "data/verification/enumeration/raw_candidate_ledger_run2.jsonl",
+    "byte_size": 64871267,
+    "sha256": "ec9532fa60225be63d5446ca2137b260255d97a74354a25e82f1b3ecd62a0093"
+  },
+  "parse_issue_ledger": {
+    "relative_path": "data/verification/enumeration/parse_issues_run2.jsonl",
+    "byte_size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "supersedes_for_scientific_use": "FIRST_RUN_FREEZE.json",
+  "supersession_reason": "Phase 9C-A1 established a frozen-contract PDF parser defect in the first canonical enumeration. Phase 9C-A2 repaired the defect before this rerun. The first run remains preserved as immutable defect provenance."
+}

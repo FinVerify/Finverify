@@ -1,0 +1,17 @@
+﻿{
+  "phase": "9C-R",
+  "artifact": "first_canonical_raw_enumeration",
+  "enumerator_commit": "933065de26bc687cbc85efc689aeeee042d2c3bd",
+  "candidate_count": 114524,
+  "parse_issue_count": 0,
+  "raw_candidate_ledger": {
+    "relative_path": "data/verification/enumeration/raw_candidate_ledger.jsonl",
+    "byte_size": 989078352,
+    "sha256": "bb85d4f1513254cfde73cdd134bd5ee693428ab8b167704672c889afb1eff38e"
+  },
+  "parse_issue_ledger": {
+    "relative_path": "data/verification/enumeration/parse_issues.jsonl",
+    "byte_size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
