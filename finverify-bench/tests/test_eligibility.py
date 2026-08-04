@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+import verification.eligibility.engine as eligibility_engine
 from verification.eligibility.duplicates import canonical_sort_key, identity_key
 from verification.eligibility.engine import build_eligibility, expansion_required, load_raw_ledger
 from verification.eligibility.models import CHALLENGEABLE_DIMENSIONS, SourceDescriptor
@@ -146,6 +147,47 @@ def test_authorization_does_not_bypass_hash_or_schema_validation(tmp_path):
     path.write_text("{}\n", encoding="utf-8")
     with pytest.raises(ValueError):
         load_raw_ledger(path, allow_production=True)
+
+
+def _authorized_synthetic_run2(tmp_path, monkeypatch):
+    ledger_path = tmp_path / "data" / "verification" / "enumeration" / "raw_candidate_ledger_run2.jsonl"
+    freeze_path = tmp_path / "data" / "verification" / "enumeration" / "SECOND_RUN_FREEZE.json"
+    ledger_path.parent.mkdir(parents=True)
+    ledger_bytes = (json.dumps(raw(), sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+    ledger_path.write_bytes(ledger_bytes)
+    parse_bytes = b""
+    parse_sha = hashlib.sha256(parse_bytes).hexdigest()
+    commit = "a" * 40
+    freeze = {
+        "phase": "9C-A3", "enumerator_commit": commit, "candidate_count": 1,
+        "raw_candidate_ledger": {"relative_path": "data/verification/enumeration/raw_candidate_ledger_run2.jsonl", "byte_size": len(ledger_bytes), "sha256": hashlib.sha256(ledger_bytes).hexdigest()},
+        "parse_issue_ledger": {"relative_path": "data/verification/enumeration/parse_issues_run2.jsonl", "byte_size": 0, "sha256": parse_sha},
+    }
+    freeze_bytes = (json.dumps(freeze, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+    freeze_path.write_bytes(freeze_bytes)
+    monkeypatch.setattr(eligibility_engine, "RUN2_SHA256", hashlib.sha256(ledger_bytes).hexdigest())
+    monkeypatch.setattr(eligibility_engine, "RUN2_COMMIT", commit)
+    monkeypatch.setattr(eligibility_engine, "RUN2_COUNT", 1)
+    monkeypatch.setattr(eligibility_engine, "RUN2_FREEZE_PATH", freeze_path)
+    monkeypatch.setattr(eligibility_engine, "RUN2_FREEZE_SHA256", hashlib.sha256(freeze_bytes).hexdigest())
+    monkeypatch.setattr(eligibility_engine, "RUN2_LEDGER_BYTES", len(ledger_bytes))
+    monkeypatch.setattr(eligibility_engine, "RUN2_PARSE_ISSUE_SHA256", parse_sha)
+    return ledger_path, freeze_path, commit
+
+
+def test_authorized_run_requires_exact_freeze_hash_and_parse_metadata(tmp_path, monkeypatch):
+    ledger_path, freeze_path, commit = _authorized_synthetic_run2(tmp_path, monkeypatch)
+    assert len(load_raw_ledger(ledger_path, allow_production=True, freeze_metadata_path=freeze_path, implementation_commit=commit)) == 1
+    freeze_path.write_bytes(freeze_path.read_bytes().replace(b"9C-A3", b"9C-X3"))
+    with pytest.raises(ValueError, match="SHA-256 mismatch"):
+        load_raw_ledger(ledger_path, allow_production=True, freeze_metadata_path=freeze_path, implementation_commit=commit)
+
+
+def test_authorized_run_rejects_missing_or_unrecorded_implementation_commit(tmp_path, monkeypatch):
+    ledger_path, freeze_path, _ = _authorized_synthetic_run2(tmp_path, monkeypatch)
+    for commit in (None, "UNRECORDED"):
+        with pytest.raises(PermissionError, match="implementation commit"):
+            load_raw_ledger(ledger_path, allow_production=True, freeze_metadata_path=freeze_path, implementation_commit=commit)
 
 
 def test_no_verifier_model_or_network_dependency():

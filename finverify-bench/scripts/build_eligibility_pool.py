@@ -27,9 +27,9 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--allow-production", action="store_true")
     parser.add_argument("--freeze-metadata", type=Path)
-    parser.add_argument("--implementation-commit", default="UNRECORDED")
+    parser.add_argument("--implementation-commit")
     args = parser.parse_args()
-    raw = load_raw_ledger(args.ledger, allow_production=args.allow_production, freeze_metadata_path=args.freeze_metadata)
+    raw = load_raw_ledger(args.ledger, allow_production=args.allow_production, freeze_metadata_path=args.freeze_metadata, implementation_commit=args.implementation_commit)
     reviews = [json.loads(line) for line in args.reviews.read_text(encoding="utf-8").splitlines() if line.strip()]
     descriptors = [SourceDescriptor(**json.loads(line)) for line in args.source_groups.read_text(encoding="utf-8").splitlines() if line.strip()]
     result = build_eligibility(raw, reviews, descriptors)
@@ -51,7 +51,7 @@ def main() -> int:
     input_hash = hashlib.sha256(args.ledger.read_bytes()).hexdigest()
     freeze = {
         "phase": "9C-G", "protocol_version": "SOURCE_ELIGIBILITY_v1+AMENDMENT_1",
-        "implementation_commit": args.implementation_commit,
+        "implementation_commit": args.implementation_commit or "UNRECORDED",
         "input_ledger": {"path": str(args.ledger), "sha256": input_hash},
         "artifacts": artifacts,
     }
