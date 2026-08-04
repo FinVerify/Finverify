@@ -52,7 +52,6 @@ import argparse
 import json
 import re
 import sys
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
@@ -63,7 +62,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.engine import verify_batch  # noqa: E402
 from core.financial.concepts import ConceptRegistry  # noqa: E402
 from core.financial.document import FinancialPeriod  # noqa: E402
-from core.financial.period import parse_period_string, periods_compatible  # noqa: E402
+from core.financial.period import parse_period_string  # noqa: E402
+from core.identity_verification import (  # noqa: E402
+    EvidenceIdentityMatch,
+    canonical_concept,
+    compare_value_to_evidence,
+    primary_evidence_matches,
+)
 from core.models import BatchClaim, BatchVerifyRequest, BatchVerifyResponse, VerificationResult  # noqa: E402
 from ingestion.transcripts import build_question_from_claim, compute_scope, extract_claims  # noqa: E402
 
@@ -160,12 +165,7 @@ def _map_claim_to_metric(claim: dict) -> Optional[str]:
     return None
 
 
-@dataclass(frozen=True)
-class MatchedEvidence:
-    value: float
-    locator: Optional[str]
-    period: Optional[str]
-    period_struct: Optional[FinancialPeriod]
+MatchedEvidence = EvidenceIdentityMatch
 
 
 def _statement_period_type(metric: Optional[str]) -> Optional[str]:
@@ -306,34 +306,17 @@ def _canonical_concept(name: Optional[str], registry: ConceptRegistry) -> Option
     at all. Deterministic dict lookup only -- no fuzzy or substring matching,
     so an unrecognized identifier stays unresolved rather than being guessed
     at."""
-    if not name:
-        return None
-    return registry.resolve_alias(name)
+    return canonical_concept(name, registry)
 
 
 def _primary_evidence_matches(result: VerificationResult, metric: str) -> list[MatchedEvidence]:
     """Collect canonical-metric-matching primary evidence with parsed periods."""
-    registry = _concept_registry()
-    canonical_metric = _canonical_concept(metric, registry)
-    if canonical_metric is None:
-        return []
-
-    statement_period_type = _statement_period_type(metric)
-    matches: list[MatchedEvidence] = []
-    for item in result.evidence:
-        if item.source.kind != "primary_filing":
-            continue
-        canonical_locator = _canonical_concept(item.locator, registry)
-        if canonical_locator is not None and canonical_locator == canonical_metric and item.value is not None:
-            matches.append(
-                MatchedEvidence(
-                    value=item.value,
-                    locator=item.locator,
-                    period=item.period,
-                    period_struct=parse_period_string(item.period, statement_period_type=statement_period_type),
-                )
-            )
-    return matches
+    return primary_evidence_matches(
+        result.evidence,
+        metric,
+        registry=_concept_registry(),
+        statement_period_type=_statement_period_type(metric),
+    )
 
 
 def _primary_evidence_values(result: VerificationResult, metric: str) -> list[float]:
@@ -397,29 +380,14 @@ def _value_matches_evidence(
     Returns (matched, matched_evidence, saw_period_match, mismatched_periods,
     unresolved_periods).
     """
-    saw_period_match = False
-    mismatched_periods: list[str] = []
-    unresolved_periods: list[str] = []
-
-    for evidence_match in evidence_matches:
-        compatibility = periods_compatible(claim_period, evidence_match.period_struct)
-        evidence_period_label = evidence_match.period or _format_period(evidence_match.period_struct) or "unknown"
-
-        if compatibility == "MISMATCH":
-            mismatched_periods.append(evidence_period_label)
-            continue
-        if compatibility == "UNKNOWN":
-            unresolved_periods.append(evidence_period_label)
-            continue
-
-        saw_period_match = True
-        evidence_value = evidence_match.value
-        if evidence_value == 0:
-            continue
-        if abs(value - evidence_value) / abs(evidence_value) <= 0.01:
-            return True, evidence_match, saw_period_match, mismatched_periods, unresolved_periods
-
-    return False, None, saw_period_match, mismatched_periods, unresolved_periods
+    comparison = compare_value_to_evidence(value, evidence_matches, claim_period)
+    return (
+        comparison.matched,
+        comparison.evidence,
+        comparison.saw_period_match,
+        list(comparison.mismatched_periods),
+        list(comparison.unresolved_periods),
+    )
 
 
 def _claim_status(claim: dict, result: VerificationResult, metric: Optional[str]) -> tuple[str, str]:
