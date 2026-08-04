@@ -232,14 +232,40 @@ def test_exact_parity_claim_counts_locked_per_ticker():
     residue is invalid. TSLA/JPM/MSFT counts are unaffected because none
     of their sample sentences happen to contain a "$NNN million/billion"
     figure whose backtrack residue is itself a valid number.
+
+    PHASE 7F UPDATE: counts for AAPL (+1), NVDA (+1), and GS (+1) rose
+    again after intentionally broadening the 'revenue' claim_type pattern
+    to fix two proven real-data extraction gaps (see CLAIM_PATTERNS'
+    'revenue' entry and its comment in ingestion/transcripts.py):
+      - AAPL +1: "Services revenue reached an all-time high of $24.2
+        billion" is now extracted as claim_type='revenue' (it wasn't
+        before, since "reached an all-time high" sat between "revenue"
+        and the connector/number). Correctly tagged scope="segment" and
+        stays unmapped -- see test_transcript_claim_context.py.
+      - NVDA +1: "Revenue was a record $39.3 billion" -- NVIDIA's own
+        headline figure -- is now extracted (the filler "a record"
+        previously broke the match the same way the real 8-K exhibit
+        text's fuller clause did). Correctly tagged scope="company" and
+        is now eligible for mapping.
+      - GS +1: "Net revenues were $13.9 billion" -- plural "revenues" plus
+        the "were" connector -- is now extracted (previously matched
+        nothing at all for claim_type='revenue'). Correctly tagged
+        scope="company".
+    TSLA/JPM/MSFT counts are unaffected because none of their sample
+    sentences trip the broadened lookahead in a way that produces a new
+    match (JPM's/TSLA's segment-revenue sentences either already matched
+    under the old adjacency-only pattern, or still lack any of
+    of/was/were/: as a standalone word between "revenue" and the number
+    and so still don't match under the new pattern either -- e.g. TSLA's
+    "Energy revenue grew 67% ... to $3.1 billion").
     """
     expected_counts = {
-        "AAPL": 34,
+        "AAPL": 35,
         "TSLA": 32,
         "JPM": 37,
-        "NVDA": 43,
+        "NVDA": 44,
         "MSFT": 42,
-        "GS": 46,
+        "GS": 47,
     }
     for ticker, expected in expected_counts.items():
         claims = extract_claims(SAMPLE_TRANSCRIPTS[ticker])

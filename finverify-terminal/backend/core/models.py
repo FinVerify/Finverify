@@ -116,6 +116,21 @@ class Claim(BaseModel):
     period_struct: Optional[FinancialPeriod] = None
     model_source: Optional[str] = None
     metadata: dict[str, Any] = Field(default_factory=dict)
+    # PHASE 7F: structured claim identity, computed at extraction time by
+    # ingestion.transcripts.extract_claims() (see that module for the exact
+    # deterministic rules) and threaded through here so it is not thrown
+    # away at the BatchClaim boundary. Additive/optional/defaulted so every
+    # existing caller that doesn't set these remains unaffected. NOT YET
+    # consulted by any verification-status decision (core.engine /
+    # scripts.verify_transcript._claim_status()) -- see those modules'
+    # docstrings. `scope` is the one field already consulted, by
+    # scripts.verify_transcript._map_claim_to_metric(), which is hardening
+    # a pre-existing mapping safeguard rather than new verification
+    # semantics.
+    accounting_basis: Optional[str] = None  # "GAAP" | "non_GAAP" | None
+    scope: Optional[str] = None  # "company" | "segment" | "unknown" | None
+    value_role: Optional[str] = None  # "current" | "comparison" | "unknown" | None
+    temporal_frame: Optional[str] = None  # "actual" | "guidance" | "unknown" | None
 
 
 class BatchClaim(BaseModel):
@@ -130,6 +145,12 @@ class BatchClaim(BaseModel):
     period: Optional[str] = None
     period_struct: Optional[FinancialPeriod] = None
     actual_value: Optional[float] = None
+    # PHASE 7F: see Claim's fields of the same name above -- identical
+    # meaning and identical "not yet enforced by verification" scope.
+    accounting_basis: Optional[str] = None
+    scope: Optional[str] = None
+    value_role: Optional[str] = None
+    temporal_frame: Optional[str] = None
 
 
 class BatchVerifyRequest(BaseModel):

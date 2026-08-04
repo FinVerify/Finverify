@@ -117,7 +117,55 @@ CLAIM_PATTERNS = [
     # Margins: margin of 30.7%, margin was 46.6%
     (r'margin\s*(?:of|was|:)?\s*([\d,.]+)\s*%?', 'margin'),
     # Revenue: revenue of $94.9 billion
-    (r'revenue\s*(?:of|was|:)?\s*\$?\s*([\d,.]+)\s*(billion|million|B|M|bn|mn)?', 'revenue'),
+    #
+    # PHASE 7F FIX (found via real-data validation on NVIDIA's own Form 8-K
+    # exhibit text -- the repository's flagship fixture): the previous
+    # pattern required "revenue"/"of|was|:" to sit immediately next to the
+    # number, with nothing else in between. Two real, general defects
+    # followed from that: (1) singular-only "revenue" missed plural
+    # "revenues" entirely (confirmed on Goldman Sachs' "Net revenues were
+    # $13.9 billion"); (2) any inserted clause between "revenue" and the
+    # figure -- a date, a quarter reference, a short filler like "a
+    # record" -- broke the match outright (confirmed on NVIDIA's own
+    # headline: "revenue for the fourth quarter ended January 26, 2025, of
+    # $39.3 billion").
+    #
+    # Fixed with a lookahead + bounded, period-and-dollar-excluding gap:
+    #   revenues?\b                                 "revenue" or "revenues"
+    #   (?=[^.]{0,80}?\b(?:of|was|were|:)\b)         REQUIRE a connector word
+    #                                                 to exist as a whole word
+    #                                                 somewhere in the next
+    #                                                 <=80 non-period chars
+    #                                                 (this is what makes the
+    #                                                 fix conservative: a
+    #                                                 forward-looking sentence
+    #                                                 like "Revenue is
+    #                                                 expected to be $43.0
+    #                                                 billion" contains NONE
+    #                                                 of of/was/were/: as a
+    #                                                 standalone word, so the
+    #                                                 lookahead fails and the
+    #                                                 pattern does not match
+    #                                                 it at all -- confirmed
+    #                                                 against the real NVDA
+    #                                                 guidance paragraph)
+    #   [^.$]{0,80}?\$                               lazily consume the gap
+    #                                                 up to the dollar sign;
+    #                                                 excluding '$' from the
+    #                                                 gap means an EARLIER,
+    #                                                 unrelated dollar figure
+    #                                                 in a long sentence can
+    #                                                 never be skipped over to
+    #                                                 reach a later one
+    #   \s*([\d,.]+)\s*(scale word)?                 unchanged from before
+    #
+    # Regression-tested (see tests/test_transcript_claim_context.py) against
+    # all 6 SAMPLE_TRANSCRIPTS plus the real NVDA fixture: this broadens
+    # recall for genuine revenue statements without ever matching any of the
+    # NVDA fixture's four guidance sentences, and without skipping past an
+    # earlier, unrelated dollar amount to reach a later one in the same
+    # sentence.
+    (r'revenues?\b(?=[^.]{0,80}?\b(?:of|was|were|:)\b)[^.$]{0,80}?\$\s*([\d,.]+)\s*(billion|million|thousand|B|M|K|bn|mn)?', 'revenue'),
     # Ratios: CET1 ratio was 15.3%
     (r'(?:CET1|tier\s*1|capital)\s*(?:ratio)?\s*(?:of|was|:)?\s*([\d,.]+)\s*%?', 'ratio'),
     # Return metrics: ROTCE was 21%
@@ -134,6 +182,230 @@ SCALE_MAP = {
 # the full billion/bn/b/million/mn/m/thousand/k/trillion/tn/t set rather
 # than just this fixed table. Kept defined (and still exported) purely
 # for backward compatibility: existing code/tests import it directly.
+
+
+# ---------------------------------------------------------------------------
+# PHASE 7F: structured claim identity at extraction time
+# ---------------------------------------------------------------------------
+# 7C (canonical concept identity) and 7D (period identity) both assume the
+# *extraction* layer handed them a claim that already knows what it is. The
+# Phase 7F audit found real, reproducible cases where that assumption
+# doesn't hold: NVIDIA's own headline revenue figure missed entirely by the
+# old regex, GAAP/non-GAAP values collapsing into the same concept, a
+# segment figure (Goldman Sachs' "FICC revenue") impersonating a
+# company-level one, forward guidance with no structural identity at all,
+# and prior-period comparison values indistinguishable from the current
+# figure. This section adds four small, deterministic, keyword/regex-scanned
+# tags -- no LLM, no embeddings, no fuzzy matching -- computed once per claim
+# at extraction time:
+#
+#   accounting_basis : "GAAP" | "non_GAAP" | None
+#   scope            : "company" | "segment" | "unknown"
+#   value_role       : "current" | "comparison" | "unknown"
+#   temporal_frame   : "actual" | "guidance" | "unknown"
+#
+# Per Phase 7F scope: these tags are computed and transported (through
+# Claim/BatchClaim -- see core/models.py) so downstream consumers CAN use
+# them. Only `scope` is consulted by mapping today (scripts.verify_transcript
+# ._map_claim_to_metric() -- hardening the pre-existing segment/company
+# revenue safeguard, not inventing a new one). `accounting_basis`,
+# `value_role`, and `temporal_frame` are deliberately NOT yet enforced by
+# any verification-status decision (core.engine / scripts.verify_transcript
+# ._claim_status()) -- that composition is left to a later phase, once
+# evidence itself can carry compatible identity metadata. Ambiguous/
+# unrecognized context always resolves to the "unknown" (or None) state,
+# never to a guessed default -- mirroring Phase 7D's own "UNKNOWN is not
+# MISMATCH, never guess" principle.
+
+# Segment/geography/product qualifiers that indicate a sub-company
+# breakdown rather than a consolidated, company-wide figure, when they
+# appear in the text preceding a claim. Shared by extract_claims() (tags
+# every claim's `scope`) and scripts.verify_transcript._map_claim_to_metric()
+# (still the only consumer that acts on `scope` today), so the two layers
+# can never disagree about what a given claim's scope is.
+_SEGMENT_QUALIFIERS = (
+    "data center", "gaming", "automotive", "professional visualization",
+    "services", "iphone", "mac", "ipad", "greater china",
+    "intelligent cloud", "more personal computing", "cloud",
+    "productivity and business processes", "linkedin",
+    "investment banking", "trading", "consumer banking", "commercial banking",
+    "asset and wealth management", "global banking and markets",
+    "advisory", "equities", "management and other fees",
+    "net interest income",
+    # Phase 7F: proven gap from the audit -- Goldman Sachs' "FICC revenue"
+    # was, before this fix, absent from this list and therefore silently
+    # promoted to company-level Revenue.
+    "ficc",
+)
+
+# Qualifiers that explicitly indicate a CONSOLIDATED, company-wide figure --
+# recognizing these lets an otherwise-unrecognized capitalized modifier
+# ("Total", "Net", "Consolidated", ...) resolve to "company" rather than
+# falling through to the conservative "unknown" default below.
+_COMPANY_LEVEL_SCOPE_WORDS = (
+    "total", "net", "consolidated", "company", "worldwide", "companywide",
+    "full-year", "full year", "fiscal year", "annual",
+)
+
+# A bare capitalized word/phrase (Title-Case or ALL-CAPS -- e.g. "FICC",
+# an unlisted segment name) sitting immediately before a claim, that is
+# NEITHER a recognized segment qualifier NOR a recognized company-level
+# qualifier. Phase 7F hardens the previous fail-open default (assume
+# company-level whenever no *known* segment qualifier is found) to
+# fail-closed for exactly this case: an unrecognized proper-noun-like
+# modifier is a signal that scope could not be conservatively established,
+# not license to guess "company".
+_PROPER_NOUN_TAIL_RE = re.compile(r"(?:[A-Z][\w&]*[\s-]+){1,4}$")
+
+_WORD_RE = re.compile(r"[A-Za-z][A-Za-z\-]*")
+
+
+def compute_scope(sentence: str, match_text: str, match_start: Optional[int] = None) -> str:
+    """Deterministically classify a claim's scope from the text immediately
+    preceding it: "company" (consolidated/company-wide), "segment" (a
+    business-unit/product/geography breakdown), or "unknown" (an
+    unrecognized modifier precedes it -- conservatively NOT assumed to be
+    company-level).
+
+    `match_start`, if known (extract_claims() always knows it, from the
+    regex Match object itself), is used directly. Otherwise it is located
+    via a case-insensitive substring search for `match_text` within
+    `sentence` -- this fallback exists so callers holding a plain claim
+    dict (e.g. hand-built in tests, or claims from before this phase) get
+    identical behavior without needing to carry the raw Match object
+    around.
+    """
+    sentence_lower = sentence.lower()
+    if match_start is None:
+        match_start = sentence_lower.find(match_text.lower())
+
+    preceding_raw = sentence[:match_start] if match_start is not None and match_start >= 0 else sentence
+    preceding_lower = preceding_raw.lower()
+
+    # 1. A known segment/geo/product qualifier anywhere in the preceding
+    #    text -> segment. Scans the WHOLE prefix, not a fixed-width window
+    #    (a fixed window previously missed "Professional Visualization
+    #    fourth-quarter revenue ..." -- the qualifier sat just outside a
+    #    ~40-char lookback).
+    if any(q in preceding_lower for q in _SEGMENT_QUALIFIERS):
+        return "segment"
+
+    stripped_preceding_raw = preceding_raw.strip()
+
+    # 2. Nothing precedes the claim at all (it opens the sentence) -- an
+    #    unqualified figure like "Revenue was $X" is company-level by
+    #    convention throughout real earnings-release prose.
+    if not stripped_preceding_raw:
+        return "company"
+
+    # 3. The word(s) immediately preceding the claim are a recognized
+    #    company-level qualifier ("Total revenue", "Net revenue", "For
+    #    fiscal 2025, ...").
+    trailing_words = _WORD_RE.findall(stripped_preceding_raw)
+    if trailing_words:
+        last_word = trailing_words[-1].lower()
+        last_two = " ".join(w.lower() for w in trailing_words[-2:])
+        if last_word in _COMPANY_LEVEL_SCOPE_WORDS or last_two in _COMPANY_LEVEL_SCOPE_WORDS:
+            return "company"
+
+    # 4. An unrecognized capitalized/proper-noun-like phrase immediately
+    #    precedes the claim (e.g. an unlisted segment/business-unit name).
+    #    Fail closed rather than assume company-level -- this is the
+    #    Phase 7F hardening; see the FICC finding in the Phase 7F audit for
+    #    why "silently promote to company-level" is not an acceptable
+    #    default here.
+    if _PROPER_NOUN_TAIL_RE.search(stripped_preceding_raw + " "):
+        return "unknown"
+
+    return "company"
+
+
+# GAAP / non-GAAP accounting basis. Order matters: "non-GAAP"/"non GAAP" is
+# checked (and its span excluded) BEFORE the bare "GAAP" scan, so "Non-GAAP"
+# is never misclassified as "GAAP" merely because "gaap" is a substring of
+# it.
+_NON_GAAP_RE = re.compile(r"non[\s-]*gaap", re.IGNORECASE)
+_GAAP_RE = re.compile(r"\bgaap\b", re.IGNORECASE)
+
+
+def _accounting_basis_occurrences(sentence: str) -> list[tuple[int, int, str]]:
+    occurrences: list[tuple[int, int, str]] = []
+    non_gaap_spans: list[tuple[int, int]] = []
+    for m in _NON_GAAP_RE.finditer(sentence):
+        occurrences.append((m.start(), m.end(), "non_GAAP"))
+        non_gaap_spans.append((m.start(), m.end()))
+    for m in _GAAP_RE.finditer(sentence):
+        # Skip any bare "gaap" match that is really just part of a
+        # "non-GAAP" occurrence already recorded above (a hyphen/space is a
+        # non-word character, so \bgaap\b alone WOULD otherwise match
+        # "gaap" inside "non-gaap" too).
+        if any(start <= m.start() < end for start, end in non_gaap_spans):
+            continue
+        occurrences.append((m.start(), m.end(), "GAAP"))
+    occurrences.sort()
+    return occurrences
+
+
+def _basis_distance(match_start: int, occ_start: int, occ_end: int) -> int:
+    if match_start < occ_start:
+        return occ_start - match_start
+    if match_start >= occ_end:
+        return match_start - occ_end + 1
+    return 0
+
+
+def compute_accounting_basis(sentence: str, match_start: int) -> Optional[str]:
+    """Match-local GAAP/non-GAAP detection: returns the accounting-basis
+    label of whichever GAAP/non-GAAP mention is textually NEAREST to the
+    claim (by absolute character distance, not merely "nearest preceding")
+    -- needed because real prose states the basis both before a value
+    ("GAAP earnings per diluted share was $0.89") and after it ("73.0% on
+    a GAAP basis and 73.5% on a non-GAAP basis"). Returns None when the
+    sentence contains no GAAP/non-GAAP wording at all.
+
+    Known limitation (explicitly deferred, not attempted in Phase 7F):
+    "GAAP and non-GAAP gross margins are expected to be 70.6% and 71.0%,
+    respectively" binds two values to two labels by ORDER/POSITION
+    ("respectively"), which nearest-distance matching cannot resolve
+    correctly. See Phase 7F's explicitly-deferred issues.
+    """
+    occurrences = _accounting_basis_occurrences(sentence)
+    if not occurrences:
+        return None
+    best = min(occurrences, key=lambda o: _basis_distance(match_start, o[0], o[1]))
+    return best[2]
+
+
+# Current-vs-comparison value role. Deliberately narrow: only the exact,
+# conservative constructions called out in the Phase 7F spec, and only when
+# they sit IMMEDIATELY before the claim (not merely "somewhere in the
+# sentence") -- "increasing 1% from $96.7 billion" does not match "up from"
+# literally and is left as the default "current" rather than guessed.
+_VALUE_ROLE_COMPARISON_RE = re.compile(r"(?:down\s+from|up\s+from|compared\s+to|versus|vs\.?)\s*$", re.IGNORECASE)
+_VALUE_ROLE_WINDOW = 30
+
+
+def compute_value_role(sentence: str, match_start: int) -> str:
+    window_start = max(0, match_start - _VALUE_ROLE_WINDOW)
+    preceding_window = sentence[window_start:match_start]
+    if _VALUE_ROLE_COMPARISON_RE.search(preceding_window):
+        return "comparison"
+    return "current"
+
+
+# Actual vs. forward-looking guidance. Sentence-scoped (not match-local):
+# a guidance sentence in these transcripts states exclusively forward-
+# looking figures, so every claim extracted from it shares the tag.
+_GUIDANCE_CUE_RE = re.compile(
+    r"\b(?:expected to be|guidance|outlook|forecast|plus or minus|projected|anticipate[sd]?)\b",
+    re.IGNORECASE,
+)
+
+
+def compute_temporal_frame(sentence: str) -> str:
+    if _GUIDANCE_CUE_RE.search(sentence):
+        return "guidance"
+    return "actual"
 
 
 # ---------------------------------------------------------------------------
@@ -335,6 +607,18 @@ def extract_claims(text: str) -> list[dict]:
                         claim["bps_original"] = bps_original
                     if scale_label:
                         claim["scale_label"] = scale_label
+
+                    # PHASE 7F: structured claim identity, computed once
+                    # here from the match's exact position (m.start()) --
+                    # see the section above this function for the full
+                    # rationale and scope of each tag. `sentence` here is
+                    # the full (un-truncated) working sentence, so m.start()
+                    # is always a valid index into it, unlike the
+                    # already-sliced `claim["sentence"]` above.
+                    claim["accounting_basis"] = compute_accounting_basis(sentence, m.start())
+                    claim["scope"] = compute_scope(sentence, m.group(0), m.start())
+                    claim["value_role"] = compute_value_role(sentence, m.start())
+                    claim["temporal_frame"] = compute_temporal_frame(sentence)
 
                     # Additive metadata now available "for free" from the
                     # canonicalizer -- not consumed downstream yet, but

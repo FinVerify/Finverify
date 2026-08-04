@@ -65,7 +65,7 @@ from core.financial.concepts import ConceptRegistry  # noqa: E402
 from core.financial.document import FinancialPeriod  # noqa: E402
 from core.financial.period import parse_period_string, periods_compatible  # noqa: E402
 from core.models import BatchClaim, BatchVerifyRequest, BatchVerifyResponse, VerificationResult  # noqa: E402
-from ingestion.transcripts import build_question_from_claim, extract_claims  # noqa: E402
+from ingestion.transcripts import build_question_from_claim, compute_scope, extract_claims  # noqa: E402
 
 REPORTS_DIR = Path(__file__).parent.parent / "reports" / "transcripts"
 
@@ -73,22 +73,15 @@ REPORTS_DIR = Path(__file__).parent.parent / "reports" / "transcripts"
 # Claim -> canonical concept mapping (conservative; see module docstring)
 # ---------------------------------------------------------------------------
 
-# Segment/geography/product qualifiers that, when they appear immediately
-# before the word "revenue" in a sentence, mean the claim is about a
-# component of revenue rather than consolidated company revenue. Consolidated
-# "Revenue" in config/concepts.yaml has no segment breakdown, so these are
-# deliberately left unmapped rather than misapplied to the whole-company
-# concept.
-_SEGMENT_REVENUE_QUALIFIERS = (
-    "data center", "gaming", "automotive", "professional visualization",
-    "services", "iphone", "mac", "ipad", "greater china",
-    "intelligent cloud", "more personal computing",
-    "productivity and business processes", "linkedin",
-    "investment banking", "trading", "consumer banking", "commercial banking",
-    "asset and wealth management", "global banking and markets",
-    "advisory", "equities", "management and other fees",
-    "net interest income",
-)
+# PHASE 7F: the segment/geography/product qualifier scan that used to live
+# here as a private, revenue-only tuple has moved to
+# ingestion.transcripts.compute_scope() (and its _SEGMENT_QUALIFIERS /
+# _COMPANY_LEVEL_SCOPE_WORDS tables), so extraction and mapping can never
+# disagree about a claim's scope, and so the "fail closed on an
+# unrecognized qualifier" hardening (see that module) applies here too.
+# Kept as a re-exported alias purely for backward compatibility with any
+# external code that imported the old name directly.
+from ingestion.transcripts import _SEGMENT_QUALIFIERS as _SEGMENT_REVENUE_QUALIFIERS  # noqa: E402,F401
 
 _GROSS_MARGIN_RE = re.compile(r"gross margin", re.IGNORECASE)
 _OPERATING_MARGIN_RE = re.compile(r"operating margin", re.IGNORECASE)
@@ -112,21 +105,31 @@ def _map_claim_to_metric(claim: dict) -> Optional[str]:
     sentence_lower = sentence.lower()
 
     if claim_type == "revenue":
-        # extract_claims' 'revenue' pattern always starts its match at the
-        # literal word "revenue"; check the text immediately preceding it
-        # in the sentence for a segment/geo/product qualifier.
-        match_start = sentence_lower.find(claim["match"].lower())
-        # Scan the ENTIRE sentence prefix before the match, not a fixed-width
-        # window: a fixed ~40-char window missed qualifiers in phrasing like
-        # "Professional Visualization fourth-quarter revenue was $511
-        # million" (found via real-data validation -- the filler words
-        # "fourth-quarter " pushed "professional visualization" just outside
-        # a 40-char lookback). Segment names never appear this far from
-        # "revenue" in these transcripts' fixed phrasing, so scanning the
-        # whole prefix does not risk pulling in an unrelated qualifier from
-        # elsewhere in the sentence.
-        preceding = sentence_lower[:match_start] if match_start >= 0 else sentence_lower
-        if any(qualifier in preceding for qualifier in _SEGMENT_REVENUE_QUALIFIERS):
+        # PHASE 7F: use the shared, hardened scope classifier
+        # (ingestion.transcripts.compute_scope) instead of a local,
+        # revenue-only re-scan. Prefer a scope already computed at
+        # extraction time (claim["scope"], present on every claim
+        # extract_claims() produces); fall back to computing it fresh from
+        # `sentence`/`match` for callers that hand-build a claim dict
+        # without that key (e.g. this module's own test suite), which
+        # preserves this function's pre-7F behavior exactly for those
+        # callers.
+        #
+        # scope == "segment"  -> a component of revenue, not consolidated
+        #                        company revenue (config/concepts.yaml's
+        #                        "Revenue" has no segment breakdown).
+        # scope == "unknown"  -> an unrecognized qualifier precedes the
+        #                        claim (Phase 7F hardening: previously this
+        #                        silently fell through to "Revenue";
+        #                        proven wrong on GS's "FICC revenue" before
+        #                        FICC was added to the known segment list --
+        #                        an as-yet-unlisted qualifier deserves the
+        #                        same conservative treatment, not a guess).
+        # scope == "company"  -> may map normally.
+        scope = claim.get("scope")
+        if scope is None:
+            scope = compute_scope(sentence, claim.get("match", ""))
+        if scope != "company":
             return None
         return "Revenue"
 
@@ -259,6 +262,16 @@ def _batch_claim_from_transcript_claim(
         ticker=ticker,
         period=_format_period(period_struct) or period,
         period_struct=period_struct,
+        # PHASE 7F: carry the structured claim-identity tags computed at
+        # extraction time (ingestion.transcripts.extract_claims()) through
+        # to BatchClaim, so they are not thrown away here the way sentence/
+        # basis/scope/role context used to be. `.get(...)` defaults to None
+        # for any claim dict that predates this phase (e.g. hand-built in
+        # tests) -- additive, no existing caller breaks.
+        accounting_basis=claim.get("accounting_basis"),
+        scope=claim.get("scope"),
+        value_role=claim.get("value_role"),
+        temporal_frame=claim.get("temporal_frame"),
     )
 
 
@@ -366,18 +379,81 @@ def _resolved_claim_period(claim: dict, result: VerificationResult, metric: str)
     return None
 
 
+def _value_matches_evidence(
+    value: float,
+    evidence_matches: list[MatchedEvidence],
+    claim_period: Optional[FinancialPeriod],
+) -> tuple[bool, Optional[MatchedEvidence], bool, list[str], list[str]]:
+    """Check a single numeric value against period-compatible evidence within
+    the existing +/-1% tolerance.
+
+    PHASE 7E: extracted, unmodified, from what used to be the single
+    comparison loop inside `_claim_status()`. Pure value+period comparison
+    logic lives here so that the raw-value check and the corrected-value
+    check (see `_claim_status()`) always share identical tolerance and
+    period-compatibility semantics -- neither check may drift from the
+    other, and no threshold changes were made while extracting this.
+
+    Returns (matched, matched_evidence, saw_period_match, mismatched_periods,
+    unresolved_periods).
+    """
+    saw_period_match = False
+    mismatched_periods: list[str] = []
+    unresolved_periods: list[str] = []
+
+    for evidence_match in evidence_matches:
+        compatibility = periods_compatible(claim_period, evidence_match.period_struct)
+        evidence_period_label = evidence_match.period or _format_period(evidence_match.period_struct) or "unknown"
+
+        if compatibility == "MISMATCH":
+            mismatched_periods.append(evidence_period_label)
+            continue
+        if compatibility == "UNKNOWN":
+            unresolved_periods.append(evidence_period_label)
+            continue
+
+        saw_period_match = True
+        evidence_value = evidence_match.value
+        if evidence_value == 0:
+            continue
+        if abs(value - evidence_value) / abs(evidence_value) <= 0.01:
+            return True, evidence_match, saw_period_match, mismatched_periods, unresolved_periods
+
+    return False, None, saw_period_match, mismatched_periods, unresolved_periods
+
+
 def _claim_status(claim: dict, result: VerificationResult, metric: Optional[str]) -> tuple[str, str]:
     """Return (status, note). Status is one of:
-        VERIFIED             - matches a real primary-source value for this metric
-        UNRESOLVED            - mapped and evidence retrieved, but no matching
-                                 primary value found (or value doesn't match --
-                                 Phase 7A does not implement period-aware
-                                 matching, so a mismatch may just mean a
-                                 different period, not a wrong extraction)
-        EVIDENCE_UNAVAILABLE   - mapped, but no primary-source evidence exists
-                                 locally for this ticker at all
-        UNMAPPED               - claim_type/context not confidently mapped to
-                                 a canonical concept; nothing to verify against
+        VERIFIED                 - the ORIGINAL (raw) claim value, independently,
+                                    matches a real primary-source value for this
+                                    metric in a compatible period. PHASE 7E: only
+                                    raw_value may ever earn this status. Plain
+                                    VERIFIED answers "was the claim as originally
+                                    stated correct?" -- it must never mean "did
+                                    FinVerify silently rewrite the number into
+                                    something that happened to match evidence?"
+                                    (that case is VERIFIED_WITH_CORRECTION,
+                                    below). A raw-value match takes precedence
+                                    over anything DVL does afterward: a
+                                    legitimately-correct original claim stays
+                                    VERIFIED even if DVL later applies an
+                                    unrelated or wrong correction to it.
+        VERIFIED_WITH_CORRECTION - the raw value does NOT independently match
+                                    evidence, but a real DVL correction occurred
+                                    (result.correction_log is non-empty -- never
+                                    inferred merely from verified_value being
+                                    present or different) and the corrected value
+                                    matches the SAME concept- and period-matched
+                                    evidence, within the same tolerance used for
+                                    the raw check.
+        UNRESOLVED                - mapped and evidence retrieved, but neither the
+                                     original nor (if a correction occurred) the
+                                     corrected value matches a primary value
+                                     within tolerance in a compatible period.
+        EVIDENCE_UNAVAILABLE       - mapped, but no primary-source evidence exists
+                                     locally for this ticker at all
+        UNMAPPED                   - claim_type/context not confidently mapped to
+                                     a canonical concept; nothing to verify against
     """
     if metric is None:
         return "UNMAPPED", "Not confidently mapped to a canonical FinVerify concept"
@@ -397,33 +473,55 @@ def _claim_status(claim: dict, result: VerificationResult, metric: Optional[str]
         )
 
     claim_period = _resolved_claim_period(claim, result, metric)
-    claim_value = result.verified_value if result.verified_value is not None else claim["raw_value"]
-    saw_period_match = False
-    saw_period_mismatch = False
-    saw_period_unknown = False
-    mismatched_periods: list[str] = []
-    unresolved_periods: list[str] = []
+    raw_value = claim["raw_value"]
 
-    for evidence_match in evidence_matches:
-        compatibility = periods_compatible(claim_period, evidence_match.period_struct)
-        evidence_period_label = evidence_match.period or _format_period(evidence_match.period_struct) or "unknown"
+    # Raw-value check first, and it takes precedence over any correction
+    # (Phase 7E threat-matrix Case D): a claim that was correct as originally
+    # stated must verify even if DVL's correction pipeline later mangles it.
+    (
+        raw_matched,
+        raw_evidence,
+        raw_saw_period_match,
+        raw_mismatched_periods,
+        raw_unresolved_periods,
+    ) = _value_matches_evidence(raw_value, evidence_matches, claim_period)
 
-        if compatibility == "MISMATCH":
-            saw_period_mismatch = True
-            mismatched_periods.append(evidence_period_label)
-            continue
-        if compatibility == "UNKNOWN":
-            saw_period_unknown = True
-            unresolved_periods.append(evidence_period_label)
-            continue
+    if raw_matched:
+        period_label = _format_period(claim_period) or result.claim.period or claim.get("period") or "matched period"
+        return "VERIFIED", f"Matches primary-source value {raw_evidence.value:,.4g} for {metric} in {period_label}"
 
-        saw_period_match = True
-        evidence_value = evidence_match.value
-        if evidence_value == 0:
-            continue
-        if abs(claim_value - evidence_value) / abs(evidence_value) <= 0.01:
+    # A corrected value may only earn VERIFIED_WITH_CORRECTION when a real
+    # DVL correction actually happened. This is read from correction_log
+    # (existing provenance), never inferred from verified_value alone --
+    # verified_value equals raw_value whenever no rule fired, and even when
+    # it differs, correction_log is the authoritative "a rule actually
+    # applied" signal (Phase 7E requirement; see module docstring on why
+    # core.engine.verify()'s own `verified` flag can't be trusted for this).
+    correction_occurred = bool(result.correction_log)
+    corr_saw_period_match = False
+    corr_mismatched_periods: list[str] = []
+    corr_unresolved_periods: list[str] = []
+
+    if correction_occurred and result.verified_value is not None:
+        (
+            corr_matched,
+            corr_evidence,
+            corr_saw_period_match,
+            corr_mismatched_periods,
+            corr_unresolved_periods,
+        ) = _value_matches_evidence(result.verified_value, evidence_matches, claim_period)
+        if corr_matched:
             period_label = _format_period(claim_period) or result.claim.period or claim.get("period") or "matched period"
-            return "VERIFIED", f"Matches primary-source value {evidence_value:,.4g} for {metric} in {period_label}"
+            return (
+                "VERIFIED_WITH_CORRECTION",
+                f"Original value did not match evidence, but a DVL correction produced "
+                f"{result.verified_value:,.4g}, which matches primary-source value "
+                f"{corr_evidence.value:,.4g} for {metric} in {period_label}",
+            )
+
+    saw_period_match = raw_saw_period_match or corr_saw_period_match
+    mismatched_periods = raw_mismatched_periods + corr_mismatched_periods
+    unresolved_periods = raw_unresolved_periods + corr_unresolved_periods
 
     if saw_period_match:
         return (
@@ -431,17 +529,17 @@ def _claim_status(claim: dict, result: VerificationResult, metric: Optional[str]
             f"No known primary-source value for '{metric}' matches this claim within tolerance in the matched period",
         )
 
-    if saw_period_unknown:
+    if unresolved_periods:
         claim_period_label = _format_period(claim_period) or result.claim.period or claim.get("period") or "unknown"
-        evidence_summary = ", ".join(sorted(set(unresolved_periods))) if unresolved_periods else "unknown"
+        evidence_summary = ", ".join(sorted(set(unresolved_periods)))
         return (
             "UNRESOLVED",
             f"Period undetermined for '{metric}' (claim={claim_period_label}, evidence={evidence_summary})",
         )
 
-    if saw_period_mismatch:
+    if mismatched_periods:
         claim_period_label = _format_period(claim_period) or result.claim.period or claim.get("period") or "unknown"
-        evidence_summary = ", ".join(sorted(set(mismatched_periods))) if mismatched_periods else "unknown"
+        evidence_summary = ", ".join(sorted(set(mismatched_periods)))
         return (
             "UNRESOLVED",
             f"Period mismatch for '{metric}' (claim={claim_period_label}, evidence={evidence_summary})",
@@ -466,7 +564,15 @@ def build_report(
     response: BatchVerifyResponse,
 ) -> dict:
     claim_reports = []
-    counts = {"detected": len(claims), "mapped": 0, "verified": 0, "corrected": 0, "unresolved": 0, "skipped": 0}
+    counts = {
+        "detected": len(claims),
+        "mapped": 0,
+        "verified": 0,
+        "verified_with_correction": 0,
+        "corrected": 0,
+        "unresolved": 0,
+        "skipped": 0,
+    }
     status_breakdown: dict[str, int] = {}
 
     for claim, result in zip(claims, response.results):
@@ -488,8 +594,20 @@ def build_report(
         corrected = bool(result.correction_log)
         if metric is not None:
             counts["mapped"] += 1
+        # NOTE: VERIFIED_WITH_CORRECTION (Phase 7E) is deliberately its own
+        # bucket -- never folded into plain "verified" (that would silently
+        # reintroduce the Phase 7E bug into the report counts) and never
+        # folded into "unresolved" (a correction that DID independently
+        # verify against evidence is a materially different outcome from a
+        # claim nothing could be resolved against). "corrected" below
+        # continues to mean "a DVL correction occurred" -- a separate fact
+        # from whether that correction was itself evidence-verified; the
+        # per-status breakdown below distinguishes UNMAPPED/EVIDENCE_UNAVAILABLE/
+        # UNRESOLVED/VERIFIED/VERIFIED_WITH_CORRECTION precisely.
         if status == "VERIFIED":
             counts["verified"] += 1
+        elif status == "VERIFIED_WITH_CORRECTION":
+            counts["verified_with_correction"] += 1
         else:
             counts["unresolved"] += 1
         if corrected:
@@ -544,6 +662,7 @@ def print_report(report: dict) -> None:
     print(f"Claims detected:    {counts['detected']}")
     print(f"Claims mapped:      {counts['mapped']}")
     print(f"Claims verified:    {counts['verified']}")
+    print(f"Verified w/ correction: {counts['verified_with_correction']}")
     print(f"Claims corrected:   {counts['corrected']}")
     print(f"Claims unresolved:  {counts['unresolved']}")
     print(f"Claims skipped:     {counts['skipped']}")
