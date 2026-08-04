@@ -134,6 +134,24 @@ def test_pdf_page_provenance_and_multiple_values(tmp_path):
     assert candidates[-1].parser_metadata["page_number"] == 2
 
 
+def test_a1_reproduces_binary_pdf_stream_as_visible_text_and_candidate(tmp_path):
+    pdf = (
+        b"%PDF-1.4\n"
+        b"1 0 obj << /Type /Page >>\n"
+        b"stream\nBT\n(ExampleCorp revenue was $123 million.) Tj\nET\nendstream\nendobj\n"
+        b"2 0 obj << /Subtype /Image /Length 28 >>\n"
+        b"stream\n\x00\xffBT\x00(binary phantom 987)\xff ET\x00\nendstream\nendobj\n"
+    )
+    manifest, source_root = _write_manifest(tmp_path, [("S-PDF-A1", "defect.pdf", "pdf", pdf)])
+    candidates, issues = enumerate_manifest(manifest, source_root=source_root)
+
+    assert not issues
+    phantom = [candidate for candidate in candidates if candidate.target_raw_text == "987"]
+    assert len(phantom) == 1
+    assert phantom[0].raw_source_span == "binary phantom 987"
+    assert phantom[0].source_locator == "page/0/block/1"
+
+
 def test_manifest_hash_success_mismatch_and_missing_artifact(tmp_path):
     manifest, source_root = _write_manifest(tmp_path, [("S-HASH", "doc.html", "html", b"<p>Fictional $8M.</p>")])
     candidates, _ = enumerate_manifest(manifest, source_root=source_root)
