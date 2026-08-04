@@ -15,6 +15,7 @@ from verification.eligibility.models import CHALLENGEABLE_DIMENSIONS, SourceDesc
 from verification.eligibility.normalization import lexical, normalize_identity, normalized_value_key
 from verification.eligibility.serialization import jsonl_bytes
 from verification.eligibility.source_groups import build_source_groups, source_group_id
+from verification.eligibility.statistics import stratified_fpc_normal_ci
 
 
 def raw(candidate_id="c1", source_id="S1", value=1, locator="block/0", target="$1"):
@@ -195,3 +196,39 @@ def test_no_verifier_model_or_network_dependency():
     assert "core.engine" not in package
     assert "transformers" not in package
     assert "requests" not in package
+
+
+def test_stratified_fpc_normal_ci_is_exact_and_repeatable():
+    strata = {"A": (8471, 20, 15), "B": (5647, 20, 10), "C": (0, 0, 0)}
+    first = stratified_fpc_normal_ci(strata)
+    second = stratified_fpc_normal_ci(strata)
+    assert first == second
+    assert first["status"] == "ESTIMATED"
+    assert first["per_stratum"] == {"A": 0.75, "B": 0.5}
+    weight_a = 8471 / 14118
+    weight_b = 5647 / 14118
+    point_estimate = weight_a * 0.75 + weight_b * 0.5
+    assert first["point_estimate"] == pytest.approx(point_estimate)
+    variance = (weight_a**2) * (1 - 20 / 8471) * 0.75 * 0.25 / 19
+    variance += (weight_b**2) * (1 - 20 / 5647) * 0.5 * 0.5 / 19
+    assert first["variance"] == pytest.approx(variance)
+    assert first["standard_error"] == pytest.approx(variance**0.5)
+    assert first["ci_lower"] == pytest.approx(max(0.0, point_estimate - 1.959963984540054 * variance**0.5))
+    assert first["ci_upper"] == pytest.approx(min(1.0, point_estimate + 1.959963984540054 * variance**0.5))
+
+
+@pytest.mark.parametrize("agreements, expected", [(0, (0.0, 0.0)), (20, (1.0, 1.0))])
+def test_stratified_fpc_normal_ci_handles_unit_interval_boundaries(agreements, expected):
+    result = stratified_fpc_normal_ci({"A": (14118, 20, agreements)})
+    assert result["status"] == "ESTIMATED"
+    assert (result["ci_lower"], result["ci_upper"]) == expected
+
+
+def test_stratified_fpc_normal_ci_marks_underpowered_cells_without_bounds():
+    result = stratified_fpc_normal_ci({"A": (100, 19, 10), "B": (14018, 20, 10)})
+    assert result["status"] == "NOT_ESTIMATED"
+    assert result["per_stratum"] == {"A": 10 / 19, "B": 0.5}
+    assert result["variance"] is None
+    assert result["standard_error"] is None
+    assert result["ci_lower"] is None
+    assert result["ci_upper"] is None

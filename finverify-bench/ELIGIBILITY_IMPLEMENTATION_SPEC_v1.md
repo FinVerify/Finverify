@@ -4,16 +4,17 @@
 **Phase:** 9C-F  
 **Status:** specification-only implementation contract  
 **Governing policy:** `SOURCE_ELIGIBILITY_v1.md` v1.0, supplemented by
-`SOURCE_ELIGIBILITY_AMENDMENT_1.md`
+`SOURCE_ELIGIBILITY_AMENDMENT_1.md` and `SOURCE_ELIGIBILITY_AMENDMENT_2.md`
 **Reserved Phase 9D seed:** `20260804`
 
 This document operationalizes the jointly applicable frozen sources
-`SOURCE_ELIGIBILITY_v1.md` and `SOURCE_ELIGIBILITY_AMENDMENT_1.md`. The parent
-protocol remains historically immutable; Amendment 1 supplements only its
-three explicitly authorized areas: duplicate equivalence, source grouping, and
-pre-sampling Controlled challenge dimensions. This document does not amend the
-parent protocol, Amendment 1, the experiment specification, the enumerator, or
-the verifier.
+`SOURCE_ELIGIBILITY_v1.md`, `SOURCE_ELIGIBILITY_AMENDMENT_1.md`, and
+`SOURCE_ELIGIBILITY_AMENDMENT_2.md`. The parent protocol and both amendments
+remain historically immutable. Amendment 1 governs duplicate equivalence,
+source grouping, and pre-sampling Controlled challenge dimensions. Amendment 2
+governs only the Step 4 eligibility-determination mechanism: frozen LLM
+ensemble annotation plus blinded human audit. No amendment changes the
+enumerator, eligibility rubric, thresholds, or verifier.
 
 ## 1. Purpose and scope
 
@@ -21,7 +22,8 @@ The construction sequence is:
 
 ```text
 frozen Run-2 raw enumeration
-  -> verifier-blind eligibility review and adjudication
+  -> frozen LLM-ensemble eligibility annotation
+  -> blinded stratified human audit and adjudication
   -> duplicate-equivalence clustering
   -> source-group assignment
   -> unique eligible Natural and Controlled-parent pool freeze
@@ -90,17 +92,23 @@ provenance are copied, never rewritten.
 
 ## 3. Information barrier and production guard
 
-Eligibility code and review interfaces must not import, invoke, or read
+Eligibility code, LLM annotation prompts, and audit interfaces must not import, invoke, or read
 FinVerify predictions/status/confidence/trust, verifier or experiment outputs,
 baseline/model outputs, attack success, aggregate performance, effect size, or
 statistical significance. No candidate decision may use expected verifier
 behavior.
 
-Development and tests use synthetic fixtures only. Production review against
-Run 2 is a separate default-deny operation requiring explicit authorization
-after implementation freeze and adversarial review. The authorization records
-the implementation commit and validated Run-2 hash. A normal flag, environment
-variable, or alternate path must not bypass the guard.
+Development and tests use synthetic fixtures only. Production annotation
+against Run 2 is a separate default-deny operation requiring explicit
+authorization after implementation freeze and adversarial review. Release of
+the audit manifest and start of human audit are a second, separate
+default-deny gate. The two gates must not be conflated. Both record the
+implementation commit and validated input/configuration hashes. A normal flag,
+environment variable, fallback, or alternate path must not bypass either gate.
+
+The annotation model-family roster must be disjoint, at model-family
+granularity, from every later FinVerifyBench evaluation-target and LLM-baseline
+roster. Both rosters are frozen before annotation or evaluation begins.
 
 ## 4. Candidate review states
 
@@ -122,7 +130,7 @@ eligibility_status
 primary_exclusion_code
 secondary_exclusion_codes
 ambiguity_status: NONE | IDENTITY_AMBIGUOUS | ADJUDICATION_REQUIRED | RESOLVED
-review_workflow_status: UNREVIEWED | INDEPENDENT_REVIEW | ADJUDICATION | FINALIZED
+review_workflow_status: LLM_ANNOTATED | AUDIT_PENDING | HUMAN_AUDITED | ADJUDICATION | FINALIZED
 review_method
 reviewer_id
 review_timestamp
@@ -132,6 +140,22 @@ adjudication_id
 `EXCLUDED` requires one primary reason; all applicable additional reasons are
 retained. `ELIGIBLE` has no exclusion reason. Reviewer timestamps are audit
 metadata only and never affect identity, ordering, grouping, or hashes.
+
+Under Amendment 2, `eligibility_status` for the full ledger is initially
+produced by the frozen LLM ensemble. The permitted workflow values are
+extended as follows without changing the three scientific terminal states:
+
+```text
+review_method: LLM_ENSEMBLE_ANNOTATION | HUMAN_AUDIT | ADJUDICATION
+audit_status: NOT_SELECTED | SELECTED | DOUBLE_CODED | ADJUDICATED
+agreement_tier: unanimous | majority | split
+label_source: llm_only | llm_audited_agree | llm_human_consensus | llm_human_adjudicated
+```
+
+The LLM annotation, human-audit judgments, and adjudication values are
+separate provenance fields. An LLM-only occurrence is never described as
+human-reviewed. A human audit does not silently overwrite the LLM annotation;
+the final `eligibility_status` source is recorded by `label_source`.
 
 ## 5. Deterministic rules and reason codes
 
@@ -176,6 +200,12 @@ frequency, span-length, numeric-kind, source-distribution, or Run-2 heuristic
 is authorized.
 
 ## 6. Semantic eligibility review
+
+Amendment 2 applies the following frozen rubric twice: first by the locked
+LLM ensemble to all 14,118 occurrences, and then by blinded human auditors for
+the deterministic audit sample. The task question and checklist below must be
+copied verbatim into every annotator prompt and human-audit interface; they
+must not be paraphrased.
 
 The reviewer answers:
 
@@ -250,6 +280,187 @@ model, or attack information. Two agreeing reviewers may establish ambiguity;
 disagreement alone does not prove ambiguity. No agreement-coefficient
 threshold is an eligibility rule. Blinded reviewer codes, method, rationale,
 adjudication ID, and final decision are retained.
+
+## 8A. Amendment 2 annotation and human-audit protocol
+
+### 8A.1 Locked ensemble configuration
+
+Before any Run-2 occurrence is processed, commit the exact bytes of
+`annotation_config.lock.json` and its lowercase SHA-256. The lock is immutable
+after annotation begins and contains an exact model-family and model-version
+roster with `k >= 3` annotators; the full verbatim prompt for every annotator,
+including the Section 6 question/checklist and Section 7 evidence boundary;
+identical fixed decoding and structured-output settings; output schema,
+aggregation rule, timeout, retry count, refusal/malformed-output fallback; the
+disjoint evaluation/baseline model-family roster; configuration version; and
+implementation commit. No annotator may receive context beyond Section 7 or
+experimental outcomes.
+
+### 8A.2 Corpus-wide aggregation
+
+Run the locked ensemble once, in one non-interactive batch, over all 14,118
+occurrences. For `k` annotators, k-of-k agreement yields the label and
+`agreement_tier: unanimous`; (k-1)-of-k agreement yields the label and
+`agreement_tier: majority`. Any other vote pattern yields
+`agreement_tier: split` and `eligibility_status: ADJUDICATION_REQUIRED`.
+Refusal, timeout, malformed output, or exhausted retry is logged and follows
+the fixed fallback; it is never defaulted to either substantive label. For an
+`EXCLUDED` result, exclusion codes use only agreeing exclusion annotators and
+the unchanged Section 5 precedence; code disagreement routes to
+`ADJUDICATION_REQUIRED`.
+
+### 8A.3 Sequencing and audit strata
+
+The mandatory sequence is: freeze/hash the annotation configuration; run and
+freeze/hash the full LLM annotation ledger; derive and freeze/hash the audit
+manifest; then begin human audit. Audit strata are derived only from frozen
+annotation output:
+
+```text
+A = unanimous/majority ELIGIBLE
+B = unanimous/majority EXCLUDED
+C = split / ADJUDICATION_REQUIRED
+```
+
+Lock `N_A`, `N_B`, and `N_C` in the manifest header. Allocation may depend
+only on these population sizes, never on audit results or experimental
+outcomes.
+
+### 8A.4 Deterministic n=100 audit sampling
+
+The guaranteed human-audit floor is exactly `n=100`; the floor, allocation
+rule, and stopping rule are frozen before the audit manifest is generated.
+The manifest is generated only after the full annotation ledger is frozen.
+Additional volunteer reviews are allowed only under an exogenous fixed
+calendar/logistics stopping rule, never based on agreement, error, or kappa.
+
+The Phase 9D seed `20260804` is not reused. Derive:
+
+```text
+audit_seed_hex = SHA256(UTF8("finverify-phase9c-audit-v1\n" +
+  raw_ledger_sha256_lower + "\n" + annotation_config_sha256_lower)).hexdigest()
+```
+
+For candidate ID `c`, order within its stratum by ascending
+`SHA256(UTF8("finverify-phase9c-audit-rank-v1\n" + audit_seed_hex + "\n" + c)).hexdigest()`,
+breaking ties by UTF-8 candidate ID. Allocate the 100 cases proportionally
+using floor plus largest remainder, lexical tie order `A < B < C`, and the
+specified capacity redistribution when a stratum is exhausted. Each case has
+`pi_i = n_h / N_h`, or zero only when its stratum receives no slots.
+
+`audit_manifest_v1.csv` is generated exactly once before human review and
+contains every candidate ID, stratum, `pi_i`, deterministic rank, selection
+flag, both input hashes, derived seed, and generation timestamp. Selection and
+allocation are never redrawn.
+
+### 8A.5 Human audit and double coding
+
+Auditors receive only the Section 7 evidence package and Section 6 rubric.
+They are blind to model identities, individual votes, LLM aggregate,
+agreement tier/stratum, LLM rationale, and experimental outcomes. Case order is
+randomized independently of stratum.
+
+Exactly 20 of the 100 selected cases are double-coded, not additional cases.
+Allocate them proportionally across selected strata using the same floor,
+largest-remainder, `A < B < C`, and capacity rules. Within each stratum rank
+using `SHA256(UTF8("finverify-phase9c-double-code-v1\n" + audit_seed_hex +
+"\n" + candidate_id)).hexdigest()` with the same candidate-ID tie-break.
+
+If the first human judgment diverges from the LLM label, a second independent
+blind human review is required, even outside the fixed 20-case subset. If two
+human judgments agree, that consensus is binding and is not overridden by an
+unblinded adjudicator. If they disagree, an adjudicator sees the complete
+record, issues a written timestamped justification, and supplies
+`adjudicated_label`; conflicts of interest are disclosed per case. Human-human
+kappa uses the fixed double-coded subset and never changes corpus-wide LLM
+labels.
+
+### 8A.6 Weighted audit statistics
+
+For stratum `h` in `{A,B,C}`, define `W_h = N_h / 14118` and let `p_h` be
+the within-stratum agreement rate between the frozen LLM label and binding
+human-audit label. Report:
+
+```text
+p_weighted = sum_h(W_h * p_h)
+```
+
+Report each `p_h`, the weighted estimate, and the following deterministic
+stratified finite-population normal-approximation 95% confidence interval. Let
+`N = 14118`, `N_h` be the frozen population size of stratum `h`, `n_h` its
+audited sample size, and `a_h` the number of audited cases whose binding human
+label agrees with the frozen LLM label. For every non-empty stratum, require
+`0 < n_h <= N_h` and define:
+
+```text
+p_h = a_h / n_h
+W_h = N_h / N
+p_hat = sum_h(W_h * p_h)
+f_h = n_h / N_h
+V_hat = sum_h(W_h^2 * (1 - f_h) * p_h * (1 - p_h) / (n_h - 1))
+SE = sqrt(V_hat)
+z_95 = 1.959963984540054
+CI_lower = max(0, p_hat - z_95 * SE)
+CI_upper = min(1, p_hat + z_95 * SE)
+```
+
+The sums include every non-empty stratum, including a stratum whose sample
+proportion is zero or one. Use binary64 IEEE-754 arithmetic, evaluate each
+sum in lexicographic stratum order `A`, `B`, `C`, and round only displayed
+values to six decimal places; retain the unrounded binary64 values in the
+freeze artifact. If any non-empty stratum has `n_h < 20`, or if a required
+stratum has `n_h = 0`, set the interval status to
+`UNDERPOWERED` / `NOT_ESTIMATED` and do not report `V_hat`, `SE`, or bounds;
+descriptive `p_h` and `p_hat` may still be retained. If all inferential strata
+meet the threshold, zero variance is valid: a point estimate of 0 yields
+`[0, 0]`, and a point estimate of 1 yields `[1, 1]`. Always clamp bounds to
+the closed unit interval as shown. These are the only confidence intervals
+authorized; no bootstrap or alternative critical value is permitted. Also
+report Cohen's kappa overall and per stratum and human-human kappa from the
+20 double-coded cases. These statistics measure annotation/audit agreement,
+not FinVerify performance, and do not alter any LLM label. A sensitivity
+analysis of plausible eligibility-label error is required before experimental
+conclusions.
+
+### 8A.7 Label provenance and final freeze
+
+The full ledger preserves the LLM result for all occurrences. Additive fields
+are:
+
+```text
+llm_annotation, agreement_tier, human_audit_label, human_audit_label_2,
+adjudicated_label, label_source, audit_stratum, inclusion_probability,
+annotation_config_hash, audit_manifest_id, audit_status
+```
+
+`label_source` is one of `llm_only`, `llm_audited_agree`,
+`llm_human_consensus`, or `llm_human_adjudicated`. `eligibility_status` is the
+LLM value for the first two, binding human consensus for the third, and the
+adjudicated value for the fourth. No field is silently overwritten. Reviewer
+identity, exclusion reasons, adjudication status, and timestamps apply to the
+human-audit layer, not to `llm_annotation`.
+
+The final freeze hashes and records Git provenance for:
+
+```text
+annotation_config.lock.json
+llm_annotation_ledger.jsonl
+audit_manifest_v1.csv
+human_audit_ledger.jsonl
+eligibility_ledger.jsonl
+source_group_manifest.json
+eligible_natural_pool.jsonl
+controlled_parent_pool.jsonl
+eligibility_summary.json
+```
+
+`ELIGIBILITY_FREEZE.json` records every artifact hash, Run-2 ledger hash,
+annotation-config hash, audit-manifest hash, audit seed, ordered annotation
+and audit-gate timestamps, implementation commit, model-family disjointness
+attestation, audit size, double-coded count, weighted statistics, and the
+statement that the corpus is LLM-annotated with a blinded human audit rather
+than fully human-reviewed. The annotation gate freezes before manifest
+generation; the audit-release gate freezes before human review.
 
 ## 9. Duplicate equivalence
 
@@ -413,7 +624,10 @@ every raw occurrence exactly once. It copies all raw fields and adds:
 ```text
 eligibility_status, primary_exclusion_code, secondary_exclusion_codes,
 ambiguity_status, review_workflow_status, review_method, reviewer_id,
-review_timestamp, adjudication_id, entity, concept, period, scope,
+review_timestamp, adjudication_id, llm_annotation, agreement_tier,
+human_audit_label, human_audit_label_2, adjudicated_label, label_source,
+audit_stratum, audit_status, inclusion_probability, annotation_config_hash,
+audit_manifest_id, entity, concept, period, scope,
 accounting_basis, temporal_frame, value_role,
 entity_normalized, concept_normalized, period_normalized, scope_normalized,
 accounting_basis_normalized, temporal_frame_normalized, value_role_normalized,
@@ -448,7 +662,8 @@ ordering, grouping, or hashes.
 
 ## 13. Pool freeze and expansion
 
-After complete verifier-blind review, adjudication, and deduplication, compute:
+After frozen full-corpus LLM annotation, required blinded audit/adjudication,
+and deterministic deduplication, compute:
 
 ```text
 N_unique_natural_eligible
@@ -474,9 +689,15 @@ sampling/design targets, not eligibility criteria.
 ## 14. Freeze, tests, and change control
 
 The eligibility freeze records SHA-256 and Git provenance for the raw ledger,
-eligibility/adjudication ledger, source-group manifest, Natural pool,
-Controlled-parent pool, and summary. Existing frozen manifests cannot be
-silently overwritten; an amendment requires a new version and change record.
+`annotation_config.lock.json`, `llm_annotation_ledger.jsonl`,
+`audit_manifest_v1.csv`, `human_audit_ledger.jsonl`, eligibility/adjudication
+ledger, source-group manifest, Natural pool, Controlled-parent pool, and
+summary. It also records the annotation-gate and audit-release gate
+timestamps, audit seed and size, double-coded count, weighted audit
+statistics, model-family disjointness attestation, and the statement that the
+corpus is LLM-annotated with a blinded audit rather than fully human-reviewed.
+Existing frozen manifests cannot be silently overwritten; an amendment
+requires a new version and change record.
 
 Future implementation tests use synthetic fixtures only and cover: exact input
 hash/freeze validation; malformed JSONL/schema/offset rejection; Run-1
@@ -502,6 +723,19 @@ recoverable and non-recoverable challenge dimensions; multiple recoverable
 dimensions; a recoverable dimension not ultimately sampled; and parent
 eligibility independent of Phase 9D selection or any outcome. No perturbation
 is generated by these eligibility tests.
+
+Amendment 2 behavior must also be tested with synthetic records only: lock-file
+schema, exact prompt/config hash, at least three disjoint model families,
+fixed decoding and schema; unanimous, majority, split, EXCLUDED-code
+disagreement, retry exhaustion, and no-default aggregation; ordered
+annotation and audit-release gates; deterministic A/B/C stratum allocation,
+inclusion probabilities, rank ordering, and the audit seed; exactly 100 audit
+slots and exactly 20 double-coded slots; blind exported columns and private
+mapping restoration; divergence-triggered second review and adjudication;
+label-source provenance; weighted statistics and confidence-interval method;
+and complete final-freeze artifact hashing/no-overwrite behavior. These tests
+must not call FinVerify, a verifier, a model service, or inspect any scientific
+ledger.
 
 An implementation defect is failure to execute a frozen rule, such as accepting
 the wrong hash, losing provenance, nondeterministic serialization, silent
@@ -532,15 +766,24 @@ construction decisions consistently.
 | 57–64 | hashes, no deletion, funnel, change control, freeze boundary | A/B |
 | paths, encodings, ordering, serialization | neutral execution mechanics | B |
 
+Amendment 2 is additionally incorporated by Sections 8A and 12–14 of this
+specification: the frozen ensemble, two default-deny gates, blinded A/B/C audit,
+20 double-coded cases, weighted reporting, provenance, and final artifact
+freeze are implementation requirements. Amendment 2 changes only the parent
+Step 4 mechanism and does not alter enumeration, duplicate/source-group rules,
+Controlled-parent rules, verifier behavior, or Phase 9D.
+
 - [x] Derived from `SOURCE_ELIGIBILITY_v1.md` without changing policy.
-- [x] Jointly governed by `SOURCE_ELIGIBILITY_v1.md` and Amendment 1.
+- [x] Jointly governed by `SOURCE_ELIGIBILITY_v1.md`, Amendment 1, and Amendment 2.
 - [x] Verifier-blind; no Run-2 candidates were inspected for rule design.
 - [x] Preserves raw IDs, spans, offsets, hashes, and provenance.
 - [x] Defines evidence, atomicity, exclusions, duplicates, groups, and pools.
 - [x] Keeps diagnostic/extracted-only dimensions from becoming capability gates.
 - [x] Defers sampling and perturbation generation to Phase 9D/later phases.
 - [x] Defines expansion triggers without pool-size tuning.
-- [x] Defines deterministic behavior and human-review provenance.
+- [x] Defines deterministic ensemble aggregation, blinded audit/adjudication, weighted statistics, and provenance.
+- [x] Keeps the full corpus explicitly LLM-annotated rather than describing it as fully human-reviewed.
+- [x] Freezes the annotation configuration, annotation ledger, audit manifest, human-audit ledger, and final artifact hashes in order.
 - [x] Establishes synthetic-only tests and default-deny production authorization.
 
 **Pre-implementation amendments required:** 0  
