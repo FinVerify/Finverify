@@ -48,7 +48,7 @@ modified.
 
 ## Verification results
 
-- Focused enumerator tests: 23 passed.
+- Focused enumerator tests: 32 passed, including blocker-repair regressions for percentage words, singular/plural basis-point forms, `bps`, `times`, adjacent `x`, and rejection of spaced `12 x` as a ratio.
 - Existing FinVerifyBench tests: 15 passed.
 - Frozen identity/provenance tests: 52 passed.
 - Backend regression: 553 passed, 1 warning.

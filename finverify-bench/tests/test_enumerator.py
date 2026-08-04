@@ -51,10 +51,18 @@ def _pdf(*pages):
         ("$39,300M", "$39,300M", "currency"),
         ("12%", "12%", "percentage"),
         ("-12%", "-12%", "percentage"),
+        ("12 percent", "12 percent", "percentage"),
+        ("12 Percent", "12 Percent", "percentage"),
+        ("-12 percent", "-12 percent", "percentage"),
+        ("+12 percent", "+12 percent", "percentage"),
+        ("50 basis point", "50 basis point", "basis_points"),
         ("50 basis points", "50 basis points", "basis_points"),
         ("50 bps", "50 bps", "basis_points"),
         ("$2.10 per diluted share", "$2.10", "per_share_numeric"),
         ("1.5x", "1.5x", "ratio"),
+        ("12x", "12x", "ratio"),
+        ("12.4 times", "12.4 times", "ratio"),
+        ("12.4 Times", "12.4 Times", "ratio"),
         ("($2.1B)", "($2.1B)", "currency"),
     ],
 )
@@ -70,6 +78,16 @@ def test_ranges_multiple_quantities_and_no_researcher_arithmetic():
     targets = find_targets(text)
     assert [target.raw_text for target in targets] == ["$10B", "$12B", "20%"]
     assert all(target.raw_text not in {"$2B", "20"} for target in targets)
+
+
+def test_ratio_requires_direct_x_adjacency_and_higher_precedence_consumes_number():
+    spaced = find_targets("12 x")
+    assert not any(target.numeric_kind == "ratio" and target.raw_text == "12 x" for target in spaced)
+    assert any(target.numeric_kind == "number" and target.raw_text == "12" for target in spaced)
+    for text, kind in (("12 percent", "percentage"), ("50 basis point", "basis_points"), ("12.4 times", "ratio")):
+        targets = find_targets(text)
+        assert len(targets) == 1
+        assert targets[0].numeric_kind == kind
 
 
 def test_malformed_grouping_and_precedence_do_not_create_nested_targets():
