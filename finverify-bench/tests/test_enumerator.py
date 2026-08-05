@@ -103,7 +103,7 @@ def test_dates_counts_and_multiple_targets_remain_raw_candidates():
     targets = find_targets("FY2025 had 12 employees, 78% growth and $3M revenue.")
     assert [target.raw_text for target in targets] == ["2025", "12", "78%", "$3M"]
     assert len({(target.start, target.end) for target in targets}) == 4
-    assert len({candidate_id("S", "block/0", target.start, target.end, target.raw_text) for target in targets}) == 4
+    assert len({candidate_id("S", "block/0", 0, target.start, target.end, target.raw_text) for target in targets}) == 4
 
 
 def test_html_table_provenance_and_raw_span(tmp_path):
@@ -196,9 +196,9 @@ def test_candidate_id_payload_is_exact_and_deterministic():
     source = "S-1"
     locator = "block/0"
     raw = "$1M"
-    payload = "fvq1-raw-v1\nS-1\nblock/0\n2\n5\n$1M".encode("utf-8")
-    expected = "fvq1_" + hashlib.sha256(payload).hexdigest()
-    assert candidate_id(source, locator, 2, 5, raw) == expected
+    payload = "fvq2-raw-v1\nS-1\nblock/0\n3\n2\n5\n$1M".encode("utf-8")
+    expected = "fvq2_" + hashlib.sha256(payload).hexdigest()
+    assert candidate_id(source, locator, 3, 2, 5, raw) == expected
 
 
 def test_repeated_output_and_manifest_order_are_byte_identical(tmp_path):
@@ -270,3 +270,16 @@ def test_enumerator_has_no_verifier_or_model_dependency():
     assert "core.engine" not in package_text
     assert "transformers" not in package_text
     assert "torch" not in package_text
+
+
+def test_candidate_id_disambiguates_segment_relative_collision():
+    left = candidate_id("S", "page/3/block/323", 0, 0, 1, "0")
+    right = candidate_id("S", "page/3/block/323", 1, 0, 1, "0")
+    assert left != right
+
+
+def test_candidate_id_requires_explicit_valid_segment_identity():
+    with pytest.raises(TypeError):
+        candidate_id("S", "block/0", 0, 1, "0")
+    with pytest.raises(EnumerationError, match="segment_index"):
+        candidate_id("S", "block/0", -1, 0, 1, "0")

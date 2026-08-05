@@ -6,7 +6,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional
 
 
-ENUMERATION_SCHEMA_VERSION = "fvq1-raw-v1"
+ENUMERATION_SCHEMA_VERSION = "fvq2-raw-v1"
 
 
 @dataclass(frozen=True)

@@ -23,9 +23,19 @@ class EnumerationError(RuntimeError):
     pass
 
 
-def candidate_id(source_id: str, source_locator: str, target_start: int, target_end: int, target_raw_text: str) -> str:
-    payload = "\n".join((ENUMERATION_SCHEMA_VERSION, source_id, source_locator, str(target_start), str(target_end), target_raw_text))
-    return "fvq1_" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
+def candidate_id(source_id: str, source_locator: str, segment_index: int, target_start: int, target_end: int, target_raw_text: str) -> str:
+    """Return the versioned identity of one enumerated quantitative occurrence.
+
+    ``target_start``/``target_end`` are span-relative, so segment identity is
+    mandatory.  There is deliberately no default: callers must supply it.
+    """
+    if not isinstance(segment_index, int) or segment_index < 0:
+        raise EnumerationError("segment_index must be an explicit non-negative integer")
+    payload = "\n".join((
+        ENUMERATION_SCHEMA_VERSION, source_id, source_locator, str(segment_index),
+        str(target_start), str(target_end), target_raw_text,
+    ))
+    return "fvq2_" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 def _parse_blocks(artifact: SourceArtifact, data: bytes) -> Tuple[List[StructuralBlock], List[ParseIssue]]:
@@ -39,11 +49,11 @@ def _parse_blocks(artifact: SourceArtifact, data: bytes) -> Tuple[List[Structura
     raise EnumerationError("unsupported required source format: %s" % artifact.source_format)
 
 
-def _candidate_from_target(artifact: SourceArtifact, block: StructuralBlock, span: str, target) -> RawCandidate:
+def _candidate_from_target(artifact: SourceArtifact, block: StructuralBlock, span: str, segment_index: int, target) -> RawCandidate:
     metadata = dict(block.metadata)
     metadata.update({"structural_kind": block.kind})
     return RawCandidate(
-        candidate_id=candidate_id(artifact.source_id, block.locator, target.start, target.end, target.raw_text),
+        candidate_id=candidate_id(artifact.source_id, block.locator, segment_index, target.start, target.end, target.raw_text),
         source_id=artifact.source_id,
         source_sha256=artifact.sha256,
         relative_path=artifact.relative_path,
@@ -70,7 +80,7 @@ def enumerate_artifact(artifact: SourceArtifact, data: bytes) -> Tuple[List[RawC
             for target in find_targets(span):
                 metadata = dict(block.metadata)
                 metadata["segment_index"] = span_index
-                candidate = _candidate_from_target(artifact, block, span, target)
+                candidate = _candidate_from_target(artifact, block, span, span_index, target)
                 candidate = RawCandidate(**dict(candidate.__dict__, parser_metadata=metadata))
                 if span[target.start:target.end] != target.raw_text:
                     raise EnumerationError("target offset invariant failed for %s" % artifact.source_id)
