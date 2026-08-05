@@ -1,0 +1,48 @@
+{
+    "phase":  "9C-R3",
+    "artifact":  "candidate_identity_collision_repair_canonical_raw_enumeration",
+    "enumerator_commit":  "e077014e3c74e691b362b25a4e58ddf3303e9006",
+    "enumeration_schema_version":  "fvq2-raw-v1",
+    "candidate_count":  14118,
+    "unique_candidate_id_count":  14118,
+    "parse_issue_count":  0,
+    "raw_candidate_ledger":  {
+                                 "relative_path":  "data/verification/enumeration/raw_candidate_ledger_run3.jsonl",
+                                 "byte_size":  64857149,
+                                 "sha256":  "1b126257e5a0e7c25a633d4b14d9eea5739378692ad1a777b48776231f32e37d"
+                             },
+    "parse_issue_ledger":  {
+                               "relative_path":  "data/verification/enumeration/parse_issues_run3.jsonl",
+                               "byte_size":  0,
+                               "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                           },
+    "supersedes_for_scientific_use":  "SECOND_RUN_FREEZE.json",
+    "supersession_reason":  "Run-2 candidate identity omitted deterministic segment identity while target offsets were segment-relative, causing distinct quantitative occurrences to share candidate_id. Discovered before production annotation; source corpus, parsing, segmentation, and occurrence universe are unchanged.",
+    "source_corpus_provenance":  {
+                                     "manifest_relative_path":  "data/verification/source_manifest.json",
+                                     "manifest_sha256":  "eb9ab3d251a6021b8620234106c1e5c0efc4b3b5372d41a6dd1ebedb8ea84862",
+                                     "manifest_byte_size":  6980,
+                                     "manifest_freeze_commit":  "e21f436cb191ca22f1795fc4503407941245bd5d",
+                                     "acquisition_commit":  "e01860c3380c53d2e1a2bbc20f3356176dcf7084",
+                                     "artifact_count":  12,
+                                     "company_count":  6,
+                                     "source_corpus_unchanged_from_run2":  true
+                                 },
+    "historical_provenance_policy":  {
+                                         "run2_freeze":  "SECOND_RUN_FREEZE.json",
+                                         "run2_ledger":  "data/verification/enumeration/raw_candidate_ledger_run2.jsonl",
+                                         "run2_ledger_sha256":  "ec9532fa60225be63d5446ca2137b260255d97a74354a25e82f1b3ecd62a0093",
+                                         "run2_remains_immutable_historical_provenance":  true,
+                                         "run2_is_never_a_scientific_fallback":  true
+                                     },
+    "repair_scope":  {
+                         "candidate_identity_changed":  true,
+                         "segment_index_added_to_identity":  true,
+                         "source_corpus_changed":  false,
+                         "parsing_changed":  false,
+                         "segmentation_changed":  false,
+                         "eligibility_policy_changed":  false,
+                         "production_annotation_had_started":  false,
+                         "annotation_outcomes_created_before_repair":  false
+                     }
+}
