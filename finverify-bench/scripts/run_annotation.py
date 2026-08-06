@@ -11,10 +11,10 @@ must cover that exact universe -- no missing, no extra, no duplicates.
 This script never calls a model, network endpoint, or FinVerify -- it
 consumes votes already collected offline (one JSONL file, one record per
 AnnotatorVote) and applies only the frozen deterministic aggregation rule.
-Running against the production Run-2 candidate set requires
+Running against the production Run-3 candidate set requires
 --allow-annotation-production plus a valid --implementation-commit and, for
-the real Run-2 path, --freeze-metadata pointing at the canonical
-SECOND_RUN_FREEZE.json (Gate 1, default-deny; see
+the real Run-3 path, --freeze-metadata pointing at the canonical
+THIRD_RUN_FREEZE.json (Gate 1, default-deny; see
 verification.eligibility.amendment2_freeze).
 """
 from __future__ import annotations
@@ -40,13 +40,13 @@ from verification.eligibility.serialization import json_bytes, write_new
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--raw-ledger", type=Path, required=True, help="the raw Run-2 candidate ledger; the candidate-ID universe is derived from this, not supplied independently")
+    parser.add_argument("--raw-ledger", type=Path, required=True, help="the raw Run-3 candidate ledger; the candidate-ID universe is derived from this, not supplied independently")
     parser.add_argument("--annotation-config", type=Path, required=True, help="frozen annotation_config.lock.json, for provenance stamping")
     parser.add_argument("--votes", type=Path, required=True, help="JSONL of AnnotatorVote records")
     parser.add_argument("--output", type=Path, required=True, help="path for llm_annotation_ledger.jsonl")
     parser.add_argument("--retry-count", type=int, default=0)
     parser.add_argument("--allow-annotation-production", action="store_true")
-    parser.add_argument("--freeze-metadata", type=Path, default=None, help="required for the real Run-2 path; canonical SECOND_RUN_FREEZE.json")
+    parser.add_argument("--freeze-metadata", type=Path, default=None, help="required for the real Run-3 path; canonical THIRD_RUN_FREEZE.json")
     parser.add_argument("--implementation-commit", default="UNRECORDED")
     args = parser.parse_args()
 
@@ -56,7 +56,7 @@ def main() -> int:
     )
 
     # Fail closed: default-deny + hash/count/duplicate validation against
-    # the frozen Run-2 contract (a no-op check for non-Run-2/synthetic
+    # the frozen Run-3 contract (a no-op check for non-Run-3/synthetic
     # paths, exactly as engine.load_raw_ledger already behaves).
     validated = validate_and_load_raw_ledger(
         args.raw_ledger,

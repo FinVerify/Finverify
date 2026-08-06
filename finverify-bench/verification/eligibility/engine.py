@@ -23,6 +23,18 @@ RUN2_LEDGER_BYTES = 64871267
 RUN2_PARSE_ISSUE_RELATIVE_PATH = "data/verification/enumeration/parse_issues_run2.jsonl"
 RUN2_PARSE_ISSUE_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
+RUN3_SUFFIX = "data/verification/enumeration/raw_candidate_ledger_run3.jsonl"
+RUN3_SHA256 = "1b126257e5a0e7c25a633d4b14d9eea5739378692ad1a777b48776231f32e37d"
+RUN3_COMMIT = "e077014e3c74e691b362b25a4e58ddf3303e9006"
+RUN3_SCHEMA_VERSION = "fvq2-raw-v1"
+RUN3_COUNT = 14118
+RUN3_FREEZE_PATH = Path(__file__).resolve().parents[2] / "data" / "verification" / "enumeration" / "THIRD_RUN_FREEZE.json"
+RUN3_FREEZE_SHA256 = "f7fd2e4b79507a763a47eee496e58f2e0c0477d46b40cda3eec54420685e564b"
+RUN3_LEDGER_BYTES = 64857149
+RUN3_PARSE_ISSUE_RELATIVE_PATH = "data/verification/enumeration/parse_issues_run3.jsonl"
+RUN3_PARSE_ISSUE_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+RUN3_CANDIDATE_ID_PREFIX = "fvq2_"
+
 
 def expansion_required(unique_natural_eligible: int, controlled_parent_eligible: int) -> bool:
     return unique_natural_eligible < 60 or controlled_parent_eligible < 15
@@ -30,6 +42,10 @@ def expansion_required(unique_natural_eligible: int, controlled_parent_eligible:
 
 def _is_run2(path: Path) -> bool:
     return path.as_posix().lower().endswith(RUN2_SUFFIX)
+
+
+def _is_run3(path: Path) -> bool:
+    return path.as_posix().lower().endswith(RUN3_SUFFIX)
 
 
 def _validate_raw(record: Mapping[str, Any]) -> Dict[str, Any]:
@@ -48,45 +64,53 @@ def _validate_raw(record: Mapping[str, Any]) -> Dict[str, Any]:
 
 def load_raw_ledger(path: Path, *, allow_production: bool = False, expected_sha256: Optional[str] = None, freeze_metadata_path: Optional[Path] = None, implementation_commit: Optional[str] = None) -> List[Dict[str, Any]]:
     path = Path(path)
-    if _is_run2(path) and not allow_production:
-        raise PermissionError("production Run-2 eligibility is blocked by default")
+    if _is_run2(path):
+        raise PermissionError("Run-2 is permanently retired for production/scientific use; Run-3 is the sole production ledger")
+    if _is_run3(path) and not allow_production:
+        raise PermissionError("production Run-3 eligibility is blocked by default")
     data = path.read_bytes()
     digest = hashlib.sha256(data).hexdigest()
     if expected_sha256 and digest != expected_sha256:
         raise ValueError("raw ledger SHA-256 mismatch")
-    if _is_run2(path) and digest != RUN2_SHA256:
-        raise ValueError("authorized path is not the frozen Run-2 ledger")
-    if _is_run2(path) and allow_production:
+    if _is_run3(path) and digest != RUN3_SHA256:
+        raise ValueError("authorized path is not the frozen Run-3 ledger")
+    if _is_run3(path) and allow_production:
         if implementation_commit is None or implementation_commit == "UNRECORDED" or not re.fullmatch(r"[0-9a-f]{40}", implementation_commit):
-            raise PermissionError("authorized Run-2 eligibility requires a valid implementation commit")
-        if freeze_metadata_path is None or Path(freeze_metadata_path).resolve() != RUN2_FREEZE_PATH.resolve():
-            raise PermissionError("authorized Run-2 eligibility requires the canonical SECOND_RUN_FREEZE.json")
-        freeze_path = Path(freeze_metadata_path)
-        freeze_bytes = freeze_path.read_bytes()
-        if hashlib.sha256(freeze_bytes).hexdigest() != RUN2_FREEZE_SHA256:
-            raise ValueError("SECOND_RUN_FREEZE.json SHA-256 mismatch")
+            raise PermissionError("authorized Run-3 eligibility requires a valid implementation commit")
+        if freeze_metadata_path is None or Path(freeze_metadata_path).resolve() != RUN3_FREEZE_PATH.resolve():
+            raise PermissionError("authorized Run-3 eligibility requires the canonical THIRD_RUN_FREEZE.json")
+        freeze_bytes = Path(freeze_metadata_path).read_bytes()
+        if hashlib.sha256(freeze_bytes).hexdigest() != RUN3_FREEZE_SHA256:
+            raise ValueError("THIRD_RUN_FREEZE.json SHA-256 mismatch")
         freeze = json.loads(freeze_bytes.decode("utf-8"))
-        raw_meta = freeze.get("raw_candidate_ledger", {})
-        parse_meta = freeze.get("parse_issue_ledger", {})
-        if (freeze.get("phase") != "9C-A3" or freeze.get("enumerator_commit") != RUN2_COMMIT
-                or freeze.get("candidate_count") != RUN2_COUNT
-                or raw_meta.get("relative_path") != RUN2_SUFFIX
-                or raw_meta.get("byte_size") != RUN2_LEDGER_BYTES
-                or raw_meta.get("sha256") != RUN2_SHA256
-                or parse_meta.get("relative_path") != RUN2_PARSE_ISSUE_RELATIVE_PATH
-                or parse_meta.get("byte_size") != 0
-                or parse_meta.get("sha256") != RUN2_PARSE_ISSUE_SHA256):
-            raise ValueError("Run-2 freeze metadata mismatch")
-    records = []
-    seen = set()
+        raw_meta = freeze.get("raw_candidate_ledger", {}); parse_meta = freeze.get("parse_issue_ledger", {})
+        provenance = freeze.get("source_corpus_provenance", {}); historical = freeze.get("historical_provenance_policy", {})
+        repair = freeze.get("repair_scope", {})
+        if (freeze.get("phase") != "9C-R3" or freeze.get("enumerator_commit") != RUN3_COMMIT
+                or freeze.get("enumeration_schema_version") != RUN3_SCHEMA_VERSION
+                or freeze.get("candidate_count") != RUN3_COUNT or freeze.get("unique_candidate_id_count") != RUN3_COUNT
+                or raw_meta.get("relative_path") != RUN3_SUFFIX or raw_meta.get("byte_size") != RUN3_LEDGER_BYTES
+                or raw_meta.get("sha256") != RUN3_SHA256 or parse_meta.get("relative_path") != RUN3_PARSE_ISSUE_RELATIVE_PATH
+                or parse_meta.get("byte_size") != 0 or parse_meta.get("sha256") != RUN3_PARSE_ISSUE_SHA256
+                or freeze.get("supersedes_for_scientific_use") != "SECOND_RUN_FREEZE.json"
+                or historical.get("run2_remains_immutable_historical_provenance") is not True
+                or historical.get("run2_is_never_a_scientific_fallback") is not True
+                or provenance.get("source_corpus_unchanged_from_run2") is not True
+                or repair.get("candidate_identity_changed") is not True or repair.get("segment_index_added_to_identity") is not True
+                or repair.get("source_corpus_changed") is not False or repair.get("parsing_changed") is not False
+                or repair.get("segmentation_changed") is not False or repair.get("eligibility_policy_changed") is not False
+                or repair.get("production_annotation_had_started") is not False
+                or repair.get("annotation_outcomes_created_before_repair") is not False):
+            raise ValueError("Run-3 freeze metadata mismatch")
+    records=[]; seen=set()
     for line in data.splitlines():
-        record = _validate_raw(json.loads(line.decode("utf-8")))
-        if record["candidate_id"] in seen:
-            raise ValueError("duplicate candidate_id")
-        seen.add(record["candidate_id"])
-        records.append(record)
-    if _is_run2(path) and len(records) != RUN2_COUNT:
-        raise ValueError("Run-2 candidate count mismatch")
+        record=_validate_raw(json.loads(line.decode("utf-8")))
+        if record["candidate_id"] in seen: raise ValueError("duplicate candidate_id")
+        seen.add(record["candidate_id"]); records.append(record)
+    if _is_run3(path):
+        if len(records) != RUN3_COUNT: raise ValueError("Run-3 candidate count mismatch")
+        if not all(r["candidate_id"].startswith(RUN3_CANDIDATE_ID_PREFIX) for r in records):
+            raise ValueError("Run-3 candidate IDs must use the fvq2_ identity scheme")
     return records
 
 

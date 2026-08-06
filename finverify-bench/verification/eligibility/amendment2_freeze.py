@@ -4,7 +4,7 @@ Two separate default-deny production gates, neither substituting for the
 other:
 
   Gate 1 (``authorize_annotation_run``): authorizes the LLM-annotation
-  production run against the frozen Run-2 ledger.
+  production run against the frozen production ledger (Run-3).
   Gate 2 (``authorize_audit_release``): authorizes release of the audit
   sampling manifest and the start of human-audit review.
 
@@ -39,7 +39,7 @@ def _parse_ts(value: str) -> datetime:
 def authorize_annotation_run(*, allow_annotation_production: bool, implementation_commit: str) -> None:
     """Gate 1: default-deny authorization for running the ensemble against Run-2."""
     if not allow_annotation_production:
-        raise ProductionGateDenied("LLM-annotation production run against the frozen Run-2 ledger is blocked by default")
+        raise ProductionGateDenied("LLM-annotation production run against the frozen production ledger (Run-3) is blocked by default")
     if not re.fullmatch(r"[0-9a-f]{40}", implementation_commit or ""):
         raise ProductionGateDenied("annotation production run requires a valid 40-hex-char implementation commit")
 

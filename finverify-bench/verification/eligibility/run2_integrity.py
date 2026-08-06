@@ -1,12 +1,12 @@
-"""Phase 9C-I4-R1: shared frozen Run-2 input-integrity checks.
+"""Shared frozen production-ledger input-integrity checks.
 
 Minimal blocker repair only — this module adds no new scientific policy. It
 binds the I4 annotation/audit production entry points to the same frozen
-Run-2 contract that ``verification.eligibility.engine.load_raw_ledger``
-already enforces for Phase 9C-G, instead of letting each I4 script trust an
+production-ledger contract that ``verification.eligibility.engine.load_raw_ledger``
+already enforces (Run-3, as of the 9C-R3 migration), instead of letting each I4 script trust an
 independently supplied path/hash/candidate list.
 
-Single source of truth: the frozen ``RUN2_*`` constants live only in
+Single source of truth: the frozen ``RUN2_*``/``RUN3_*`` constants live only in
 ``engine.py``. This module always reads them from the ``engine`` module
 object at call time (never copies them into a local constant) so that the
 existing test convention of ``monkeypatch.setattr(eligibility_engine,
@@ -16,7 +16,7 @@ Fail-closed: every function here raises ``IntegrityViolation`` (a
 ``ValueError``) on any mismatch. None of these functions accept a
 production-side override/bypass parameter. The only way to exercise this
 code with synthetic data is the same mechanism ``engine.load_raw_ledger``
-already relies on: a path that does not end in the frozen Run-2 relative
+already relies on: a path that does not end in the frozen Run-3 relative
 path is never subject to the frozen-hash/count checks at all, exactly like
 the existing ``tests/test_eligibility.py`` fixtures do. There is no
 separate "test mode" flag.

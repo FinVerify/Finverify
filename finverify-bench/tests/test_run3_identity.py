@@ -27,9 +27,19 @@ def test_run3_has_exact_unique_fvq2_universe():
     assert all(x.startswith('fvq2_') for x in ids)
     assert _sha(p)=='1b126257e5a0e7c25a633d4b14d9eea5739378692ad1a777b48776231f32e37d'
 
-def test_run3_passes_structural_integrity_loader():
-    records=load_raw_ledger(ENUM/'raw_candidate_ledger_run3.jsonl')
+def test_run3_is_default_deny_without_production_authorization():
+    with pytest.raises(PermissionError):
+        load_raw_ledger(ENUM/'raw_candidate_ledger_run3.jsonl')
+
+def test_run3_passes_structural_integrity_loader_when_authorized():
+    records=load_raw_ledger(
+        ENUM/'raw_candidate_ledger_run3.jsonl',
+        allow_production=True,
+        freeze_metadata_path=ENUM/'THIRD_RUN_FREEZE.json',
+        implementation_commit='a' * 40,
+    )
     assert len(records)==14118
+    assert all(record['candidate_id'].startswith('fvq2_') for record in records)
 
 def test_historical_run2_still_fails_duplicate_identity_after_authorization_gate(monkeypatch):
     # Bypass only the historical production-path gate to reach the known

@@ -1,11 +1,13 @@
 """Synthetic-only tests for Phase 9C-I4-R1 (minimal input-integrity repair).
 
-No Run-2 ledger content, model service, network call, or FinVerify output is
-used anywhere in this file. Follows the same synthetic-Run-2 fixture
+No Run-3 ledger content, model service, network call, or FinVerify output is
+used anywhere in this file. Follows the same synthetic-Run-3 fixture
 convention already established in tests/test_eligibility.py
-(_authorized_synthetic_run2): monkeypatch the frozen RUN2_* constants on
+(_authorized_synthetic_run3): monkeypatch the frozen RUN3_* constants on
 verification.eligibility.engine and use a tmp_path whose suffix matches the
-frozen Run-2 relative path, rather than inventing a second mechanism.
+frozen Run-3 relative path, rather than inventing a second mechanism.
+Run-2 coverage is retained only for its permanent-retirement behavior
+(PermissionError, unconditionally, since Run-2 can never be authorized).
 """
 from __future__ import annotations
 
@@ -32,10 +34,10 @@ def _raw(candidate_id="c1", source_id="S1"):
     }
 
 
-def _authorized_synthetic_run2(tmp_path, monkeypatch, candidate_ids=("c1",)):
-    """Mirrors tests/test_eligibility.py::_authorized_synthetic_run2, extended to N candidates."""
-    ledger_path = tmp_path / "data" / "verification" / "enumeration" / "raw_candidate_ledger_run2.jsonl"
-    freeze_path = tmp_path / "data" / "verification" / "enumeration" / "SECOND_RUN_FREEZE.json"
+def _authorized_synthetic_run3(tmp_path, monkeypatch, candidate_ids=("fvq2_c1",)):
+    """Mirrors tests/test_eligibility.py::_authorized_synthetic_run3, extended to N candidates."""
+    ledger_path = tmp_path / "data" / "verification" / "enumeration" / "raw_candidate_ledger_run3.jsonl"
+    freeze_path = tmp_path / "data" / "verification" / "enumeration" / "THIRD_RUN_FREEZE.json"
     ledger_path.parent.mkdir(parents=True)
     ledger_bytes = b"".join(
         (json.dumps(_raw(cid), sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
@@ -46,19 +48,29 @@ def _authorized_synthetic_run2(tmp_path, monkeypatch, candidate_ids=("c1",)):
     parse_sha = hashlib.sha256(parse_bytes).hexdigest()
     commit = "a" * 40
     freeze = {
-        "phase": "9C-A3", "enumerator_commit": commit, "candidate_count": len(candidate_ids),
-        "raw_candidate_ledger": {"relative_path": "data/verification/enumeration/raw_candidate_ledger_run2.jsonl", "byte_size": len(ledger_bytes), "sha256": hashlib.sha256(ledger_bytes).hexdigest()},
-        "parse_issue_ledger": {"relative_path": "data/verification/enumeration/parse_issues_run2.jsonl", "byte_size": 0, "sha256": parse_sha},
+        "phase": "9C-R3", "enumerator_commit": commit, "enumeration_schema_version": "fvq2-raw-v1",
+        "candidate_count": len(candidate_ids), "unique_candidate_id_count": len(candidate_ids),
+        "raw_candidate_ledger": {"relative_path": "data/verification/enumeration/raw_candidate_ledger_run3.jsonl", "byte_size": len(ledger_bytes), "sha256": hashlib.sha256(ledger_bytes).hexdigest()},
+        "parse_issue_ledger": {"relative_path": "data/verification/enumeration/parse_issues_run3.jsonl", "byte_size": 0, "sha256": parse_sha},
+        "supersedes_for_scientific_use": "SECOND_RUN_FREEZE.json",
+        "historical_provenance_policy": {"run2_remains_immutable_historical_provenance": True, "run2_is_never_a_scientific_fallback": True},
+        "source_corpus_provenance": {"source_corpus_unchanged_from_run2": True},
+        "repair_scope": {
+            "candidate_identity_changed": True, "segment_index_added_to_identity": True,
+            "source_corpus_changed": False, "parsing_changed": False, "segmentation_changed": False,
+            "eligibility_policy_changed": False, "production_annotation_had_started": False,
+            "annotation_outcomes_created_before_repair": False,
+        },
     }
     freeze_bytes = (json.dumps(freeze, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
     freeze_path.write_bytes(freeze_bytes)
-    monkeypatch.setattr(eligibility_engine, "RUN2_SHA256", hashlib.sha256(ledger_bytes).hexdigest())
-    monkeypatch.setattr(eligibility_engine, "RUN2_COMMIT", commit)
-    monkeypatch.setattr(eligibility_engine, "RUN2_COUNT", len(candidate_ids))
-    monkeypatch.setattr(eligibility_engine, "RUN2_FREEZE_PATH", freeze_path)
-    monkeypatch.setattr(eligibility_engine, "RUN2_FREEZE_SHA256", hashlib.sha256(freeze_bytes).hexdigest())
-    monkeypatch.setattr(eligibility_engine, "RUN2_LEDGER_BYTES", len(ledger_bytes))
-    monkeypatch.setattr(eligibility_engine, "RUN2_PARSE_ISSUE_SHA256", parse_sha)
+    monkeypatch.setattr(eligibility_engine, "RUN3_SHA256", hashlib.sha256(ledger_bytes).hexdigest())
+    monkeypatch.setattr(eligibility_engine, "RUN3_COMMIT", commit)
+    monkeypatch.setattr(eligibility_engine, "RUN3_COUNT", len(candidate_ids))
+    monkeypatch.setattr(eligibility_engine, "RUN3_FREEZE_PATH", freeze_path)
+    monkeypatch.setattr(eligibility_engine, "RUN3_FREEZE_SHA256", hashlib.sha256(freeze_bytes).hexdigest())
+    monkeypatch.setattr(eligibility_engine, "RUN3_LEDGER_BYTES", len(ledger_bytes))
+    monkeypatch.setattr(eligibility_engine, "RUN3_PARSE_ISSUE_SHA256", parse_sha)
     return ledger_path, freeze_path, commit
 
 
@@ -67,11 +79,11 @@ def _authorized_synthetic_run2(tmp_path, monkeypatch, candidate_ids=("c1",)):
 # ---------------------------------------------------------------------------
 
 def test_valid_complete_universe_succeeds(tmp_path, monkeypatch):
-    ledger_path, freeze_path, commit = _authorized_synthetic_run2(tmp_path, monkeypatch, candidate_ids=("c1", "c2", "c3"))
+    ledger_path, freeze_path, commit = _authorized_synthetic_run3(tmp_path, monkeypatch, candidate_ids=("fvq2_c1", "fvq2_c2", "fvq2_c3"))
     validated = validate_and_load_raw_ledger(
         ledger_path, allow_production=True, freeze_metadata_path=freeze_path, implementation_commit=commit,
     )
-    assert validated.candidate_ids == ("c1", "c2", "c3")
+    assert validated.candidate_ids == ("fvq2_c1", "fvq2_c2", "fvq2_c3")
     assert len(validated.sha256) == 64
 
 
@@ -83,36 +95,46 @@ def test_production_run2_blocked_without_authorization(tmp_path):
         validate_and_load_raw_ledger(path)
 
 
+def test_production_run3_blocked_without_authorization(tmp_path):
+    path = tmp_path / "data" / "verification" / "enumeration" / "raw_candidate_ledger_run3.jsonl"
+    path.parent.mkdir(parents=True)
+    path.write_text("{}\n", encoding="utf-8")
+    with pytest.raises(PermissionError):
+        validate_and_load_raw_ledger(path)
+
+
 def test_negative_1_modified_raw_ledger_bytes_rejected(tmp_path, monkeypatch):
-    ledger_path, freeze_path, commit = _authorized_synthetic_run2(tmp_path, monkeypatch, candidate_ids=("c1",))
-    ledger_path.write_bytes(ledger_path.read_bytes().replace(b'"c1"', b'"c9"'))
-    with pytest.raises(ValueError, match="not the frozen Run-2 ledger"):
+    ledger_path, freeze_path, commit = _authorized_synthetic_run3(tmp_path, monkeypatch, candidate_ids=("fvq2_c1",))
+    ledger_path.write_bytes(ledger_path.read_bytes().replace(b'"fvq2_c1"', b'"fvq2_c9"'))
+    with pytest.raises(ValueError, match="not the frozen Run-3 ledger"):
         validate_and_load_raw_ledger(ledger_path, allow_production=True, freeze_metadata_path=freeze_path, implementation_commit=commit)
 
 
 def test_negative_2_truncated_raw_ledger_rejected(tmp_path, monkeypatch):
-    ledger_path, freeze_path, commit = _authorized_synthetic_run2(tmp_path, monkeypatch, candidate_ids=("c1", "c2"))
+    ledger_path, freeze_path, commit = _authorized_synthetic_run3(tmp_path, monkeypatch, candidate_ids=("fvq2_c1", "fvq2_c2"))
     original = ledger_path.read_bytes()
     ledger_path.write_bytes(original[: len(original) // 2])
-    with pytest.raises(ValueError, match="not the frozen Run-2 ledger"):
+    with pytest.raises(ValueError, match="not the frozen Run-3 ledger"):
         validate_and_load_raw_ledger(ledger_path, allow_production=True, freeze_metadata_path=freeze_path, implementation_commit=commit)
 
 
 def test_negative_3_wrong_raw_ledger_hash_rejected(tmp_path, monkeypatch):
-    ledger_path, freeze_path, commit = _authorized_synthetic_run2(tmp_path, monkeypatch, candidate_ids=("c1",))
+    ledger_path, freeze_path, commit = _authorized_synthetic_run3(tmp_path, monkeypatch, candidate_ids=("fvq2_c1",))
     # Simulate an attacker/operator substituting a different, well-formed ledger.
-    ledger_path.write_bytes((json.dumps(_raw("c1", "S2"), sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8"))
-    with pytest.raises(ValueError, match="not the frozen Run-2 ledger"):
+    ledger_path.write_bytes((json.dumps(_raw("fvq2_c1", "S2"), sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8"))
+    with pytest.raises(ValueError, match="not the frozen Run-3 ledger"):
         validate_and_load_raw_ledger(ledger_path, allow_production=True, freeze_metadata_path=freeze_path, implementation_commit=commit)
 
 
-def test_authorization_alone_never_bypasses_hash_validation(tmp_path):
-    # Same invariant as tests/test_eligibility.py, re-asserted through the
+def test_run2_authorization_alone_never_succeeds(tmp_path):
+    # Run-2 is permanently retired: allow_production=True can never authorize
+    # it (unlike Run-3, where authorization still requires exact hash/schema
+    # validation -- see test_negative_1/2/3 above). Re-asserted through the
     # I4-R1 wrapper specifically (not just the underlying engine call).
     path = tmp_path / "data" / "verification" / "enumeration" / "raw_candidate_ledger_run2.jsonl"
     path.parent.mkdir(parents=True)
     path.write_text("{}\n", encoding="utf-8")
-    with pytest.raises(ValueError):
+    with pytest.raises(PermissionError):
         validate_and_load_raw_ledger(path, allow_production=True)
 
 

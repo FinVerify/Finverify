@@ -142,50 +142,70 @@ def test_production_run2_rejected_by_default(tmp_path):
         load_raw_ledger(path)
 
 
-def test_authorization_does_not_bypass_hash_or_schema_validation(tmp_path):
+def test_run2_authorization_can_never_succeed(tmp_path):
+    """Run-2 is permanently retired: allow_production=True can never authorize it,
+    unlike Run-3 where authorization still requires exact hash/schema validation."""
     path = tmp_path / "data" / "verification" / "enumeration" / "raw_candidate_ledger_run2.jsonl"
     path.parent.mkdir(parents=True)
     path.write_text("{}\n", encoding="utf-8")
-    with pytest.raises(ValueError):
+    with pytest.raises(PermissionError):
         load_raw_ledger(path, allow_production=True)
 
 
-def _authorized_synthetic_run2(tmp_path, monkeypatch):
-    ledger_path = tmp_path / "data" / "verification" / "enumeration" / "raw_candidate_ledger_run2.jsonl"
-    freeze_path = tmp_path / "data" / "verification" / "enumeration" / "SECOND_RUN_FREEZE.json"
+def test_production_run3_rejected_by_default(tmp_path):
+    path = tmp_path / "data" / "verification" / "enumeration" / "raw_candidate_ledger_run3.jsonl"
+    path.parent.mkdir(parents=True)
+    path.write_text("{}\n", encoding="utf-8")
+    with pytest.raises(PermissionError):
+        load_raw_ledger(path)
+
+
+def _authorized_synthetic_run3(tmp_path, monkeypatch):
+    ledger_path = tmp_path / "data" / "verification" / "enumeration" / "raw_candidate_ledger_run3.jsonl"
+    freeze_path = tmp_path / "data" / "verification" / "enumeration" / "THIRD_RUN_FREEZE.json"
     ledger_path.parent.mkdir(parents=True)
-    ledger_bytes = (json.dumps(raw(), sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+    ledger_bytes = (json.dumps(raw("fvq2_c1"), sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
     ledger_path.write_bytes(ledger_bytes)
     parse_bytes = b""
     parse_sha = hashlib.sha256(parse_bytes).hexdigest()
-    commit = "a" * 40
+    commit = "b" * 40
     freeze = {
-        "phase": "9C-A3", "enumerator_commit": commit, "candidate_count": 1,
-        "raw_candidate_ledger": {"relative_path": "data/verification/enumeration/raw_candidate_ledger_run2.jsonl", "byte_size": len(ledger_bytes), "sha256": hashlib.sha256(ledger_bytes).hexdigest()},
-        "parse_issue_ledger": {"relative_path": "data/verification/enumeration/parse_issues_run2.jsonl", "byte_size": 0, "sha256": parse_sha},
+        "phase": "9C-R3", "enumerator_commit": commit, "enumeration_schema_version": "fvq2-raw-v1",
+        "candidate_count": 1, "unique_candidate_id_count": 1,
+        "raw_candidate_ledger": {"relative_path": "data/verification/enumeration/raw_candidate_ledger_run3.jsonl", "byte_size": len(ledger_bytes), "sha256": hashlib.sha256(ledger_bytes).hexdigest()},
+        "parse_issue_ledger": {"relative_path": "data/verification/enumeration/parse_issues_run3.jsonl", "byte_size": 0, "sha256": parse_sha},
+        "supersedes_for_scientific_use": "SECOND_RUN_FREEZE.json",
+        "historical_provenance_policy": {"run2_remains_immutable_historical_provenance": True, "run2_is_never_a_scientific_fallback": True},
+        "source_corpus_provenance": {"source_corpus_unchanged_from_run2": True},
+        "repair_scope": {
+            "candidate_identity_changed": True, "segment_index_added_to_identity": True,
+            "source_corpus_changed": False, "parsing_changed": False, "segmentation_changed": False,
+            "eligibility_policy_changed": False, "production_annotation_had_started": False,
+            "annotation_outcomes_created_before_repair": False,
+        },
     }
     freeze_bytes = (json.dumps(freeze, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
     freeze_path.write_bytes(freeze_bytes)
-    monkeypatch.setattr(eligibility_engine, "RUN2_SHA256", hashlib.sha256(ledger_bytes).hexdigest())
-    monkeypatch.setattr(eligibility_engine, "RUN2_COMMIT", commit)
-    monkeypatch.setattr(eligibility_engine, "RUN2_COUNT", 1)
-    monkeypatch.setattr(eligibility_engine, "RUN2_FREEZE_PATH", freeze_path)
-    monkeypatch.setattr(eligibility_engine, "RUN2_FREEZE_SHA256", hashlib.sha256(freeze_bytes).hexdigest())
-    monkeypatch.setattr(eligibility_engine, "RUN2_LEDGER_BYTES", len(ledger_bytes))
-    monkeypatch.setattr(eligibility_engine, "RUN2_PARSE_ISSUE_SHA256", parse_sha)
+    monkeypatch.setattr(eligibility_engine, "RUN3_SHA256", hashlib.sha256(ledger_bytes).hexdigest())
+    monkeypatch.setattr(eligibility_engine, "RUN3_COMMIT", commit)
+    monkeypatch.setattr(eligibility_engine, "RUN3_COUNT", 1)
+    monkeypatch.setattr(eligibility_engine, "RUN3_FREEZE_PATH", freeze_path)
+    monkeypatch.setattr(eligibility_engine, "RUN3_FREEZE_SHA256", hashlib.sha256(freeze_bytes).hexdigest())
+    monkeypatch.setattr(eligibility_engine, "RUN3_LEDGER_BYTES", len(ledger_bytes))
+    monkeypatch.setattr(eligibility_engine, "RUN3_PARSE_ISSUE_SHA256", parse_sha)
     return ledger_path, freeze_path, commit
 
 
 def test_authorized_run_requires_exact_freeze_hash_and_parse_metadata(tmp_path, monkeypatch):
-    ledger_path, freeze_path, commit = _authorized_synthetic_run2(tmp_path, monkeypatch)
+    ledger_path, freeze_path, commit = _authorized_synthetic_run3(tmp_path, monkeypatch)
     assert len(load_raw_ledger(ledger_path, allow_production=True, freeze_metadata_path=freeze_path, implementation_commit=commit)) == 1
-    freeze_path.write_bytes(freeze_path.read_bytes().replace(b"9C-A3", b"9C-X3"))
+    freeze_path.write_bytes(freeze_path.read_bytes().replace(b"9C-R3", b"9C-X3"))
     with pytest.raises(ValueError, match="SHA-256 mismatch"):
         load_raw_ledger(ledger_path, allow_production=True, freeze_metadata_path=freeze_path, implementation_commit=commit)
 
 
 def test_authorized_run_rejects_missing_or_unrecorded_implementation_commit(tmp_path, monkeypatch):
-    ledger_path, freeze_path, _ = _authorized_synthetic_run2(tmp_path, monkeypatch)
+    ledger_path, freeze_path, _ = _authorized_synthetic_run3(tmp_path, monkeypatch)
     for commit in (None, "UNRECORDED"):
         with pytest.raises(PermissionError, match="implementation commit"):
             load_raw_ledger(ledger_path, allow_production=True, freeze_metadata_path=freeze_path, implementation_commit=commit)
