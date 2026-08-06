@@ -1,0 +1,37 @@
+{
+  "implementation_commit": "50487428e0a969a3b587e0622fa66fd7fed72311",
+  "evaluation_model_families": [
+    "openai",
+    "llama",
+    "mistral"
+  ],
+  "decoding": {
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "max_tokens": 512
+  },
+  "failure_handling": {
+    "timeout_seconds": 60,
+    "retry_count": 2
+  },
+  "annotators": [
+    {
+      "annotator_id": "a1_qwen25_3b",
+      "model_family": "qwen",
+      "model_version": "Qwen/Qwen2.5-3B-Instruct",
+      "prompt": "You are annotator role: a1_qwen25_3b.\nDoes this explicitly enumerated occurrence represent an eligible quantitative financial fact, with sufficient permitted source context to resolve the relevant identity and evidence, without researcher-derived arithmetic?\nCheck each of the following:\n- explicit presence of the value\n- financial versus purely operational scope\n- Entity, Concept, and materially required Period\n- recoverable Scope, Accounting Basis, Temporal Frame, and Value Role\n- evidence sufficiency\n- absence of researcher-derived meaning\nEvidence boundary: ELIGIBILITY_IMPLEMENTATION_SPEC_v1.md#7 (Section 7 package only; no other context)."
+    },
+    {
+      "annotator_id": "a2_gemma3_4b",
+      "model_family": "gemma",
+      "model_version": "google/gemma-3-4b-it",
+      "prompt": "You are annotator role: a2_gemma3_4b.\nDoes this explicitly enumerated occurrence represent an eligible quantitative financial fact, with sufficient permitted source context to resolve the relevant identity and evidence, without researcher-derived arithmetic?\nCheck each of the following:\n- explicit presence of the value\n- financial versus purely operational scope\n- Entity, Concept, and materially required Period\n- recoverable Scope, Accounting Basis, Temporal Frame, and Value Role\n- evidence sufficiency\n- absence of researcher-derived meaning\nEvidence boundary: ELIGIBILITY_IMPLEMENTATION_SPEC_v1.md#7 (Section 7 package only; no other context)."
+    },
+    {
+      "annotator_id": "a3_phi4_mini",
+      "model_family": "phi",
+      "model_version": "microsoft/Phi-4-mini-instruct",
+      "prompt": "You are annotator role: a3_phi4_mini.\nDoes this explicitly enumerated occurrence represent an eligible quantitative financial fact, with sufficient permitted source context to resolve the relevant identity and evidence, without researcher-derived arithmetic?\nCheck each of the following:\n- explicit presence of the value\n- financial versus purely operational scope\n- Entity, Concept, and materially required Period\n- recoverable Scope, Accounting Basis, Temporal Frame, and Value Role\n- evidence sufficiency\n- absence of researcher-derived meaning\nEvidence boundary: ELIGIBILITY_IMPLEMENTATION_SPEC_v1.md#7 (Section 7 package only; no other context)."
+    }
+  ]
+}
