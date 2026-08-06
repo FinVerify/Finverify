@@ -1,0 +1,9 @@
+{
+  "artifact": "data/verification/evidence_packages_run3.jsonl",
+  "schema": "section7-evidence-v1",
+  "candidate_count": 14118,
+  "sha256": "129493c9c5b75d51b240a8568a468dd76e9651a996e67d74ec1664c030e4bf60",
+  "raw_ledger_sha256": "1b126257e5a0e7c25a633d4b14d9eea5739378692ad1a777b48776231f32e37d",
+  "annotation_config_sha256": "ce7ab8872bd0e6043523b429f9b2072f58ea60e6c80bcd6e99f71a4dfe891690",
+  "implementation_commit": "7da32aca7a19bc0d31a81be05aa0a0e209c332ae"
+}
