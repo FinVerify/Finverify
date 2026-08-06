@@ -17,8 +17,9 @@ from typing import Any, Dict, List, Mapping, Sequence
 # Section 7 evidence-package fields only — no LLM/aggregation fields, no
 # FinVerify/model output fields are permitted here by construction.
 EVIDENCE_ALLOWED_FIELDS = (
-    "evidence_type", "evidence_text", "target_raw_text", "source_locator",
-    "applicable_heading", "issuer", "reporting_event", "dependency_log",
+    "evidence_type", "evidence_text", "target_raw_text", "target_start", "target_end",
+    "source_id", "source_sha256", "source_format", "source_locator", "parser_metadata",
+    "applicable_heading", "issuer", "reporting_event", "structural_context", "dependency_log",
 )
 
 
