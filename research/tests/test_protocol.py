@@ -1,6 +1,9 @@
 import inspect
+import hashlib
+import json
 from dataclasses import fields
 from collections import OrderedDict
+from pathlib import Path
 
 import pytest
 
@@ -104,6 +107,25 @@ def test_frozen_bootstrap_and_tolerance_cannot_be_overridden():
     from research.intervention.scoring import is_correct
     with pytest.raises(TypeError):
         is_correct(1.0, 1.0, tolerance=0.1)
+
+
+def test_provenance_validates_only_executing_dataset(tmp_path):
+    lock = json.loads((Path("research/protocols/PREEXECUTION_PROVENANCE_LOCK.json")).read_text(encoding="utf-8"))
+    protocol_path = Path("research/protocols/SELECTIVE_INTERVENTION_PROTOCOL_v1.1_FROZEN.md").resolve()
+    lock["metadata"]["frozen"] = True
+    lock["protocol"]["file"] = str(protocol_path)
+    lock["protocol"]["sha256"] = hashlib.sha256(protocol_path.read_bytes()).hexdigest()
+    lock["finqa"] = {"repository": "repo", "revision": "a" * 40, "dev_file": "dev.json", "sha256": "a" * 64, "raw_examples": 1, "eligible_examples": 1}
+    lock["tatqa"] = {}
+    lock["model"].update({"revision": "b" * 40, "tokenizer_revision": "c" * 40})
+    lock["adapter"]["revision"] = "d" * 40
+    lock["environment"] = {field: "value" for field in ("python", "torch", "transformers", "peft", "bitsandbytes", "cuda", "gpu", "platform", "operating_system")}
+    lock["implementation"].update({"commit": "e" * 40, "codex_completed": True, "implementation_sha256": "f" * 64})
+    lock_path = tmp_path / "lock.json"
+    lock_path.write_text(json.dumps(lock), encoding="utf-8")
+    assert_lock_ready(lock_path, dataset="finqa") is None
+    with pytest.raises(RuntimeError, match="tatqa"):
+        assert_lock_ready(lock_path, dataset="tatqa")
 
 
 def test_net_benefit_equals_derived_accuracy():

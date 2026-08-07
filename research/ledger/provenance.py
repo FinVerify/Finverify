@@ -10,7 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-from typing import Iterable, Mapping
+from typing import Iterable, Literal, Mapping
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -57,8 +57,10 @@ def artifact_paths(root: str | Path, dataset: str) -> dict[str, Path]:
     }
 
 
-def assert_lock_ready(lock_path: str | Path) -> None:
-    """Validate every execution-critical lock field before inference."""
+def assert_lock_ready(lock_path: str | Path, *, dataset: Literal["finqa", "tatqa"]) -> None:
+    """Validate shared gates plus provenance for the executing dataset."""
+    if dataset not in ("finqa", "tatqa"):
+        raise ValueError(f"unsupported execution dataset: {dataset}")
     target = Path(lock_path)
     payload = json.loads(target.read_text(encoding="utf-8"))
     missing: list[str] = []
@@ -77,8 +79,7 @@ def assert_lock_ready(lock_path: str | Path) -> None:
         raise RuntimeError("protocol SHA-256 does not match the provenance lock")
 
     required = {
-        "finqa": ("repository", "revision", "dev_file", "sha256", "raw_examples", "eligible_examples"),
-        "tatqa": ("repository", "revision", "dev_file", "sha256", "raw_examples", "eligible_examples"),
+        dataset: ("repository", "revision", "dev_file", "sha256", "raw_examples", "eligible_examples"),
         "model": ("base_model", "revision", "tokenizer_revision"),
         "adapter": ("repository", "revision"),
         "implementation": ("branch", "commit", "codex_completed", "implementation_sha256"),
@@ -92,10 +93,9 @@ def assert_lock_ready(lock_path: str | Path) -> None:
     for field in ("python", "torch", "transformers", "peft", "bitsandbytes", "cuda", "gpu", "platform", "operating_system"):
         require(f"environment.{field}", payload.get("environment", {}).get(field))
 
-    for section in ("finqa", "tatqa"):
-        digest = str(payload.get(section, {}).get("sha256", ""))
-        if digest and (len(digest) != 64 or any(c not in "0123456789abcdefABCDEF" for c in digest)):
-            raise RuntimeError(f"{section}.sha256 is not a SHA-256 digest")
+    digest = str(payload.get(dataset, {}).get("sha256", ""))
+    if digest and (len(digest) != 64 or any(c not in "0123456789abcdefABCDEF" for c in digest)):
+        raise RuntimeError(f"{dataset}.sha256 is not a SHA-256 digest")
     implementation_digest = str(payload.get("implementation", {}).get("implementation_sha256", ""))
     if implementation_digest and (len(implementation_digest) != 64 or any(c not in "0123456789abcdefABCDEF" for c in implementation_digest)):
         raise RuntimeError("implementation.implementation_sha256 is not a SHA-256 digest")
