@@ -17,6 +17,7 @@ from research.ledger.serialization import build_prompt, finqa_context, tatqa_con
 from research.stats.mcnemar import mcnemar
 from research.stats.bootstrap import bootstrap_ci
 from research.scripts.fill_provenance_lock import fill_lock
+from research.ledger.generate_tatqa_ledger import flatten_tatqa
 
 
 class Tok:
@@ -205,6 +206,23 @@ def test_finqa_serializer_deterministic():
 def test_tatqa_serializer_deterministic():
     sample = {"paragraphs": [{"text": "P"}], "table": [["A", "B"]], "question": "Q", "gold_inds": {}}
     assert tatqa_context(sample) == "PARAGRAPHS:\nP\n\nTABLE:\nA | B"
+
+
+def test_flatten_tatqa_documents_preserves_question_order_and_fields():
+    documents = [{
+        "table": [["Metric", "Value"]],
+        "paragraphs": [{"text": "paragraph"}],
+        "questions": [
+            {"uid": "d0-q0", "question": "Q0", "answer": 1, "answer_type": "arithmetic", "program": "ignored"},
+            {"uid": "d0-q1", "question": "Q1", "answer": "text", "answer_type": "span", "gold_inds": {"ignored": "metadata"}},
+        ],
+    }]
+    assert flatten_tatqa(documents) == [
+        {"uid": "d0-q0", "question": "Q0", "answer": 1, "answer_type": "arithmetic",
+         "table": [["Metric", "Value"]], "paragraphs": [{"text": "paragraph"}]},
+        {"uid": "d0-q1", "question": "Q1", "answer": "text", "answer_type": "span",
+         "table": [["Metric", "Value"]], "paragraphs": [{"text": "paragraph"}]},
+    ]
 
 
 def test_parser_fixtures():

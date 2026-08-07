@@ -1,8 +1,28 @@
 """CLI for the frozen TAT-QA raw/gold ledger pair."""
 
 import argparse
+from typing import Any, Mapping
+
 from .generate import generate_ledgers, load_json, write_ledgers
 from .provenance import assert_lock_ready
+
+
+def flatten_tatqa(documents: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Flatten official document/question TAT-QA records deterministically."""
+    flattened: list[dict[str, Any]] = []
+    for document in documents:
+        table = document["table"]
+        paragraphs = document["paragraphs"]
+        for question in document["questions"]:
+            flattened.append({
+                "uid": question["uid"],
+                "question": question["question"],
+                "answer": question["answer"],
+                "answer_type": question["answer_type"],
+                "table": table,
+                "paragraphs": paragraphs,
+            })
+    return flattened
 
 
 def main() -> None:
@@ -18,7 +38,8 @@ def main() -> None:
     assert_lock_ready(args.lock, dataset="tatqa")
     from .model import load_generator
     tokenizer, generator = load_generator(args.base_model, args.adapter, args.tokenizer)
-    raw, gold, meta = generate_ledgers(load_json(args.data), "tatqa", tokenizer, lambda p: generator(p, max_new_tokens=30, do_sample=False)[0]["generated_text"])
+    documents = load_json(args.data)
+    raw, gold, meta = generate_ledgers(flatten_tatqa(documents), "tatqa", tokenizer, lambda p: generator(p, max_new_tokens=30, do_sample=False)[0]["generated_text"])
     print(meta)
     print(write_ledgers(raw, gold, args.raw_out, args.gold_out))
 
