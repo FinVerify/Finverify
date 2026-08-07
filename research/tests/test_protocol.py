@@ -1,6 +1,7 @@
 import inspect
 import hashlib
 import json
+from argparse import Namespace
 from dataclasses import fields
 from collections import OrderedDict
 from pathlib import Path
@@ -15,6 +16,7 @@ from research.ledger.provenance import jsonl_bytes, sha256_bytes, assert_lock_re
 from research.ledger.serialization import build_prompt, finqa_context, tatqa_context
 from research.stats.mcnemar import mcnemar
 from research.stats.bootstrap import bootstrap_ci
+from research.scripts.fill_provenance_lock import fill_lock
 
 
 class Tok:
@@ -126,6 +128,47 @@ def test_provenance_validates_only_executing_dataset(tmp_path):
     assert_lock_ready(lock_path, dataset="finqa") is None
     with pytest.raises(RuntimeError, match="tatqa"):
         assert_lock_ready(lock_path, dataset="tatqa")
+
+
+def _lock_for_fill_test(tmp_path):
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    lock = json.loads(Path("research/protocols/PREEXECUTION_PROVENANCE_LOCK.json").read_text(encoding="utf-8"))
+    protocol_path = Path("research/protocols/SELECTIVE_INTERVENTION_PROTOCOL_v1.1_FROZEN.md").resolve()
+    lock["protocol"]["file"] = str(protocol_path)
+    lock["protocol"]["sha256"] = hashlib.sha256(protocol_path.read_bytes()).hexdigest()
+    path = tmp_path / "lock.json"
+    path.write_text(json.dumps(lock), encoding="utf-8")
+    return path, lock
+
+
+def _fill_args(lock_path, dataset, finqa_file=None, tatqa_file=None, **kwargs):
+    return Namespace(
+        lock=str(lock_path), dataset=dataset,
+        finqa_file=str(finqa_file) if finqa_file else None, tatqa_file=str(tatqa_file) if tatqa_file else None,
+        finqa_repository=kwargs.get("finqa_repository"), finqa_revision=kwargs.get("finqa_revision"),
+        tatqa_repository=kwargs.get("tatqa_repository"), tatqa_revision=kwargs.get("tatqa_revision"),
+        base_model_revision="b" * 40, tokenizer_revision="c" * 40,
+        adapter_revision="d" * 40, implementation_commit="e" * 40,
+    )
+
+
+def test_fill_provenance_lock_is_dataset_scoped(tmp_path):
+    finqa_path = tmp_path / "finqa.json"
+    finqa_path.write_text(json.dumps([{"id": "f", "qa": {"question": "q", "exe_ans": "1"}}]), encoding="utf-8")
+    tatqa_path = tmp_path / "tatqa.json"
+    tatqa_path.write_text(json.dumps([{"uid": "t", "question": "q", "answer": "2", "answer_type": "arithmetic"}]), encoding="utf-8")
+
+    finqa_lock_path, original = _lock_for_fill_test(tmp_path / "finqa-lock")
+    finqa_result = fill_lock(_fill_args(finqa_lock_path, "finqa", finqa_file=finqa_path,
+                                        finqa_repository="finqa", finqa_revision="a" * 40))
+    assert finqa_result["finqa"]["raw_examples"] == 1
+    assert finqa_result["tatqa"] == original["tatqa"]
+
+    tatqa_lock_path, original = _lock_for_fill_test(tmp_path / "tatqa-lock")
+    tatqa_result = fill_lock(_fill_args(tatqa_lock_path, "tatqa", tatqa_file=tatqa_path,
+                                        tatqa_repository="tatqa", tatqa_revision="a" * 40))
+    assert tatqa_result["tatqa"]["eligible_examples"] == 1
+    assert tatqa_result["finqa"] == original["finqa"]
 
 
 def test_net_benefit_equals_derived_accuracy():
