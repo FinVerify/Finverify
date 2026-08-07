@@ -1,0 +1,67 @@
+{
+    "metadata": {
+        "schema_version": "1.0",
+        "created_utc": "",
+        "last_updated_utc": "",
+        "frozen": false,
+        "description": "Pre-execution provenance lock for the Selective Intervention study. Fields are populated mechanically before execution and are never chosen based on experimental outcomes."
+    },
+    "protocol": {
+        "file": "SELECTIVE_INTERVENTION_PROTOCOL_v1.1_FROZEN.md",
+        "git_commit": "9d7ebed",
+        "sha256": "97999BC9A4BB5283E49D6C2E835F4951741190CD6C6E113205CE59315875D1C6"
+    },
+    "finqa": {
+        "repository": "",
+        "revision": "",
+        "dev_file": "",
+        "sha256": "",
+        "raw_examples": null,
+        "eligible_examples": null
+    },
+    "tatqa": {
+        "repository": "",
+        "revision": "",
+        "dev_file": "",
+        "sha256": "",
+        "raw_examples": null,
+        "eligible_examples": null
+    },
+    "model": {
+        "base_model": "mistralai/Mistral-7B-Instruct-v0.3",
+        "revision": "",
+        "tokenizer_revision": ""
+    },
+    "adapter": {
+        "repository": "aadi2026/finverify-lora",
+        "revision": ""
+    },
+    "environment": {
+        "python": "",
+        "torch": "",
+        "transformers": "",
+        "peft": "",
+        "bitsandbytes": "",
+        "cuda": "",
+        "gpu": "",
+        "platform": "",
+        "operating_system": ""
+    },
+    "implementation": {
+        "branch": "main",
+        "commit": "9813204",
+        "codex_completed": true,
+        "implementation_sha256": ""
+    },
+    "execution": {
+        "status": "PRE_EXECUTION",
+        "raw_ledger_generated": false,
+        "intervention_ledger_generated": false,
+        "statistics_completed": false
+    },
+    "notes": [
+        "All fields after protocol freeze are populated mechanically.",
+        "No field may be selected or modified based on model accuracy, verifier outcomes, statistical significance, or downstream experimental results.",
+        "Any scientific methodology change requires a separately hashed and committed protocol amendment before execution."
+    ]
+}
