@@ -5,16 +5,17 @@ import { AreaChart, Area, ResponsiveContainer } from "recharts";
 import { getMarketIndices, type MarketQuote } from "@/lib/api";
 
 /**
- * MarketPulsePanel — Rebuilt per visual parity spec §3.
- * Shows timeframe tabs + sparkline area chart + SPX/NDX/VIX stat row.
+ * MarketPulsePanel — Left column top panel.
+ * Shows timeframe tabs + sparkline area chart + index stats.
+ * Enhanced per target screenshot: S&P 500, NASDAQ, VIX with named labels and dollar values.
  */
 
 const TIMEFRAMES = ["1D", "1W", "1M", "YTD", "1Y"];
 
-const FALLBACK_INDICES: { symbol: string; name: string; price: number; change_pct: number }[] = [
-  { symbol: "SPX", name: "SPX", price: 5287.14, change_pct: 0.88 },
-  { symbol: "NDX", name: "NDX", price: 18431.28, change_pct: 1.28 },
-  { symbol: "VIX", name: "VIX", price: 14.32, change_pct: -0.42 },
+const FALLBACK_INDICES: { symbol: string; name: string; price: number; change_pct: number; change: number }[] = [
+  { symbol: "SPX", name: "S&P 500", price: 5447.20, change: 73.12, change_pct: 1.48 },
+  { symbol: "NDX", name: "NASDAQ", price: 17182.00, change: 156.84, change_pct: 0.91 },
+  { symbol: "VIX", name: "VIX", price: 15.99, change: -0.67, change_pct: -4.35 },
 ];
 
 function generateChartData(points: number = 60): { t: number; v: number }[] {
@@ -39,8 +40,9 @@ export default function MarketPulsePanel() {
         if (data.length > 0) {
           const mapped = data.slice(0, 3).map((d: MarketQuote) => ({
             symbol: d.display_name || d.symbol,
-            name: d.display_name || d.symbol,
+            name: d.display_name === "S&P 500" ? "S&P 500" : d.display_name === "NASDAQ" ? "NASDAQ" : d.display_name || d.symbol,
             price: d.price,
+            change: d.change,
             change_pct: d.change_pct,
           }));
           if (mapped.length >= 3) setIndices(mapped);
@@ -57,7 +59,6 @@ export default function MarketPulsePanel() {
       {/* Header with timeframe tabs */}
       <div className="flex items-center justify-between px-2 py-1.5 border-b border-t-border/50">
         <div className="flex items-center gap-1.5">
-          <span className="text-t-green text-[9px]">▶</span>
           <span className="text-[9px] font-mono font-bold text-t-secondary uppercase tracking-wider">
             MARKET PULSE
           </span>
@@ -80,7 +81,7 @@ export default function MarketPulsePanel() {
       </div>
 
       {/* Sparkline chart */}
-      <div className="h-[90px] px-1">
+      <div className="h-[80px] px-1">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 5, right: 5, bottom: 0, left: 5 }}>
             <defs>
@@ -102,7 +103,7 @@ export default function MarketPulsePanel() {
         </ResponsiveContainer>
       </div>
 
-      {/* Index stat row */}
+      {/* Index stat row — enhanced with dollar values and named labels */}
       <div className="grid grid-cols-3 gap-1 px-2 pb-2 pt-1">
         {indices.map((idx) => {
           const isUp = idx.change_pct >= 0;
@@ -112,10 +113,12 @@ export default function MarketPulsePanel() {
               <div className="text-[8px] font-mono text-t-muted uppercase tracking-wider">
                 {idx.name}
               </div>
-              <div className="text-[12px] font-mono font-bold text-t-primary tabular-nums">
-                {idx.price >= 1000
-                  ? idx.price.toLocaleString(undefined, { maximumFractionDigits: 2 })
-                  : idx.price.toFixed(2)}
+              <div className="text-[13px] font-mono font-bold text-t-primary tabular-nums">
+                {idx.symbol === "VIX"
+                  ? idx.price.toFixed(2)
+                  : idx.price >= 1000
+                    ? idx.price.toLocaleString(undefined, { maximumFractionDigits: 2 })
+                    : `$${idx.price.toFixed(2)}`}
               </div>
               <div className={`text-[9px] font-mono font-semibold tabular-nums ${color}`}>
                 {isUp ? "▲" : "▼"} {isUp ? "+" : ""}{idx.change_pct.toFixed(2)}%

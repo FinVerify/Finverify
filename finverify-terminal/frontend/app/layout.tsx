@@ -40,16 +40,32 @@ export default async function RootLayout({
       <body className="antialiased min-h-screen flex flex-col overflow-x-hidden terminal-ambience">
         <ConnectionProvider>
           {/* ── Top Navbar ── */}
-          <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-3 py-2 sm:px-5 border-b border-t-border bg-t-bg sticky top-0 z-50">
+          <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-3 py-1.5 sm:px-4 border-b border-t-border bg-t-bg sticky top-0 z-50">
             <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
               <a href="/" className="text-t-green font-bold text-sm tracking-widest font-mono">
                 FINVERIFY TERMINAL
               </a>
-              <span className="text-t-muted text-[10px] font-mono">v1.2</span>
+              <span className="text-t-muted text-[10px] font-mono">v1.3</span>
               <NavModeToggle />
             </div>
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="hidden md:flex items-center gap-1.5 text-[9px] font-mono text-t-muted">
+                <span>MODEL:</span>
+                <span className="text-t-secondary">llama-3.1-8b-instant</span>
+                <span className="text-t-green">•</span>
+                <span className="flex items-center gap-1 text-t-green">
+                  <span className="w-[4px] h-[4px] rounded-full bg-t-green live-pulse" />
+                  LIVE
+                </span>
+              </div>
+              <div className="hidden lg:flex items-center gap-1.5 text-[9px] font-mono">
+                <span className="text-t-muted">SYSTEM HEALTH</span>
+                <span className="text-t-green font-bold">ALL SYSTEMS OPERATIONAL</span>
+              </div>
               <NavHealthIndicator />
+              <div className="w-[26px] h-[26px] rounded-full bg-t-green/10 border border-t-green/30 flex items-center justify-center text-[9px] font-mono font-bold text-t-green shrink-0">
+                FV
+              </div>
             </div>
           </header>
 

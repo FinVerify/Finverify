@@ -4,6 +4,12 @@ import React, { useState, useEffect } from "react";
 import EarningsVerification from "@/components/EarningsVerification";
 import MetricPanel from "@/components/MetricPanel";
 import GlobalTransactionMonitor from "@/components/workspace/GlobalTransactionMonitor";
+import VerificationPulse from "@/components/workspace/VerificationPulse";
+import RecentVerificationActivity from "@/components/workspace/RecentVerificationActivity";
+import NeedsAttention from "@/components/workspace/NeedsAttention";
+import VerificationCoverage from "@/components/workspace/VerificationCoverage";
+import LiveVerificationTrace from "@/components/workspace/LiveVerificationTrace";
+import CommandBar from "@/components/workspace/CommandBar";
 import {
   getFundamentals,
   type FundamentalsResponse,
@@ -12,11 +18,15 @@ import {
 
 /**
  * FocusView — Center column, fills entire center.
- * Two states: Default (no selection) and Company (selectedSymbol set).
- * Per §6 of UI_IMPLEMENTATION_PLAN.md.
+ * Two states: Default (verification intelligence workspace) and Company (selectedSymbol set).
+ * Per §6 of UI_IMPLEMENTATION_PLAN.md, enhanced per target screenshot.
  *
- * Reuses existing EarningsVerification and MetricPanel components directly
- * rather than rewriting them, per the "reuse aggressively" directive.
+ * Default state now shows:
+ * 1. Global Transaction Monitor (reduced height)
+ * 2. Verification Pulse
+ * 3. Three-panel intelligence row (Recent Activity, Needs Attention, Coverage)
+ * 4. Live Verification Trace
+ * 5. Command Bar
  */
 
 type FocusTab =
@@ -161,11 +171,35 @@ export default function FocusView({ selectedSymbol, onDeselect, onSelectSymbol }
     if (selectedSymbol) setActiveTab("integrity");
   }, [selectedSymbol]);
 
-  // ── Default State (no selection) ──
+  // ── Default State (no selection) — Enhanced verification workspace ──
   if (!selectedSymbol) {
     return (
-      <div className="panel flex flex-col h-full min-h-0">
-        <GlobalTransactionMonitor onSelectSymbol={onSelectSymbol || (() => {})} />
+      <div className="flex flex-col h-full min-h-0">
+        {/* Global Transaction Monitor — reduced height */}
+        <div className="panel flex-shrink-0" style={{ height: "clamp(200px, 38vh, 320px)" }}>
+          <GlobalTransactionMonitor onSelectSymbol={onSelectSymbol || (() => {})} />
+        </div>
+
+        {/* Scrollable verification intelligence area */}
+        <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-[6px] mt-[6px]">
+          {/* Verification Pulse */}
+          <VerificationPulse />
+
+          {/* Three-panel intelligence row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[6px]" style={{ minHeight: "160px" }}>
+            <RecentVerificationActivity />
+            <NeedsAttention />
+            <VerificationCoverage />
+          </div>
+
+          {/* Live Verification Trace */}
+          <LiveVerificationTrace />
+        </div>
+
+        {/* Command Bar */}
+        <div className="flex-shrink-0 mt-[6px]">
+          <CommandBar onSelectSymbol={onSelectSymbol || (() => {})} />
+        </div>
       </div>
     );
   }
