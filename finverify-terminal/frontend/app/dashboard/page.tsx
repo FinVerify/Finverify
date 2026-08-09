@@ -293,7 +293,7 @@ export default function DashboardPage() {
             </div>
             {history.length === 0 && (
               <a
-                href="/"
+                href="/terminal"
                 className="text-[10px] font-mono text-t-cyan border border-t-cyan/30 px-3 py-1.5 rounded hover:bg-t-cyan/5 transition-colors"
               >
                 → GO TO TERMINAL

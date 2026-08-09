@@ -23,15 +23,15 @@ interface CityNode {
 
 const CITIES: CityNode[] = [
   { name: "San Francisco", x: 120, y: 195, volume: "$1.2B", changePct: 12.4, size: "sm" },
-  { name: "New York",      x: 230, y: 185, volume: "$3.8B", changePct: 8.7,  size: "lg" },
-  { name: "São Paulo",     x: 290, y: 340, volume: "$780M", changePct: -2.1, size: "sm" },
-  { name: "London",        x: 470, y: 145, volume: "$2.1B", changePct: 6.3,  size: "md" },
-  { name: "Frankfurt",     x: 510, y: 160, volume: "$1.6B", changePct: 4.6,  size: "sm" },
-  { name: "Johannesburg",  x: 540, y: 355, volume: "$420M", changePct: -1.3, size: "sm" },
-  { name: "Mumbai",        x: 650, y: 240, volume: "$950M", changePct: 3.8,  size: "sm" },
-  { name: "Singapore",     x: 730, y: 290, volume: "$2.9B", changePct: 9.2,  size: "md" },
-  { name: "Tokyo",         x: 830, y: 185, volume: "$1.4B", changePct: 5.1,  size: "md" },
-  { name: "Sydney",        x: 860, y: 380, volume: "$980M", changePct: 3.0,  size: "sm" },
+  { name: "New York", x: 230, y: 185, volume: "$3.8B", changePct: 8.7, size: "lg" },
+  { name: "São Paulo", x: 290, y: 340, volume: "$780M", changePct: -2.1, size: "sm" },
+  { name: "London", x: 470, y: 145, volume: "$2.1B", changePct: 6.3, size: "md" },
+  { name: "Frankfurt", x: 510, y: 160, volume: "$1.6B", changePct: 4.6, size: "sm" },
+  { name: "Johannesburg", x: 540, y: 355, volume: "$420M", changePct: -1.3, size: "sm" },
+  { name: "Mumbai", x: 650, y: 240, volume: "$950M", changePct: 3.8, size: "sm" },
+  { name: "Singapore", x: 730, y: 290, volume: "$2.9B", changePct: 9.2, size: "md" },
+  { name: "Tokyo", x: 830, y: 185, volume: "$1.4B", changePct: 5.1, size: "md" },
+  { name: "Sydney", x: 860, y: 380, volume: "$980M", changePct: 3.0, size: "sm" },
 ];
 
 /* ── Arc connections ── */
@@ -308,11 +308,10 @@ export default function GlobalTransactionMonitor({ onSelectSymbol }: GlobalTrans
           <button
             key={sector}
             onClick={() => setActiveSector(sector)}
-            className={`text-[8px] font-mono font-bold px-2 py-1 rounded whitespace-nowrap transition-colors ${
-              activeSector === sector
-                ? "bg-t-green/15 text-t-green border border-t-green/30"
-                : "text-t-muted border border-transparent hover:text-t-secondary hover:border-t-border/30"
-            }`}
+            className={`text-[8px] font-mono font-bold px-2 py-1 rounded whitespace-nowrap transition-colors ${activeSector === sector
+              ? "bg-t-green/15 text-t-green border border-t-green/30"
+              : "text-t-muted border border-transparent hover:text-t-secondary hover:border-t-border/30"
+              }`}
           >
             {sector}
           </button>

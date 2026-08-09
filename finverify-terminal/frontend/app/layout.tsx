@@ -36,12 +36,12 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className="antialiased min-h-screen flex flex-col terminal-ambience">
+    <html lang="en" className="overflow-x-hidden">
+      <body className="antialiased min-h-screen flex flex-col overflow-x-hidden terminal-ambience">
         <ConnectionProvider>
           {/* ── Top Navbar ── */}
-          <header className="flex items-center justify-between px-5 py-2 border-b border-t-border bg-t-bg sticky top-0 z-50">
-            <div className="flex items-center gap-3">
+          <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-3 py-2 sm:px-5 border-b border-t-border bg-t-bg sticky top-0 z-50">
+            <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
               <a href="/" className="text-t-green font-bold text-sm tracking-widest font-mono">
                 FINVERIFY TERMINAL
               </a>
@@ -50,24 +50,6 @@ export default async function RootLayout({
             </div>
             <div className="flex items-center gap-5">
               <NavHealthIndicator />
-              <a
-                href="/workspace"
-                className="text-[10px] text-t-green font-mono font-semibold tracking-wider hover:text-t-green/80 transition-colors"
-              >
-                WORKSPACE
-              </a>
-              <a
-                href="/dashboard"
-                className="text-[10px] text-t-cyan font-mono font-semibold tracking-wider hover:text-t-cyan/80 transition-colors"
-              >
-                DASHBOARD
-              </a>
-              <a
-                href="/metrics"
-                className="text-[11px] text-t-amber font-mono font-semibold tracking-wider hover:text-t-amber/80 transition-colors"
-              >
-                RESEARCH
-              </a>
             </div>
           </header>
 
