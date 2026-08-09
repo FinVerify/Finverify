@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import type { QueryResponse } from "@/lib/api";
 
 /**
  * LiveVerificationTrace — Pipeline visualization showing claim verification flow.
@@ -29,7 +30,21 @@ const DEMO_TRACE: { timestamp: string; company: string; claim: string; steps: Tr
   ],
 };
 
-export default function LiveVerificationTrace() {
+export default function LiveVerificationTrace({ lastVerification }: { lastVerification: QueryResponse | null }) {
+  const trace = lastVerification ? {
+    timestamp: "NOW",
+    company: "SESSION QUERY",
+    claim: lastVerification.question,
+    steps: [
+      { label: "CLAIM EXTRACTED", detail: lastVerification.raw_text || "Value extracted", subDetail: lastVerification.raw_number == null ? "Value not exposed" : String(lastVerification.raw_number), status: "complete" as const },
+      { label: "ENTITY RESOLVED", detail: "Not provided by API", subDetail: "No entity stage returned", status: "pending" as const },
+      { label: "EVIDENCE RETRIEVED", detail: "Not provided by query API", subDetail: "Available in filing flows", status: "pending" as const },
+      { label: "CALCULATION RECONSTRUCTED", detail: lastVerification.correction_log.length ? `${lastVerification.correction_log.length} DVL correction(s)` : "No corrections", subDetail: lastVerification.correction_log.map((entry) => entry.rule).join(" → ") || "DVL result", status: "complete" as const },
+      { label: "CONSTRAINTS CHECK", detail: "Not exposed by API", subDetail: "No constraint result returned", status: "pending" as const },
+      { label: "RESULT", detail: lastVerification.verified ? "✓ VERIFIED" : "PROCESSED", subDetail: `Trust: ${lastVerification.trust_score}`, status: "complete" as const },
+    ],
+  } : DEMO_TRACE;
+
   return (
     <div className="panel">
       <div className="flex items-center justify-between px-3 py-1.5 border-b border-t-border/50">
@@ -47,14 +62,14 @@ export default function LiveVerificationTrace() {
       <div className="px-3 py-2">
         {/* Trace header with timestamp and claim info */}
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-[8px] font-mono text-t-muted tabular-nums">{DEMO_TRACE.timestamp}</span>
-          <span className="text-[9px] font-mono font-bold text-t-primary">{DEMO_TRACE.company}</span>
-          <span className="text-[8px] font-mono text-t-muted">{DEMO_TRACE.claim}</span>
+          <span className="text-[8px] font-mono text-t-muted tabular-nums">{trace.timestamp}</span>
+          <span className="text-[9px] font-mono font-bold text-t-primary">{trace.company}</span>
+          <span className="text-[8px] font-mono text-t-muted truncate">{trace.claim}</span>
         </div>
 
         {/* Pipeline steps */}
         <div className="flex items-start gap-0 overflow-x-auto">
-          {DEMO_TRACE.steps.map((step, i) => (
+          {trace.steps.map((step, i) => (
             <div key={step.label} className="flex items-start min-w-0">
               {/* Step box */}
               <div className={`px-2 py-1.5 rounded border min-w-[120px] ${
@@ -80,7 +95,7 @@ export default function LiveVerificationTrace() {
                 )}
               </div>
               {/* Connector arrow */}
-              {i < DEMO_TRACE.steps.length - 1 && (
+              {i < trace.steps.length - 1 && (
                 <div className="flex items-center px-1 pt-3 shrink-0">
                   <span className="text-[8px] text-t-green/40">→</span>
                 </div>

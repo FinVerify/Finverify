@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import type { QueryResponse } from "@/lib/api";
 
 /**
  * RecentVerificationActivity — Shows recently verified/corrected/conflicting claims.
@@ -37,7 +38,22 @@ function SeverityBadge({ severity }: { severity: string }) {
   );
 }
 
-export default function RecentVerificationActivity() {
+const KNOWN_SYMBOLS = ["AAPL", "TSLA", "JPM", "NVDA", "MSFT", "GS", "COIN", "INTC", "AMZN", "META"];
+
+function responseToActivity(result: QueryResponse): ActivityItem {
+  const symbol = KNOWN_SYMBOLS.find((ticker) => result.question.toUpperCase().includes(ticker)) || "DVL";
+  const corrected = result.correction_log.length > 0;
+  const severity = result.trust_score === "LOW" ? "HIGH" : result.trust_score === "MEDIUM" || corrected ? "MEDIUM" : "LOW";
+  return { symbol, description: result.question, time: "JUST NOW", severity, type: corrected ? "corrected" : "verified" };
+}
+
+interface RecentVerificationActivityProps {
+  verificationHistory: QueryResponse[];
+  onSelectSymbol?: (symbol: string) => void;
+}
+
+export default function RecentVerificationActivity({ verificationHistory, onSelectSymbol }: RecentVerificationActivityProps) {
+  const activity = verificationHistory.length ? verificationHistory.map(responseToActivity) : DEMO_ACTIVITY;
   return (
     <div className="panel flex flex-col h-full min-h-0">
       <div className="flex items-center justify-between px-2 py-1.5 border-b border-t-border/50">
@@ -53,9 +69,11 @@ export default function RecentVerificationActivity() {
         <span className="text-[7px] font-mono text-t-muted">LAST 24H</span>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {DEMO_ACTIVITY.map((item, i) => (
-          <div
+        {activity.map((item, i) => (
+          <button
             key={i}
+            onClick={() => item.symbol !== "DVL" && onSelectSymbol?.(item.symbol)}
+            disabled={item.symbol === "DVL" || !onSelectSymbol}
             className="flex items-center gap-2 px-2 py-1.5 border-b border-t-border/20 last:border-b-0 hover:bg-white/[0.02] transition-colors text-[9px] font-mono"
           >
             <span className={`font-bold w-[36px] shrink-0 ${
@@ -74,7 +92,7 @@ export default function RecentVerificationActivity() {
             </div>
             <span className="text-t-muted/60 shrink-0 tabular-nums text-[8px]">{item.time}</span>
             <SeverityBadge severity={item.severity} />
-          </div>
+          </button>
         ))}
       </div>
       <div className="px-2 py-1 border-t border-t-border/50 text-center">

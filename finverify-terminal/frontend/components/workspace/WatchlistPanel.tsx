@@ -54,13 +54,16 @@ interface WatchlistPanelProps {
 }
 
 export default function WatchlistPanel({ selectedSymbol, onSelectSymbol }: WatchlistPanelProps) {
+  const [watchlist, setWatchlist] = useState(DEFAULT_WATCHLIST);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newSymbol, setNewSymbol] = useState("");
   const [quotes, setQuotes] = useState<MarketQuote[]>(FALLBACK_QUOTES);
   const [isLive, setIsLive] = useState(false);
 
   const fetchQuotes = useCallback(async () => {
     if (!isFinnhubConfigured()) return;
     try {
-      const data = await getAllQuotes(DEFAULT_WATCHLIST);
+      const data = await getAllQuotes(watchlist);
       if (data.length > 0) {
         setQuotes(data.map(toMarketQuote));
         setIsLive(true);
@@ -68,7 +71,7 @@ export default function WatchlistPanel({ selectedSymbol, onSelectSymbol }: Watch
     } catch {
       // Keep existing data
     }
-  }, []);
+  }, [watchlist]);
 
   useEffect(() => {
     fetchQuotes();
@@ -85,7 +88,7 @@ export default function WatchlistPanel({ selectedSymbol, onSelectSymbol }: Watch
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[8px] text-t-muted font-mono">{quotes.length} SYMBOLS</span>
-          <span className="text-[8px] text-t-muted hover:text-t-secondary cursor-pointer font-mono transition-colors">EDIT</span>
+          <button onClick={() => setIsEditing((value) => !value)} className="text-[8px] text-t-muted hover:text-t-secondary font-mono transition-colors">{isEditing ? "DONE" : "EDIT"}</button>
         </div>
       </div>
 
@@ -100,7 +103,7 @@ export default function WatchlistPanel({ selectedSymbol, onSelectSymbol }: Watch
 
       {/* Rows */}
       <div className="flex-1 overflow-y-auto">
-        {quotes.map((q) => {
+        {quotes.filter((q) => watchlist.includes(q.symbol)).map((q) => {
           const isUp = q.change_pct >= 0;
           const color = isUp ? "text-t-green" : "text-t-red";
           const isSelected = q.symbol === selectedSymbol;
@@ -134,6 +137,14 @@ export default function WatchlistPanel({ selectedSymbol, onSelectSymbol }: Watch
               <span className={`text-center ${verif.color}`}>
                 {verif.label}
               </span>
+              {isEditing && (
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={(event) => { event.stopPropagation(); setWatchlist((symbols) => symbols.filter((symbol) => symbol !== q.symbol)); }}
+                  className="text-t-red ml-1"
+                >×</span>
+              )}
             </button>
           );
         })}
@@ -141,7 +152,20 @@ export default function WatchlistPanel({ selectedSymbol, onSelectSymbol }: Watch
 
       {/* Footer */}
       <div className="px-2 py-1 border-t border-t-border/50 flex justify-between text-[8px] font-mono text-t-muted">
-        <span className="hover:text-t-secondary cursor-pointer transition-colors">+ ADD SYMBOL</span>
+        <form onSubmit={(event) => {
+          event.preventDefault();
+          const symbol = newSymbol.trim().toUpperCase();
+          if (symbol && !watchlist.includes(symbol)) {
+            setWatchlist((symbols) => [...symbols, symbol]);
+            setQuotes((current) => current.some((quote) => quote.symbol === symbol)
+              ? current
+              : [...current, { symbol, price: 0, prev_close: 0, change: 0, change_pct: 0, volume: 0, market_cap: 0 }]);
+          }
+          setNewSymbol("");
+        }} className="flex items-center gap-1">
+          {isEditing && <input value={newSymbol} onChange={(event) => setNewSymbol(event.target.value)} placeholder="TICKER" className="w-[48px] bg-transparent border-b border-t-border text-[8px] font-mono text-t-primary outline-none" />}
+          <button type="submit" className="hover:text-t-secondary transition-colors">+ ADD SYMBOL</button>
+        </form>
         <span className="hover:text-t-secondary cursor-pointer transition-colors">VIEW ALL →</span>
       </div>
     </div>

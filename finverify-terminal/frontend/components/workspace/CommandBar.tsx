@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import { useConnection } from "@/lib/connection";
 import { verifyNumber, queryLLM, type QueryResponse } from "@/lib/api";
 
 /**
@@ -11,27 +10,10 @@ import { verifyNumber, queryLLM, type QueryResponse } from "@/lib/api";
  */
 
 const KNOWN_TICKERS = ["AAPL", "TSLA", "JPM", "NVDA", "MSFT", "GS", "COIN", "INTC", "AMZN", "GOOG"];
-const RATIO_KW = ["ratio", "margin", "return", "yield", "growth", "change", "increase", "decrease", "percent", "rate"];
 const DEMO_NUMS: Record<string, number> = {
   "YoY operating margin change?": 0.1240, "CET1 ratio Q4 2022?": 10.935,
   "Net income increase YoY?": 1250000, "Revenue growth rate?": 8.14,
 };
-
-function quickDVL(question: string, raw: number): QueryResponse {
-  const isRatio = RATIO_KW.some((kw) => question.toLowerCase().includes(kw));
-  let value = raw;
-  const log: QueryResponse["correction_log"] = [];
-  if (isRatio && Math.abs(value) > 100) {
-    log.push({ rule: "scale_div100", before: value, after: value / 100, description: "Scale corrected" });
-    value = value / 100;
-  } else if (isRatio && Math.abs(value) < 1) {
-    log.push({ rule: "scale_mul100", before: value, after: value * 100, description: "Scale corrected" });
-    value = value * 100;
-  }
-  const trust = log.length === 0 ? "HIGH" : "MEDIUM";
-  const display = isRatio ? `${value.toFixed(2)}%` : value.toLocaleString();
-  return { question, raw_text: `${raw}`, raw_number: raw, verified_number: value, correction_log: log, trust_score: trust, trust_color: trust === "HIGH" ? "#00ff88" : "#fbbf24", display_value: display, mode: "numerical", verified: true };
-}
 
 const QUICK_ACTIONS = [
   { icon: "📄", label: "Analyze Apple 10-Q Filing", query: "Analyze Apple 10-Q filing" },
@@ -42,14 +24,16 @@ const QUICK_ACTIONS = [
 ];
 
 interface CommandBarProps {
-  onSelectSymbol: (symbol: string) => void;
+  onSelectSymbol: (symbol: string, tab?: "evidence" | "verification") => void;
+  onVerification: (result: QueryResponse) => void;
 }
 
-export default function CommandBar({ onSelectSymbol }: CommandBarProps) {
+export default function CommandBar({ onSelectSymbol, onVerification }: CommandBarProps) {
   const [queryValue, setQueryValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<QueryResponse | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { backendOnline } = useConnection();
 
   // Ctrl+K to focus
   useEffect(() => {
@@ -76,15 +60,25 @@ export default function CommandBar({ onSelectSymbol }: CommandBarProps) {
       return;
     }
     setIsLoading(true);
+    setError(null);
+    setResult(null);
     try {
       const knownDemo = DEMO_NUMS[q];
+      let response: QueryResponse | null = null;
       if (knownDemo !== undefined) {
-        if (backendOnline) { try { await verifyNumber(q, knownDemo); } catch { quickDVL(q, knownDemo); } }
-        else { quickDVL(q, knownDemo); }
-      } else if (backendOnline) { await queryLLM(q); }
-    } catch { /* swallow */ }
+        response = await verifyNumber(q, knownDemo);
+      } else {
+        response = await queryLLM(q);
+      }
+      if (response) {
+        setResult(response);
+        onVerification(response);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Verification failed — try again");
+    }
     finally { setIsLoading(false); setQueryValue(""); }
-  }, [queryValue, isLoading, backendOnline, onSelectSymbol]);
+  }, [queryValue, isLoading, onSelectSymbol, onVerification]);
 
   return (
     <div className="border-t border-t-border/50 bg-[#0a0a0a]">
@@ -95,8 +89,15 @@ export default function CommandBar({ onSelectSymbol }: CommandBarProps) {
             <button
               key={action.label}
               onClick={() => {
-                if (action.query) {
+                if (action.label === "Analyze Apple 10-Q Filing") {
+                  onSelectSymbol("AAPL", "evidence");
+                } else if (action.label === "Check Earnings") {
+                  onSelectSymbol("NVDA", "verification");
+                } else if (action.label === "Upload Document") {
+                  setError("Document upload is not available yet");
+                } else if (action.query) {
                   setQueryValue(action.query);
+                  setError(null);
                   inputRef.current?.focus();
                 }
               }}
@@ -140,6 +141,11 @@ export default function CommandBar({ onSelectSymbol }: CommandBarProps) {
           </button>
         </div>
       </div>
+      {(error || result) && (
+        <div className={`px-3 pb-2 text-[9px] font-mono ${error ? "text-t-red" : "text-t-green"}`}>
+          {error ? `× ${error}` : `✓ ${result?.verified ? "VERIFIED" : "PROCESSED"} — ${result?.display_value || "Result received"}`}
+        </div>
+      )}
     </div>
   );
 }

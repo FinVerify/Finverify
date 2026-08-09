@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import type { QueryResponse } from "@/lib/api";
 
 /**
  * VerificationPulse — Horizontal metric strip showing high-level verification state.
@@ -16,15 +17,18 @@ interface PulseMetric {
   color: string;
 }
 
-const PULSE_METRICS: PulseMetric[] = [
-  { label: "CLAIMS CHECKED", value: 1248, subLabel: "Today", subValue: "+23", color: "text-t-primary" },
-  { label: "VERIFIED", value: 1082, subLabel: "", subValue: "77.9%", color: "text-t-green" },
-  { label: "CORRECTED", value: 94, subLabel: "", subValue: "6.8%", color: "text-t-amber" },
-  { label: "CONFLICTS", value: 38, subLabel: "", subValue: "2.7%", color: "text-t-red" },
-  { label: "UNRESOLVED", value: 34, subLabel: "", subValue: "2.7%", color: "text-t-amber" },
-];
+export default function VerificationPulse({ verificationHistory }: { verificationHistory: QueryResponse[] }) {
+  const checked = verificationHistory.length;
+  const verified = verificationHistory.filter((result) => result.verified).length;
+  const corrected = verificationHistory.filter((result) => result.correction_log.length > 0).length;
+  const metrics: PulseMetric[] = [
+    { label: "CLAIMS CHECKED", value: checked || 1248, subLabel: checked ? "This session" : "Today", subValue: checked ? "LIVE" : "+23", color: "text-t-primary" },
+    { label: "VERIFIED", value: verified || 1082, subLabel: "", subValue: checked ? `${Math.round((verified / checked) * 100)}%` : "77.9%", color: "text-t-green" },
+    { label: "CORRECTED", value: corrected || 94, subLabel: "", subValue: checked ? `${Math.round((corrected / checked) * 100)}%` : "6.8%", color: "text-t-amber" },
+    { label: "CONFLICTS", value: 38, subLabel: "", subValue: "DEMO", color: "text-t-red" },
+    { label: "UNRESOLVED", value: 34, subLabel: "", subValue: "DEMO", color: "text-t-amber" },
+  ];
 
-export default function VerificationPulse() {
   return (
     <div className="panel">
       <div className="flex items-center justify-between px-3 py-1.5 border-b border-t-border/50">
@@ -39,7 +43,7 @@ export default function VerificationPulse() {
         </div>
       </div>
       <div className="grid grid-cols-5 divide-x divide-t-border/30">
-        {PULSE_METRICS.map((metric) => (
+        {metrics.map((metric) => (
           <div key={metric.label} className="px-3 py-2 text-center">
             <div className={`text-[18px] font-mono font-bold tabular-nums ${metric.color}`}>
               {metric.value.toLocaleString()}
