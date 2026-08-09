@@ -12,6 +12,7 @@ import LiveVerificationTrace from "@/components/workspace/LiveVerificationTrace"
 import CommandBar from "@/components/workspace/CommandBar";
 import {
   getFundamentals,
+  type QueryResponse,
   type FundamentalsResponse,
   type FundamentalMetric,
 } from "@/lib/api";
@@ -165,6 +166,18 @@ interface FocusViewProps {
 
 export default function FocusView({ selectedSymbol, onDeselect, onSelectSymbol }: FocusViewProps) {
   const [activeTab, setActiveTab] = useState<FocusTab>("integrity");
+  const [lastVerification, setLastVerification] = useState<QueryResponse | null>(null);
+  const [verificationHistory, setVerificationHistory] = useState<QueryResponse[]>([]);
+
+  const handleCommandSelect = (symbol: string, tab?: FocusTab) => {
+    setActiveTab(tab || "integrity");
+    onSelectSymbol?.(symbol);
+  };
+
+  const handleVerification = (result: QueryResponse) => {
+    setLastVerification(result);
+    setVerificationHistory((current) => [result, ...current].slice(0, 20));
+  };
 
   // Reset to integrity tab when symbol changes
   useEffect(() => {
@@ -183,22 +196,25 @@ export default function FocusView({ selectedSymbol, onDeselect, onSelectSymbol }
         {/* Scrollable verification intelligence area */}
         <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-[6px] mt-[6px]">
           {/* Verification Pulse */}
-          <VerificationPulse />
+          <VerificationPulse verificationHistory={verificationHistory} />
 
           {/* Three-panel intelligence row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[6px]" style={{ minHeight: "160px" }}>
-            <RecentVerificationActivity />
+            <RecentVerificationActivity verificationHistory={verificationHistory} onSelectSymbol={onSelectSymbol} />
             <NeedsAttention />
             <VerificationCoverage />
           </div>
 
           {/* Live Verification Trace */}
-          <LiveVerificationTrace />
+          <LiveVerificationTrace lastVerification={lastVerification} />
         </div>
 
         {/* Command Bar */}
         <div className="flex-shrink-0 mt-[6px]">
-          <CommandBar onSelectSymbol={onSelectSymbol || (() => {})} />
+          <CommandBar
+            onSelectSymbol={handleCommandSelect}
+            onVerification={handleVerification}
+          />
         </div>
       </div>
     );

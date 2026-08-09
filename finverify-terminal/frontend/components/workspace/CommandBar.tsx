@@ -42,12 +42,15 @@ const QUICK_ACTIONS = [
 ];
 
 interface CommandBarProps {
-  onSelectSymbol: (symbol: string) => void;
+  onSelectSymbol: (symbol: string, tab?: "evidence" | "verification") => void;
+  onVerification: (result: QueryResponse) => void;
 }
 
-export default function CommandBar({ onSelectSymbol }: CommandBarProps) {
+export default function CommandBar({ onSelectSymbol, onVerification }: CommandBarProps) {
   const [queryValue, setQueryValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<QueryResponse | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { backendOnline } = useConnection();
 
@@ -76,15 +79,29 @@ export default function CommandBar({ onSelectSymbol }: CommandBarProps) {
       return;
     }
     setIsLoading(true);
+    setError(null);
+    setResult(null);
     try {
       const knownDemo = DEMO_NUMS[q];
+      let response: QueryResponse | null = null;
       if (knownDemo !== undefined) {
-        if (backendOnline) { try { await verifyNumber(q, knownDemo); } catch { quickDVL(q, knownDemo); } }
-        else { quickDVL(q, knownDemo); }
-      } else if (backendOnline) { await queryLLM(q); }
-    } catch { /* swallow */ }
+        if (backendOnline) {
+          try { response = await verifyNumber(q, knownDemo); } catch { response = quickDVL(q, knownDemo); }
+        } else { response = quickDVL(q, knownDemo); }
+      } else if (backendOnline) {
+        response = await queryLLM(q);
+      } else {
+        throw new Error("Backend is offline");
+      }
+      if (response) {
+        setResult(response);
+        onVerification(response);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Verification failed — try again");
+    }
     finally { setIsLoading(false); setQueryValue(""); }
-  }, [queryValue, isLoading, backendOnline, onSelectSymbol]);
+  }, [queryValue, isLoading, backendOnline, onSelectSymbol, onVerification]);
 
   return (
     <div className="border-t border-t-border/50 bg-[#0a0a0a]">
@@ -95,8 +112,15 @@ export default function CommandBar({ onSelectSymbol }: CommandBarProps) {
             <button
               key={action.label}
               onClick={() => {
-                if (action.query) {
+                if (action.label === "Analyze Apple 10-Q Filing") {
+                  onSelectSymbol("AAPL", "evidence");
+                } else if (action.label === "Check Earnings") {
+                  onSelectSymbol("NVDA", "verification");
+                } else if (action.label === "Upload Document") {
+                  setError("Document upload is not available yet");
+                } else if (action.query) {
                   setQueryValue(action.query);
+                  setError(null);
                   inputRef.current?.focus();
                 }
               }}
@@ -140,6 +164,11 @@ export default function CommandBar({ onSelectSymbol }: CommandBarProps) {
           </button>
         </div>
       </div>
+      {(error || result) && (
+        <div className={`px-3 pb-2 text-[9px] font-mono ${error ? "text-t-red" : "text-t-green"}`}>
+          {error ? `× ${error}` : `✓ ${result?.verified ? "VERIFIED" : "PROCESSED"} — ${result?.display_value || "Result received"}`}
+        </div>
+      )}
     </div>
   );
 }
