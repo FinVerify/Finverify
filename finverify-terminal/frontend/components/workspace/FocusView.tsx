@@ -10,6 +10,7 @@ import NeedsAttention from "@/components/workspace/NeedsAttention";
 import VerificationCoverage from "@/components/workspace/VerificationCoverage";
 import LiveVerificationTrace from "@/components/workspace/LiveVerificationTrace";
 import CommandBar from "@/components/workspace/CommandBar";
+import AccessibleScore from "@/components/workspace/AccessibleScore";
 import {
   getFundamentals,
   type QueryResponse,
@@ -56,7 +57,12 @@ function TrustBadge({ trust }: { trust: string }) {
       ? "bg-t-amber/10 text-t-amber border-t-amber/20"
       : "bg-t-red/10 text-t-red border-t-red/20";
   return (
-    <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded border ${cls}`}>
+    <span
+      role="status"
+      tabIndex={0}
+      aria-label={`Trust confidence: ${trust.toLowerCase()}`}
+      className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded border focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-t-blue ${cls}`}
+    >
       {trust}
     </span>
   );
@@ -246,18 +252,25 @@ export default function FocusView({ selectedSymbol, onDeselect, onSelectSymbol }
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[9px] font-mono text-t-muted uppercase">Integrity:</span>
-          <span className={`text-[22px] font-mono font-bold tabular-nums ${band.color}`}>
-            {integrityScore}
-          </span>
-          <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded border ${
-            band.label === "HIGH"
-              ? "bg-t-green/10 text-t-green border-t-green/20"
-              : band.label === "MEDIUM"
-              ? "bg-t-amber/10 text-t-amber border-t-amber/20"
-              : "bg-t-red/10 text-t-red border-t-red/20"
-          }`}>
-            {band.label}
-          </span>
+          <AccessibleScore
+            label={`${companyName} integrity score`}
+            value={integrityScore}
+            valueText={`${integrityScore} out of 100, ${band.label.toLowerCase()} integrity`}
+            className="inline-flex items-center gap-2"
+          >
+            <span className={`text-[22px] font-mono font-bold tabular-nums ${band.color}`}>
+              {integrityScore}
+            </span>
+            <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded border ${
+              band.label === "HIGH"
+                ? "bg-t-green/10 text-t-green border-t-green/20"
+                : band.label === "MEDIUM"
+                ? "bg-t-amber/10 text-t-amber border-t-amber/20"
+                : "bg-t-red/10 text-t-red border-t-red/20"
+            }`}>
+              {band.label}
+            </span>
+          </AccessibleScore>
           <span className="text-[8px] font-mono text-t-amber border border-t-amber/20 bg-t-amber/[0.04] px-1 py-0.5 rounded">
             DEMO
           </span>
@@ -328,7 +341,17 @@ function IntegrityTab({ symbol, score }: { symbol: string; score: number }) {
         { label: "SEC Agreement", weight: "30%", value: Math.min(secAgreement, 100), color: "bg-t-cyan" },
         { label: "DVL Confidence", weight: "30%", value: Math.min(dvlConfidence, 100), color: "bg-t-blue" },
       ].map(({ label, weight, value, color }) => (
-        <div key={label} className="space-y-1">
+        <div
+          key={label}
+          role="meter"
+          tabIndex={0}
+          aria-label={`${label} score`}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={value}
+          aria-valuetext={`${value} out of 100; ${weight} of the composite score`}
+          className="space-y-1 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-t-blue"
+        >
           <div className="flex items-center justify-between text-[9px] font-mono">
             <span className="text-t-secondary">{label} <span className="text-t-muted">({weight})</span></span>
             <span className={`font-bold ${value >= 80 ? "text-t-green" : value >= 50 ? "text-t-amber" : "text-t-red"}`}>
