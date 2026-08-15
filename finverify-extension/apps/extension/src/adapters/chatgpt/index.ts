@@ -54,6 +54,7 @@ function findToolbarBySelector(messageEl: HTMLElement): HTMLElement | null {
 export const chatgptAdapter: ProviderAdapter = {
   id: "chatgpt",
   displayName: "ChatGPT",
+  modelSource: "chatgpt.com",
   verified: true,
 
   matches(hostname) {

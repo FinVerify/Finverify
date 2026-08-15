@@ -40,6 +40,7 @@ class Evidence(BaseModel):
     excerpt: Optional[str] = None
     period: Optional[str] = None
     locator: Optional[str] = None
+    entity: Optional[str] = None
 
 
 class Calculation(BaseModel):
@@ -126,6 +127,10 @@ class Claim(BaseModel):
     period: Optional[str] = None
     period_struct: Optional[FinancialPeriod] = None
     model_source: Optional[str] = None
+    entity_hint: Optional[str] = None
+    metric_hint: Optional[str] = None
+    period_hint: Optional[str] = None
+    context_text: Optional[str] = None
     metadata: dict[str, Any] = Field(default_factory=dict)
     # PHASE 7F: structured claim identity, computed at extraction time by
     # ingestion.transcripts.extract_claims() (see that module for the exact

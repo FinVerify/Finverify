@@ -25,7 +25,7 @@ interface ClaimPattern {
 // backend's CLAIM_PATTERNS list order exactly.
 const CLAIM_PATTERNS: ClaimPattern[] = [
   { regex: /\$\s*([\d,.]+)\s*(billion|million|thousand|B|M|K|bn|mn)/gi, claimType: "currency" },
-  { regex: /\$\s*([\d,.]+)(?!\s*(?:billion|million|thousand|B|M|K|bn|mn))/gi, claimType: "currency_raw" },
+  { regex: /\$\s*([\d,.]+)(?![\d,.])(?!\s*(?:billion|million|thousand|B|M|K|bn|mn))/gi, claimType: "currency_raw" },
   { regex: /([\d,.]+)\s*%/gi, claimType: "percentage" },
   { regex: /([\d,.]+)\s*(?:basis\s*points?|bps)/gi, claimType: "bps" },
   { regex: /(?:grew|growth|increased|rose|up|gained|improved|expanded)\s+([\d,.]+)\s*%/gi, claimType: "growth_pct" },
@@ -43,6 +43,30 @@ const SCALE_MAP: Record<string, number> = {
   million: 1e6, M: 1e6, mn: 1e6,
   thousand: 1e3, K: 1e3,
 };
+
+function inferEntityHint(sentence: string): string | undefined {
+  const match = sentence.match(/^\s*(.+?)\s+(?:reported|announced|posted|generated|recorded|had|has|saw|expects|forecast)\b/i);
+  if (!match) return undefined;
+  const candidate = match[1].replace(/^according to\s+/i, "").replace(/[’']s$/i, "").trim();
+  return candidate && !/^(the company|it|they|this company)$/i.test(candidate) ? candidate : undefined;
+}
+
+function inferMetricHint(sentence: string, claimType: string): string | undefined {
+  const lower = sentence.toLowerCase();
+  if (lower.includes("operating margin")) return "Operating Margin";
+  if (lower.includes("gross margin")) return "Gross Margin";
+  if (lower.includes("net income")) return "Net Income";
+  if (lower.includes("operating income")) return "Operating Income";
+  if (lower.includes("free cash flow")) return "Free Cash Flow";
+  if (claimType === "revenue") return "Revenue";
+  if (claimType === "eps") return "Earnings Per Share Diluted";
+  if (claimType === "shares") return "Shares Outstanding";
+  return undefined;
+}
+
+function inferPeriodHint(sentence: string): string | undefined {
+  return sentence.match(/\bQ[1-4]\s*(?:FY\s*)?20\d{2}\b|\bFY\s*20\d{2}\b/i)?.[0];
+}
 
 /** Mirrors backend's sentence splitter: split on ./!/? followed by
  *  whitespace+uppercase, or on newlines, while preserving decimals like "5.2%". */
@@ -100,6 +124,23 @@ export function detectFinanceClaims(text: string): ExtractedClaim[] {
           seenMatches.add(matchKey);
 
           const offsetInFullText = sentenceStart >= 0 ? sentenceStart + m.index : -1;
+          const matchedText = m[0];
+
+          // Multiple patterns intentionally recognize the same numeric span
+          // (for example currency and revenue). Keep the semantic pattern
+          // when it overlaps a generic currency match, so one source claim
+          // cannot become several verification requests.
+          const overlapIndex = claims.findIndex((existing) => {
+            const existingEnd = existing.offset + existing.match.length;
+            const currentEnd = offsetInFullText + matchedText.length;
+            return existing.offset < currentEnd && offsetInFullText < existingEnd && existing.raw_value === value;
+          });
+          if (overlapIndex >= 0) {
+            const existing = claims[overlapIndex];
+            const generic = existing.claim_type === "currency" || existing.claim_type === "currency_raw";
+            if (generic && claimType !== "currency" && claimType !== "currency_raw") claims.splice(overlapIndex, 1);
+            else if (generic) continue;
+          }
 
           claims.push({
             id: `finance:${matchKey}:${claims.length}`,
@@ -107,10 +148,13 @@ export function detectFinanceClaims(text: string): ExtractedClaim[] {
             sentence: sentence.slice(0, 200),
             raw_value: value,
             claim_type: claimType,
-            match: m[0],
+            match: matchedText,
             offset: offsetInFullText,
             bps_original: bpsOriginal,
             scale_label: scaleLabel,
+            entity_hint: inferEntityHint(sentence),
+            metric_hint: inferMetricHint(sentence, claimType),
+            period_hint: inferPeriodHint(sentence),
           });
         } catch {
           continue;

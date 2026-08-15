@@ -75,7 +75,7 @@ export class VerificationEngine {
   /** Creates a new cancellable verification session. Create one per
    *  logical unit of work (one chat message, one document, one cell
    *  range) so cancelling it can't affect anything else. */
-  createSession(options: { concurrency?: number } = {}): VerificationSession {
+  createSession(options: { concurrency?: number; modelSource?: string } = {}): VerificationSession {
     return new VerificationSession({
       registry: this.registry,
       transport: this.transport,
@@ -83,6 +83,7 @@ export class VerificationEngine {
       dedupCache: this.dedupCache,
       dedupTtlMs: this.dedupTtlMs,
       concurrency: options.concurrency ?? this.defaultConcurrency,
+      modelSource: options.modelSource,
     });
   }
 

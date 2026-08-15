@@ -16,6 +16,11 @@ export interface V1VerifyRequest {
   question: string;
   raw_value: number;
   model_source?: string;
+  /** Untrusted semantic hints used only to resolve independent evidence. */
+  entity_hint?: string;
+  metric_hint?: string;
+  period_hint?: string;
+  context_text?: string;
 }
 
 /** Mirrors backend/app/models.py::V1VerifyResponse */
@@ -26,12 +31,16 @@ export interface V1VerifyResponse {
   correction_applied: string | null;
   trust_score: TrustScore;
   trust_color: string;
+  verification_status?: VerificationStatus;
+  confidence?: number | null;
+  reasons?: string[];
   delta_pct: number;
   dvl_version: string;
   timestamp: string;
 }
 
 export type TrustScore = "HIGH" | "MEDIUM" | "LOW" | "N/A";
+export type VerificationStatus = "verified" | "contradicted" | "unverified" | "pending" | "error";
 
 /** One numeric claim extracted from text, mirroring the dict shape
  *  produced by ingestion/transcripts.py::extract_claims(). The specific
@@ -61,6 +70,10 @@ export interface ExtractedClaim {
   bps_original?: number;
   /** Present only for currency claims with a unit word (e.g. "billion"). */
   scale_label?: string;
+  /** Optional semantic context inferred from the source sentence. */
+  entity_hint?: string;
+  metric_hint?: string;
+  period_hint?: string;
 }
 
 /** A claim after it has been sent through /v1/verify. */

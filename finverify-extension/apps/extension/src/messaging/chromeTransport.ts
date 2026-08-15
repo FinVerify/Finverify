@@ -13,11 +13,14 @@ function newRequestId(): string {
  * this (retry/backoff, dedup, batching, cancellation bookkeeping) is
  * handled generically by the engine in @finverify/core.
  */
-export function createChromeTransport(defaultModelSource: string): VerificationTransport {
+export function createChromeTransport(defaultModelSource = "unknown"): VerificationTransport {
   return {
     verify(request: V1VerifyRequest, options?: { signal?: AbortSignal }): Promise<V1VerifyResponse> {
       const requestId = newRequestId();
-      const fullRequest: V1VerifyRequest = { model_source: defaultModelSource, ...request };
+      const fullRequest: V1VerifyRequest = {
+        ...request,
+        model_source: request.model_source ?? defaultModelSource,
+      };
 
       const promise = new Promise<V1VerifyResponse>((resolve, reject) => {
         chrome.runtime.sendMessage(

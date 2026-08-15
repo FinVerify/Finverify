@@ -32,5 +32,6 @@ class SECProvider:
                 value=row.get("verified_value"),
                 period=row.get("period"),
                 locator=row.get("metric_name"),
+                entity=ticker,
             ))
         return results

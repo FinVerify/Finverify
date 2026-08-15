@@ -95,7 +95,7 @@ function updateEntry(adapter: ProviderAdapter, messageEl: HTMLElement, entry: Tr
   entry.lastText = text;
 
   try {
-    entry.root.render(<InlineBadge text={text} />);
+    entry.root.render(<InlineBadge text={text} modelSource={adapter.modelSource ?? adapter.id} />);
     // TEMP DEBUG — remove after diagnosis
     adapterDebugLog("[FV-DEBUG] 9. entry.root.render(<InlineBadge/>) called without throwing (does not confirm DOM output — check data-finverify-badge span's childElementCount separately)");
   } catch (err) {

@@ -128,7 +128,7 @@ def _compare_claim_to_evidence(
             return None
 
         evidence_matches = primary_evidence_matches(
-            evidence,
+            [item for item in evidence if _evidence_entity_matches(item, context)],
             canonical_metric,
             registry=registry,
             statement_period_type=statement_period_type(canonical_metric, registry),
@@ -137,6 +137,16 @@ def _compare_claim_to_evidence(
     except Exception as exc:
         logger.warning("Identity/value comparison failed for %r: %s", context.claim.question, exc)
         return None
+
+
+def _evidence_entity_matches(evidence: Evidence, context: VerificationContext) -> bool:
+    """Reject explicitly identified evidence for a different company."""
+    if not evidence.entity:
+        return True
+    if not context.entity:
+        return False
+    expected = {context.entity.name.lower(), (context.entity.ticker or "").lower(), (context.entity.cik or "").lower()}
+    return evidence.entity.lower() in expected
 
 
 def _run_constraint_verification(

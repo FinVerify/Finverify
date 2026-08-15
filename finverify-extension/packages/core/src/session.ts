@@ -20,6 +20,7 @@ export interface SessionDeps {
   dedupCache: Map<string, DedupEntry>;
   dedupTtlMs: number;
   concurrency: number;
+  modelSource?: string;
 }
 
 /**
@@ -98,7 +99,7 @@ export class VerificationSession {
     }
 
     const question = plugin.buildQuestion(claim);
-    const { promise, controller } = this.getOrCreateDeduped(question, claim.raw_value);
+    const { promise, controller } = this.getOrCreateDeduped(question, claim);
     if (controller) this.ownedControllers.add(controller);
 
     try {
@@ -160,8 +161,19 @@ export class VerificationSession {
    * (handled by the `this.cancelled` check after `await promise`) while
    * the underlying request runs to completion regardless.
    */
-  private getOrCreateDeduped(question: string, rawValue: number): { promise: Promise<V1VerifyResponse>; controller: AbortController | null } {
-    const key = `${question}|${rawValue}`;
+  private getOrCreateDeduped(question: string, claim: ExtractedClaim): { promise: Promise<V1VerifyResponse>; controller: AbortController | null } {
+    const request = {
+      question,
+      raw_value: claim.raw_value,
+      model_source: this.deps.modelSource,
+      entity_hint: claim.entity_hint,
+      metric_hint: claim.metric_hint,
+      period_hint: claim.period_hint,
+      context_text: claim.sentence,
+    };
+    // Context is part of claim identity: equal numbers from different
+    // companies/periods must never share a verification result.
+    const key = JSON.stringify(request);
     const now = Date.now();
     const cached = this.deps.dedupCache.get(key);
     if (cached && cached.expiresAt > now) {
@@ -169,7 +181,7 @@ export class VerificationSession {
     }
 
     const controller = new AbortController();
-    const promise = this.deps.transport.verify({ question, raw_value: rawValue }, { signal: controller.signal });
+    const promise = this.deps.transport.verify(request, { signal: controller.signal });
     this.deps.dedupCache.set(key, { promise, expiresAt: now + this.deps.dedupTtlMs });
     return { promise, controller };
   }

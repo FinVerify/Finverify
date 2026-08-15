@@ -79,6 +79,10 @@ class V1VerifyRequest(BaseModel):
     question: str = Field(..., description="Financial question (for DVL keyword detection)")
     raw_value: float = Field(..., description="Raw numerical value to verify")
     model_source: Optional[str] = Field(None, description="Source model identifier (optional, for logging)")
+    entity_hint: Optional[str] = Field(None, max_length=200)
+    metric_hint: Optional[str] = Field(None, max_length=200)
+    period_hint: Optional[str] = Field(None, max_length=100)
+    context_text: Optional[str] = Field(None, max_length=2000)
 
 
 class V1VerifyResponse(BaseModel):

@@ -11,9 +11,10 @@ interface Props {
    *  what it's already seen and only verifies claims it hasn't before —
    *  that's what makes verification "live" instead of "click and wait". */
   text: string;
+  modelSource: string;
 }
 
-export function InlineBadge({ text }: Props) {
+export function InlineBadge({ text, modelSource }: Props) {
   const [claims, setClaims] = useState<Map<string, VerifiedClaim>>(new Map());
   const [expanded, setExpanded] = useState(false);
   const [justCompleted, setJustCompleted] = useState(false);
@@ -61,7 +62,7 @@ export function InlineBadge({ text }: Props) {
   }, []);
 
   if (!sessionRef.current) {
-    sessionRef.current = engine.createSession();
+    sessionRef.current = engine.createSession({ modelSource });
   }
 
   useEffect(() => {

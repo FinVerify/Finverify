@@ -35,6 +35,8 @@ export interface ProviderAdapter {
    *  sent as `model_source` on verification requests. */
   readonly id: string;
   readonly displayName: string;
+  /** Stable wire identity sent to the backend, e.g. chatgpt.com. */
+  readonly modelSource?: string;
 
   /** Whether this adapter's selectors have actually been exercised against
    *  the live product. The registry (adapters/registry.ts) refuses to

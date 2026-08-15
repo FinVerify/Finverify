@@ -97,6 +97,7 @@ function findTurnContainer(actionBar: HTMLElement): HTMLElement {
 export const claudeAdapter: ProviderAdapter = {
   id: "claude",
   displayName: "Claude",
+  modelSource: "claude.ai",
 
   // NOT flipped to true — see the sourcing note above. Flip only after a
   // real live-testing pass per docs/adding-a-provider.md, then add

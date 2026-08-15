@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 import re
 
-from ingestion.sec_edgar import TICKER_TO_CIK
 
 
 @dataclass(frozen=True)
@@ -46,15 +45,26 @@ _TICKER_PATTERN = re.compile(r"\b[A-Z]{2,5}\b")
 
 
 def resolve_company(query: str) -> ResolvedCompany | None:
-    """Resolve a supported company from a natural-language question."""
+    """Resolve one unambiguous company; never guess among multiple entities."""
+    # Lazy import avoids the ingestion module's optional core.engine import
+    # cycle when the reusable resolver is loaded by core.engine itself.
+    from ingestion.sec_edgar import TICKER_TO_CIK
+    matches: dict[str, str] = {}
     for match in _TICKER_PATTERN.finditer(query):
         ticker = match.group(0).upper()
         if ticker in TICKER_TO_CIK:
-            return ResolvedCompany(ticker=ticker, cik=TICKER_TO_CIK[ticker], matched_text=match.group(0))
+            matches[ticker] = match.group(0)
 
     lower_query = query.lower()
     for alias, ticker in _ALIASES_BY_LENGTH:
-        if alias in lower_query:
-            return ResolvedCompany(ticker=ticker, cik=TICKER_TO_CIK[ticker], matched_text=alias)
+        if re.search(rf"(?<!\w){re.escape(alias)}(?!\w)", lower_query):
+            matches.setdefault(ticker, alias)
 
-    return None
+    # A possessive subject followed by a relationship noun is not a claim
+    # about that company itself (e.g. "Apple's suppliers").
+    if re.search(r"\b(?:suppliers?|customers?|vendors?|partners?|competitors?|subsidiaries)\b", lower_query):
+        return None
+    if len(matches) != 1:
+        return None
+    ticker, matched_text = next(iter(matches.items()))
+    return ResolvedCompany(ticker=ticker, cik=TICKER_TO_CIK[ticker], matched_text=matched_text)

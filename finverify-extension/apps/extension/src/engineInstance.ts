@@ -14,6 +14,6 @@ import { createChromeTransport } from "@/messaging/chromeTransport";
  * `VerifiedClaim`/`EngineEvent` types, not finance-specific ones.
  */
 export const engine = new VerificationEngine({
-  transport: createChromeTransport("chatgpt.com"),
+  transport: createChromeTransport(),
   plugins: [financePlugin],
 });

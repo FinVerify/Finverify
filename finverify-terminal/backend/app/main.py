@@ -387,7 +387,16 @@ async def v1_verify_endpoint(req: V1VerifyRequest, request: Request):
         logger.info("Model source: %s", req.model_source)
 
     # Run the shared verification pipeline.
-    result = verify(Claim(question=req.question, raw_value=req.raw_value))
+    result = verify(Claim(
+        question=req.question,
+        raw_value=req.raw_value,
+        raw_text=req.context_text,
+        context_text=req.context_text,
+        model_source=req.model_source,
+        entity_hint=req.entity_hint,
+        metric_hint=req.metric_hint,
+        period_hint=req.period_hint,
+    ))
     verified_value = result.verified_value
     correction_log = result.correction_log
     trust_label = result.trust_score.label
