@@ -281,12 +281,24 @@ def extract_latest_10k_info(submissions: dict) -> Optional[dict]:
     return None
 
 
-def extract_xbrl_metrics(facts: dict, ticker: str) -> list[dict]:
+def extract_xbrl_metrics(
+    facts: dict,
+    ticker: str,
+    *,
+    target_metric: str | None = None,
+    target_period=None,
+) -> list[dict]:
     """
     Extract key financial metrics from XBRL CompanyFacts JSON.
-    Returns list of {metric_name, raw_value, period, filing_date, source_url, question}.
-    
-    Selects the most recent 10-K filing values for each metric.
+
+    By default this preserves the historical ingestion behavior: one most
+    recent annual value per configured metric.  When ``target_metric`` and
+    ``target_period`` are supplied, the extractor instead selects the exact
+    fiscal period needed by a live verification request.  For quarterly
+    duration facts (for example Revenue), a 10-Q can contain both the
+    three-month value and a nine-month year-to-date value; the shortest
+    matching duration is selected so cumulative data cannot masquerade as a
+    quarter.
     """
     if not facts:
         return []
@@ -294,41 +306,87 @@ def extract_xbrl_metrics(facts: dict, ticker: str) -> list[dict]:
     results = []
     us_gaap = facts.get("facts", {}).get("us-gaap", {})
 
+    target_metric_normalized = target_metric.strip().lower() if target_metric else None
+    target_year = getattr(target_period, "fiscal_year", None) if target_period else None
+    target_quarter = getattr(target_period, "fiscal_quarter", None) if target_period else None
+    target_kind = getattr(target_period, "kind", None) if target_period else None
+
+    def _duration_days(entry: dict) -> int | None:
+        start = entry.get("start")
+        end = entry.get("end")
+        if not start or not end:
+            return None
+        try:
+            from datetime import date
+            return (date.fromisoformat(end) - date.fromisoformat(start)).days
+        except (TypeError, ValueError):
+            return None
+
+    def _matches_target(entry: dict, metric_name: str) -> bool:
+        if target_metric_normalized and metric_name.lower() != target_metric_normalized:
+            return False
+        if target_year is None:
+            return True
+        try:
+            entry_year = int(entry.get("fy"))
+        except (TypeError, ValueError):
+            return False
+        if entry_year != target_year:
+            return False
+
+        form = str(entry.get("form") or "").upper()
+        fp = str(entry.get("fp") or "").upper()
+        if target_kind == "annual":
+            return form == "10-K" and fp == "FY"
+        if target_kind == "quarterly":
+            return form == "10-Q" and fp == f"Q{target_quarter}"
+        if target_kind == "instant":
+            return form in {"10-Q", "10-K"} and (fp == f"Q{target_quarter}" if target_quarter else True)
+        return False
+
     for xbrl_concept, meta in XBRL_METRICS.items():
         concept_data = us_gaap.get(xbrl_concept)
         if not concept_data:
             continue
+        if target_metric_normalized and meta["metric_name"].lower() != target_metric_normalized:
+            continue
 
         units = concept_data.get("units", {})
-        # Try USD first, then USD/shares for EPS, then pure for ratios
         unit_data = units.get("USD") or units.get("USD/shares") or units.get("pure")
         if not unit_data:
             continue
 
-        # Filter for 10-K (annual) filings and get the most recent
-        annual_entries = [
-            e for e in unit_data
-            if e.get("form") == "10-K" and e.get("val") is not None
-        ]
-        if not annual_entries:
-            # Try 10-Q as fallback
+        if target_period is not None:
+            candidates = [e for e in unit_data if e.get("val") is not None and _matches_target(e, meta["metric_name"]) ]
+            if not candidates:
+                continue
+
+            if target_kind == "quarterly":
+                # Prefer the true three-month 10-Q fact over the cumulative
+                # six-/nine-month fact reported in the same filing.
+                duration_candidates = [e for e in candidates if _duration_days(e) is not None]
+                if duration_candidates:
+                    short = [e for e in duration_candidates if 60 <= (_duration_days(e) or 0) <= 120]
+                    candidates = short or duration_candidates
+                    candidates.sort(key=lambda e: (_duration_days(e) or 10**9, e.get("filed", "")), reverse=False)
+            candidates.sort(key=lambda e: (e.get("filed", ""), e.get("end", "")), reverse=True)
+            entries = candidates[:1]
+        else:
             annual_entries = [
                 e for e in unit_data
-                if e.get("form") == "10-Q" and e.get("val") is not None
+                if e.get("form") == "10-K" and e.get("val") is not None
             ]
+            if not annual_entries:
+                annual_entries = [
+                    e for e in unit_data
+                    if e.get("form") == "10-Q" and e.get("val") is not None
+                ]
+            if not annual_entries:
+                continue
+            annual_entries.sort(key=lambda x: x.get("end", ""), reverse=True)
+            entries = annual_entries[:1]
 
-        if not annual_entries:
-            continue
-
-        # Sort by end date (most recent first)
-        annual_entries.sort(key=lambda x: x.get("end", ""), reverse=True)
-
-        # Skip duplicate metric names (keep only the first/most recent)
-        existing_names = {r["metric_name"] for r in results}
-        if meta["metric_name"] in existing_names:
-            continue
-
-        entry = annual_entries[0]
+        entry = entries[0]
         cik = TICKER_TO_CIK.get(ticker.upper(), "")
         accn = entry.get("accn", "").replace("-", "")
         source_url = (
@@ -337,14 +395,24 @@ def extract_xbrl_metrics(facts: dict, ticker: str) -> list[dict]:
             f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={cik}&type=10-K"
         )
 
+        if target_kind == "quarterly" and target_year and target_quarter:
+            period_label = f"Q{target_quarter} FY{target_year}"
+        elif target_kind == "annual" and target_year:
+            period_label = f"FY{target_year}"
+        else:
+            period_label = str(entry.get("fp", "FY")) + str(entry.get("fy", ""))
+
         results.append({
             "metric_name": meta["metric_name"],
             "raw_value": float(entry["val"]),
-            "period": str(entry.get("fp", "FY")) + str(entry.get("fy", "")),
+            "period": period_label,
             "filing_date": entry.get("filed", ""),
             "source_url": source_url,
             "question": meta["question"].format(ticker=ticker.upper()),
         })
+
+        if target_metric_normalized:
+            break
 
     return results
 
