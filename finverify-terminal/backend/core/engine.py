@@ -9,6 +9,13 @@ from typing import TYPE_CHECKING, Optional
 
 from .compiler import compile_claim
 from .evidence import EvidenceRetriever
+from .identity_verification import (
+    EvidenceValueComparison,
+    canonical_concept,
+    compare_value_to_evidence,
+    primary_evidence_matches,
+    statement_period_type,
+)
 from .math_engine import MathEngine
 from .models import (
     BatchClaim,
@@ -16,6 +23,8 @@ from .models import (
     BatchVerifyResponse,
     Claim,
     Entity,
+    Evidence,
+    MathResult,
     Metric,
     VerificationContext,
     VerificationResult,
@@ -56,7 +65,8 @@ def verify(claim: Claim | dict, *, evidence_retriever: Optional[EvidenceRetrieve
         for correction in math_result.corrections
     ]
     constraint_result = _run_constraint_verification(context, evidence, math_result.verified_value)
-    trust = compute_trust(context, math_result, evidence)
+    value_comparison = _compare_claim_to_evidence(context, math_result, evidence)
+    trust = compute_trust(context, math_result, evidence, value_comparison=value_comparison)
     return build_result(
         compiled,
         math_result.verified_value,
@@ -89,6 +99,44 @@ def verify_batch(
         constraint_result = _run_batch_constraint_verification(results, tolerance=request.tolerance)
 
     return BatchVerifyResponse(results=results, constraint_result=constraint_result)
+
+
+def _compare_claim_to_evidence(
+    context: VerificationContext,
+    math_result: MathResult,
+    evidence: list[Evidence],
+) -> Optional[EvidenceValueComparison]:
+    """PHASE 3A: connect the live pipeline to the EXISTING deterministic
+    identity/value comparison machinery in .identity_verification (already
+    relied on by the offline scripts/verify_transcript.py path) so that
+    engine.verify() can no longer report VERIFIED purely from evidence tier
+    without proving the claimed value against the retrieved evidence.
+
+    Returns None whenever the comparison cannot be attempted at all (no
+    canonical metric resolved for this claim, or the math engine produced no
+    value to compare) -- callers must treat None conservatively, the same
+    as "no compatible evidence found", never as "verified".
+    """
+    metric = context.metric.canonical_name or context.metric.name if context.metric else None
+    if not metric or math_result.verified_value is None:
+        return None
+
+    try:
+        registry = _load_constraint_registry()
+        canonical_metric = canonical_concept(metric, registry)
+        if canonical_metric is None:
+            return None
+
+        evidence_matches = primary_evidence_matches(
+            evidence,
+            canonical_metric,
+            registry=registry,
+            statement_period_type=statement_period_type(canonical_metric, registry),
+        )
+        return compare_value_to_evidence(math_result.verified_value, evidence_matches, context.period_struct)
+    except Exception as exc:
+        logger.warning("Identity/value comparison failed for %r: %s", context.claim.question, exc)
+        return None
 
 
 def _run_constraint_verification(

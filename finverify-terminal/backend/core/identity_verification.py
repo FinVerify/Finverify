@@ -41,6 +41,24 @@ def canonical_concept(name: Optional[str], registry: ConceptRegistry) -> Optiona
     return registry.resolve_alias(name)
 
 
+def statement_period_type(metric: Optional[str], registry: ConceptRegistry) -> Optional[str]:
+    """Map a canonical concept's declared financial statement to the period
+    kind ("instant" for balance-sheet concepts, "duration" for income- or
+    cash-flow-statement concepts) that `parse_period_string` needs to
+    disambiguate bare dates. Shared by every caller that needs to parse an
+    evidence or claim period for a given metric (previously duplicated as a
+    private helper in scripts/verify_transcript.py)."""
+    if not metric:
+        return None
+    concept = registry.get_concept(metric)
+    statement = concept.get("statement")
+    if statement == "BalanceSheet":
+        return "instant"
+    if statement in {"IncomeStatement", "CashFlowStatement"}:
+        return "duration"
+    return None
+
+
 def primary_evidence_matches(
     evidence: list[Evidence],
     metric: str,

@@ -4,6 +4,7 @@ from typing import Any
 
 from providers.base import resolve_provider_tier
 
+from .identity_verification import EvidenceValueComparison
 from .models import (
     Ambiguity,
     Consistency,
@@ -17,6 +18,19 @@ from .models import (
     VerificationStatus,
     VerificationContext,
 )
+
+# PHASE 3A: sentinel distinguishing "caller did not opt into the claim-value
+# comparison gate" from "the gate was attempted but no comparison could be
+# made" (which is a legitimate `None`). Only callers that explicitly pass
+# `value_comparison` (currently core.engine.verify(), the live verification
+# entry point) get the new, stricter VERIFIED/CONTRADICTED gating below.
+# Existing callers that construct trust scores directly (e.g.
+# core.financial.reasoning.ReasoningEngine, and every pre-Phase-3A test that
+# calls compute_trust with its original 3-argument signature) keep their
+# exact previous behavior -- this is an additive, backward-compatible wiring
+# of the existing identity/value comparison machinery into the live pipeline,
+# not a rebuild of trust scoring itself.
+_VALUE_COMPARISON_NOT_SUPPLIED = object()
 
 
 TRUST_RULES: list[dict[str, Any]] = [
@@ -176,8 +190,20 @@ def compute_trust(
     context: VerificationContext,
     math_result: MathResult,
     evidence: list[Evidence],
+    value_comparison: "EvidenceValueComparison | None" = _VALUE_COMPARISON_NOT_SUPPLIED,
 ) -> TrustScore:
-    """Compute deterministic trust metadata from context, math, and evidence."""
+    """Compute deterministic trust metadata from context, math, and evidence.
+
+    `value_comparison` is the result of running the existing
+    identity/value comparison machinery (core.identity_verification) for
+    this claim, or None if that comparison could not be attempted (e.g. no
+    canonical metric was resolved). When a caller supplies it -- which the
+    live core.engine.verify() pipeline now does -- independent evidence
+    (PRIMARY/SECONDARY tier) is no longer sufficient on its own for
+    VERIFIED: the claimed value must actually match the evidence value in a
+    compatible period. Callers that omit the argument entirely keep the
+    prior behavior unchanged.
+    """
     findings = compute_findings(context, math_result, evidence)
     if findings.evidence_tier is EvidenceTier.USER and context.claim.raw_value is not None:
         return build_trust(
@@ -188,7 +214,28 @@ def compute_trust(
             "No independent evidence available",
             status=VerificationStatus.UNVERIFIED,
         )
+
     label, score, colour, reason = derive_label(findings)
+
+    gated_tiers = (EvidenceTier.PRIMARY, EvidenceTier.SECONDARY)
+    if value_comparison is not _VALUE_COMPARISON_NOT_SUPPLIED and findings.evidence_tier in gated_tiers:
+        if value_comparison is not None and value_comparison.matched:
+            status = VerificationStatus.VERIFIED
+        elif value_comparison is not None and value_comparison.saw_period_match:
+            # Compatible entity/metric/period evidence exists, but the
+            # claimed value itself does not match it within tolerance.
+            status = VerificationStatus.CONTRADICTED
+            label, score, colour = "LOW", 0.0, DEFAULT_COLOUR
+            reason = "Claim value contradicts the matched primary-source evidence"
+        else:
+            # Independent evidence exists, but it could not be positively
+            # tied to this claim (wrong/unresolved metric or period). Stay
+            # conservative rather than claiming VERIFIED on tier alone.
+            status = VerificationStatus.UNVERIFIED
+            label, score, colour = "N/A", None, "#888888"
+            reason = "Independent evidence available, but it could not be matched to this claim"
+        return build_trust(findings, label, score, colour, reason, status=status)
+
     status = (
         VerificationStatus.CONTRADICTED
         if findings.consistency is Consistency.FAIL or findings.rule_evidence is RuleEvidence.CONFLICTING

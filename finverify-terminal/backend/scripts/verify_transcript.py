@@ -68,6 +68,7 @@ from core.identity_verification import (  # noqa: E402
     canonical_concept,
     compare_value_to_evidence,
     primary_evidence_matches,
+    statement_period_type as _shared_statement_period_type,
 )
 from core.models import BatchClaim, BatchVerifyRequest, BatchVerifyResponse, VerificationResult  # noqa: E402
 from ingestion.transcripts import build_question_from_claim, compute_scope, extract_claims  # noqa: E402
@@ -169,15 +170,10 @@ MatchedEvidence = EvidenceIdentityMatch
 
 
 def _statement_period_type(metric: Optional[str]) -> Optional[str]:
-    if not metric:
-        return None
-    concept = _concept_registry().get_concept(metric)
-    statement = concept.get("statement")
-    if statement == "BalanceSheet":
-        return "instant"
-    if statement in {"IncomeStatement", "CashFlowStatement"}:
-        return "duration"
-    return None
+    # PHASE 3A: delegates to the now-shared core.identity_verification helper
+    # (identical logic; this local wrapper is kept so every existing call
+    # site in this file -- which passes only `metric` -- is unaffected).
+    return _shared_statement_period_type(metric, _concept_registry())
 
 
 def _merge_period_hint(primary: Optional[FinancialPeriod], fallback: Optional[FinancialPeriod]) -> Optional[FinancialPeriod]:
