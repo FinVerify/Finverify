@@ -15,6 +15,7 @@ from core.models import (
     Source,
     TrustFindings,
     VerificationContext,
+    VerificationStatus,
 )
 from providers.base import ProviderRegistry, resolve_provider_tier
 
@@ -216,5 +217,42 @@ def test_core_verify_uses_new_trust_engine_without_mutating_math_outputs():
     result = verify(claim)
     assert result.verified_value == 0.3411
     assert [entry["rule"] for entry in result.correction_log] == ["scale_div100", "sign_corrected"]
+    assert result.trust_score.status is VerificationStatus.VERIFIED
     assert result.trust_score.label == "LOW"
     assert result.trust_score.color == "#f87171"
+
+
+def test_no_independent_evidence_is_unverified_not_low():
+    trust = trust_engine.compute_trust(
+        make_context(provider=None),
+        make_math_result(),
+        [],
+    )
+    assert trust.status is VerificationStatus.UNVERIFIED
+    assert trust.label == "N/A"
+    assert trust.score is None
+    assert "No independent evidence available" in trust.reasons
+
+
+def test_evidence_backed_primary_claim_remains_verified():
+    trust = trust_engine.compute_trust(
+        make_context(provider="sec_edgar"),
+        make_math_result(),
+        [],
+    )
+    assert trust.status is VerificationStatus.VERIFIED
+    assert trust.label == "HIGH"
+    assert trust.score == 0.90
+
+
+def test_conflicting_evidence_is_contradicted():
+    findings = TrustFindings(
+        evidence_tier=EvidenceTier.PRIMARY,
+        correction_severity=CorrectionSeverity.NONE,
+        ambiguity=Ambiguity.LOW,
+        consistency=Consistency.FAIL,
+        rule_evidence=RuleEvidence.CONFLICTING,
+    )
+    trust = trust_engine.build_trust(findings, "LOW", 0.25, "#f87171", "Conflicting evidence", status=VerificationStatus.CONTRADICTED)
+    assert trust.status is VerificationStatus.CONTRADICTED
+    assert trust.label == "LOW"

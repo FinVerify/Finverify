@@ -14,6 +14,7 @@ from .models import (
     RuleEvidence,
     TrustFindings,
     TrustScore,
+    VerificationStatus,
     VerificationContext,
 )
 
@@ -147,9 +148,10 @@ def derive_label(findings: TrustFindings) -> tuple[str, float, str, str]:
 def build_trust(
     findings: TrustFindings,
     label: str,
-    score: float,
+    score: float | None,
     colour: str,
     reason: str,
+    status: VerificationStatus = VerificationStatus.VERIFIED,
 ) -> TrustScore:
     """Build the public trust payload without exposing internal findings."""
     reasons = [
@@ -165,6 +167,7 @@ def build_trust(
         score=score,
         color=colour,
         reasons=reasons,
+        status=status,
         findings=findings,
     )
 
@@ -176,5 +179,19 @@ def compute_trust(
 ) -> TrustScore:
     """Compute deterministic trust metadata from context, math, and evidence."""
     findings = compute_findings(context, math_result, evidence)
+    if findings.evidence_tier is EvidenceTier.USER and context.claim.raw_value is not None:
+        return build_trust(
+            findings,
+            "N/A",
+            None,
+            "#888888",
+            "No independent evidence available",
+            status=VerificationStatus.UNVERIFIED,
+        )
     label, score, colour, reason = derive_label(findings)
-    return build_trust(findings, label, score, colour, reason)
+    status = (
+        VerificationStatus.CONTRADICTED
+        if findings.consistency is Consistency.FAIL or findings.rule_evidence is RuleEvidence.CONFLICTING
+        else VerificationStatus.VERIFIED
+    )
+    return build_trust(findings, label, score, colour, reason, status=status)

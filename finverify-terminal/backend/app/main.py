@@ -392,6 +392,18 @@ async def v1_verify_endpoint(req: V1VerifyRequest, request: Request):
     correction_log = result.correction_log
     trust_label = result.trust_score.label
     trust_color = result.trust_score.color
+    verification_status = result.trust_score.status
+    confidence = result.trust_score.score
+    reasons = result.trust_score.reasons
+    # The standalone extension contract must distinguish an empty evidence
+    # result even when an internal registry classified the fallback as MODEL.
+    evidence_tier = getattr(result.trust_score.findings, "evidence_tier", None)
+    if not result.evidence or getattr(evidence_tier, "value", None) in ("model", "user"):
+        verification_status = "unverified"
+        trust_label = "N/A"
+        trust_color = "#888888"
+        confidence = None
+        reasons = ["No independent evidence available"]
 
     # Compute delta percentage
     delta_pct = 0.0
@@ -412,6 +424,9 @@ async def v1_verify_endpoint(req: V1VerifyRequest, request: Request):
         correction_applied=correction_applied,
         trust_score=trust_label,
         trust_color=trust_color,
+        verification_status=verification_status,
+        confidence=confidence,
+        reasons=reasons,
         delta_pct=delta_pct,
         dvl_version="1.0.0",
         timestamp=datetime.now(timezone.utc).isoformat(),

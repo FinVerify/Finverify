@@ -58,6 +58,16 @@ class EvidenceTier(str, Enum):
     USER = "user"
 
 
+class VerificationStatus(str, Enum):
+    """Evidentiary state, distinct from the transport/pipeline state."""
+
+    VERIFIED = "verified"
+    CONTRADICTED = "contradicted"
+    UNVERIFIED = "unverified"
+    PENDING = "pending"
+    ERROR = "error"
+
+
 class CorrectionSeverity(str, Enum):
     NONE = "none"
     SCALE_ONLY = "scale_only"
@@ -95,9 +105,10 @@ class TrustFindings(BaseModel):
 
 class TrustScore(BaseModel):
     label: str = "LOW"
-    score: float = Field(0.0, ge=0.0, le=1.0)
+    score: float | None = Field(default=0.0, ge=0.0, le=1.0)
     color: str = "#f87171"
     reasons: list[str] = Field(default_factory=list)
+    status: VerificationStatus = VerificationStatus.VERIFIED
     findings: Optional[TrustFindings] = Field(default=None, exclude=True)
 
     @property

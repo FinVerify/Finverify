@@ -18,6 +18,7 @@ from core.models import (
     Calculation,
     TrustScore,
     VerificationResult,
+    VerificationStatus,
 )
 
 
@@ -85,8 +86,11 @@ class V1VerifyResponse(BaseModel):
     raw_value: float
     verified_value: float
     correction_applied: Optional[str] = None
-    trust_score: str  # HIGH | MEDIUM | LOW
+    trust_score: str  # HIGH | MEDIUM | LOW | N/A
     trust_color: str  # #00ff88 | #fbbf24 | #f87171
+    verification_status: VerificationStatus
+    confidence: Optional[float] = None
+    reasons: list[str] = Field(default_factory=list)
     delta_pct: float
     dvl_version: str = "1.0.0"
     timestamp: str

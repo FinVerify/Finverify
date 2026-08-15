@@ -68,6 +68,22 @@ def test_verify_endpoint_422_on_missing_raw_number(client):
     assert resp.status_code == 422
 
 
+def test_v1_verify_exposes_unverified_status_without_fake_confidence(client):
+    resp = client.post("/v1/verify", json={
+        "question": "What was revenue?",
+        "raw_value": 42,
+        "model_source": "chatgpt.com",
+    })
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["verification_status"] == "unverified"
+    assert data["trust_score"] == "N/A"
+    assert data["confidence"] is None
+    assert "No independent evidence available" in data["reasons"]
+    for field in ("question", "raw_value", "verified_value", "correction_applied", "trust_color", "delta_pct", "dvl_version", "timestamp"):
+        assert field in data
+
+
 # ---------------------------------------------------------------------------
 # /v1/fcg/verify
 # ---------------------------------------------------------------------------
