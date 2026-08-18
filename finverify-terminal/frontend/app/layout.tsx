@@ -51,7 +51,7 @@ export default async function RootLayout({
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="hidden md:flex items-center gap-1.5 text-[9px] font-mono text-t-muted">
                 <span>MODEL:</span>
-                <span className="text-t-secondary">llama-3.1-8b-instant</span>
+                <span className="text-t-secondary">openai/gpt-oss-20b</span>
                 <span className="text-t-green">•</span>
                 <span className="flex items-center gap-1 text-t-green">
                   <span className="w-[4px] h-[4px] rounded-full bg-t-green live-pulse" />

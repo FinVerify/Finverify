@@ -53,7 +53,14 @@ from .models import (
 )
 from .parser import clean_llm_output
 from core.engine import verify, verify_batch as core_verify_batch
-from core.models import BatchVerifyRequest, BatchVerifyResponse, Claim
+from core.models import (
+    BatchVerifyRequest,
+    BatchVerifyResponse,
+    Claim,
+    TrustScore,
+    VerificationResult,
+    VerificationStatus,
+)
 from .evaluator import build_query_response
 from .financial import handle_financial_reasoning
 from .router import classify_query
@@ -202,7 +209,12 @@ async def call_hf_inference(
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": question},
         ],
-        "max_tokens": 200 if advisory else 50,
+        # GPT-OSS-20B is a reasoning model — internal reasoning tokens consume
+        # the generation budget before the final answer is emitted.  The old
+        # max_tokens=50 is safe for non-reasoning models but risks truncation
+        # with reasoning models.  120 gives enough headroom for short numeric
+        # answers; advisory mode already has 200.
+        "max_tokens": 200 if advisory else 120,
         "temperature": 0.3,
     }
 
@@ -362,6 +374,65 @@ async def health():
 
 
 # ---------------------------------------------------------------------------
+# PHASE 3E: public-API independent-evidence gate
+# ---------------------------------------------------------------------------
+#
+# core.trust_engine.compute_trust() can report VERIFIED for MODEL-tier
+# evidence when correction rules (scale/sign/magnitude) validate against an
+# internally supplied `actual_value` -- this is intentional and relied on by
+# the offline evaluation harness (tests/test_trust_engine.py::
+# test_core_verify_uses_new_trust_engine_without_mutating_math_outputs),
+# where `actual_value` stands in for a known, already-labeled ground truth
+# rather than "no evidence at all". compute_trust() is deliberately left
+# unchanged so that path keeps working.
+#
+# Public API callers, however, never supply `actual_value` -- they only ever
+# supply `raw_value` (and optionally `context_text`). For them, MODEL/USER
+# tier evidence (or no evidence at all) must never be reported as VERIFIED.
+# This gate is the API boundary that enforces that invariant, applied
+# uniformly to both /v1/verify and /v1/verify/batch so the two endpoints
+# cannot silently diverge again the way they had (single-claim endpoint
+# patched inline, batch endpoint left unprotected).
+
+
+def _gate_independent_evidence(trust_score: TrustScore, evidence: list) -> TrustScore:
+    """
+    Enforce: no independent evidence -> UNVERIFIED / N/A / no confidence.
+
+    "No independent evidence" means either no evidence was retrieved at all,
+    or the evidence tier resolved to MODEL (the caller's own raw value,
+    echoed back as evidence) or USER (unclassified/ungraded source) --
+    neither of which is an independent, authoritative source per Phase 3E's
+    provenance requirements. PRIMARY/SECONDARY tiers pass through untouched.
+    """
+    evidence_tier = getattr(trust_score.findings, "evidence_tier", None)
+    tier_value = getattr(evidence_tier, "value", None)
+    if evidence and tier_value not in ("model", "user"):
+        return trust_score
+
+    update = {
+        "status": VerificationStatus.UNVERIFIED,
+        "label": "N/A",
+        "score": None,
+        "color": "#888888",
+        "reasons": ["No independent evidence available"],
+    }
+    if hasattr(trust_score, "model_copy"):
+        return trust_score.model_copy(update=update)
+    return trust_score.copy(update=update)
+
+
+def _gate_verification_result(result: VerificationResult) -> VerificationResult:
+    """Apply _gate_independent_evidence to a single VerificationResult."""
+    gated_trust = _gate_independent_evidence(result.trust_score, result.evidence)
+    if gated_trust is result.trust_score:
+        return result
+    if hasattr(result, "model_copy"):
+        return result.model_copy(update={"trust_score": gated_trust})
+    return result.copy(update={"trust_score": gated_trust})
+
+
+# ---------------------------------------------------------------------------
 # V1 Standalone DVL API
 # ---------------------------------------------------------------------------
 
@@ -397,6 +468,11 @@ async def v1_verify_endpoint(req: V1VerifyRequest, request: Request):
         metric_hint=req.metric_hint,
         period_hint=req.period_hint,
     ))
+    # PHASE 3E: public-API independent-evidence gate (see definition above).
+    # The standalone extension contract must distinguish an empty evidence
+    # result even when an internal registry classified the fallback as MODEL.
+    result = _gate_verification_result(result)
+
     verified_value = result.verified_value
     correction_log = result.correction_log
     trust_label = result.trust_score.label
@@ -404,15 +480,6 @@ async def v1_verify_endpoint(req: V1VerifyRequest, request: Request):
     verification_status = result.trust_score.status
     confidence = result.trust_score.score
     reasons = result.trust_score.reasons
-    # The standalone extension contract must distinguish an empty evidence
-    # result even when an internal registry classified the fallback as MODEL.
-    evidence_tier = getattr(result.trust_score.findings, "evidence_tier", None)
-    if not result.evidence or getattr(evidence_tier, "value", None) in ("model", "user"):
-        verification_status = "unverified"
-        trust_label = "N/A"
-        trust_color = "#888888"
-        confidence = None
-        reasons = ["No independent evidence available"]
 
     # Compute delta percentage
     delta_pct = 0.0
@@ -444,8 +511,17 @@ async def v1_verify_endpoint(req: V1VerifyRequest, request: Request):
 
 @app.post("/v1/verify/batch", response_model=BatchVerifyResponse)
 async def batch_verify_endpoint(request: BatchVerifyRequest) -> BatchVerifyResponse:
-    """Verify multiple claims in a single batch."""
-    return core_verify_batch(request)
+    """Verify multiple claims in a single batch.
+
+    PHASE 3E: applies the same independent-evidence gate as /v1/verify to
+    every result in the batch, so the two public endpoints cannot diverge
+    on the "no independent evidence -> UNVERIFIED" invariant.
+    """
+    response = core_verify_batch(request)
+    gated_results = [_gate_verification_result(result) for result in response.results]
+    if hasattr(response, "model_copy"):
+        return response.model_copy(update={"results": gated_results})
+    return response.copy(update={"results": gated_results})
 
 
 @app.get("/sample-queries", response_model=list[SampleQuery])

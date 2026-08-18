@@ -28,6 +28,14 @@ export interface V1VerifyResponse {
   question: string;
   raw_value: number;
   verified_value: number;
+  /** The actual independently-sourced (primary/secondary evidence) numeric
+   *  value for this claim, when one exists. Distinct from `verified_value`,
+   *  which is the DVL's own value and, for a CONTRADICTED claim, still
+   *  echoes the claim rather than the evidence. Consumers must use this
+   *  field -- never `verified_value` -- to render what the independent
+   *  evidence actually said. `null`/`undefined` when no independent
+   *  evidence value is available; never derive or infer it. */
+  evidence_value?: number | null;
   correction_applied: string | null;
   trust_score: TrustScore;
   trust_color: string;

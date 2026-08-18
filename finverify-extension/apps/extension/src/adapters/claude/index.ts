@@ -35,6 +35,16 @@ import { adapterDebugError, adapterDebugLog } from "@/adapters/shared/log";
  * until someone has actually loaded this against a real conversation and
  * confirmed the fallback chain fires correctly. See the PR description
  * for the exact manual checklist that's still outstanding.
+ *
+ * STATUS (productization pass): this was previously set to `verified:
+ * true` despite the note above never having been resolved — i.e. the
+ * flag contradicted its own sourcing note and was silently activating
+ * unverified selectors against real claude.ai conversations (manifest.json
+ * had "https://claude.ai/*" in content_scripts.matches). Corrected back to
+ * `verified: false` and removed claude.ai from manifest.json's matches.
+ * The implementation, fallback chain, and this sourcing note are left
+ * intact so a future contributor can do the real manual verification pass,
+ * flip this to `true`, and re-add "https://claude.ai/*" to manifest.json.
  */
 
 // Claude has no positive "this is an assistant message" marker at all
@@ -102,7 +112,7 @@ export const claudeAdapter: ProviderAdapter = {
   // NOT flipped to true — see the sourcing note above. Flip only after a
   // real live-testing pass per docs/adding-a-provider.md, then add
   // "https://claude.ai/*" to manifest.json's content_scripts.matches.
-  verified: true,
+  verified: false,
 
   matches(hostname) {
     const result = hostname === "claude.ai";

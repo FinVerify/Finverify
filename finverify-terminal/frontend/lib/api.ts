@@ -65,6 +65,144 @@ export interface MetricResult {
   stale?: boolean;
 }
 
+/* ─── Batch Verify Types (wired to /v1/verify/batch) ─── */
+
+export interface BatchClaimEntity {
+  name: string;
+  ticker: string | null;
+  cik: string | null;
+  lei: string | null;
+}
+
+export interface BatchClaimMetric {
+  name: string;
+  canonical_name: string | null;
+  unit: string | null;
+}
+
+export interface BatchEvidenceSource {
+  name: string;
+  kind: string;
+  authority: number;
+  url: string | null;
+  retrieved_at: string | null;
+}
+
+export interface BatchEvidence {
+  source: BatchEvidenceSource;
+  claim: string;
+  value: number | null;
+  excerpt: string | null;
+  period: string | null;
+  locator: string | null;
+  entity: string | null;
+}
+
+export interface BatchCalculation {
+  name: string;
+  expression: string | null;
+  inputs: Record<string, unknown>;
+  output: number | null;
+  passed: boolean;
+  details: string | null;
+}
+
+export interface BatchTrustScore {
+  label: string;
+  score: number | null;
+  color: string;
+  reasons: string[];
+  status: string; // "verified" | "contradicted" | "unverified" | "pending" | "error"
+}
+
+export interface BatchCorrectionEntry {
+  rule: string;
+  before: number;
+  after: number;
+  description?: string;
+}
+
+export interface BatchClaim {
+  question: string;
+  raw_value: number | null;
+  raw_text: string | null;
+  actual_value: number | null;
+  entity: BatchClaimEntity | null;
+  metric: BatchClaimMetric | null;
+  period: string | null;
+  period_struct: unknown | null;
+  model_source: string | null;
+  entity_hint: string | null;
+  metric_hint: string | null;
+  period_hint: string | null;
+  context_text: string | null;
+  metadata: Record<string, unknown>;
+  accounting_basis: string | null;
+  scope: string | null;
+  value_role: string | null;
+  temporal_frame: string | null;
+}
+
+export interface BatchConstraintOutcome {
+  target: string;
+  status: string; // "verified" | "violation" | "indeterminate" | "derivable" | "not_applicable"
+  formula: string;
+  dependencies: Record<string, number>;
+  expected?: number | null;
+  actual?: number | null;
+  reason?: string | null;
+}
+
+export interface BatchConstraintResult {
+  status: string; // "consistent" | "inconsistent" | "indeterminate" | "not_evaluated"
+  coverage: {
+    loaded: number;
+    verified: number;
+    violated: number;
+    indeterminate: number;
+    derivable: number;
+    not_applicable: number;
+  };
+  consistent: boolean | null;
+  outcomes: BatchConstraintOutcome[];
+  violations: Array<{
+    metric: string;
+    expected: number;
+    actual: number;
+    formula: string;
+    dependencies: Record<string, number>;
+  }>;
+  indeterminate: string[];
+  indeterminate_reasons: Record<string, string>;
+}
+
+export interface BatchVerificationResult {
+  claim: BatchClaim;
+  verified_value: number | null;
+  correction_log: BatchCorrectionEntry[];
+  evidence: BatchEvidence[];
+  calculations: BatchCalculation[];
+  trust_score: BatchTrustScore;
+  constraint_result: BatchConstraintResult | null;
+  mode: string;
+  verified: boolean;
+}
+
+export interface BatchVerifyResponse {
+  results: BatchVerificationResult[];
+  constraint_result: BatchConstraintResult | null;
+}
+
+/**
+ * Full verification result returned by verifyClaimFull().
+ * Contains the single result plus the batch-level constraint_result.
+ */
+export interface FullVerificationResult {
+  result: BatchVerificationResult;
+  batchConstraintResult: BatchConstraintResult | null;
+  latencyMs: number;
+}
+
 /* ─── DVL API Calls ─── */
 
 export async function queryLLM(
@@ -97,6 +235,58 @@ export async function verifyNumber(
     throw new Error(`Verify failed (${res.status}): ${err}`);
   }
   return res.json();
+}
+
+/**
+ * Full claim verification via POST /v1/verify/batch with a single claim.
+ * Returns the rich VerificationResult plus batch-level constraint info.
+ * Measures real frontend round-trip latency via performance.now().
+ */
+export async function verifyClaimFull(
+  question: string,
+  rawValue: number,
+  opts?: {
+    entity?: string;
+    ticker?: string;
+    metric?: string;
+    period?: string;
+  }
+): Promise<FullVerificationResult> {
+  const t0 = performance.now();
+  const res = await fetch(`${API_BASE}/v1/verify/batch`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      claims: [
+        {
+          question,
+          raw_value: rawValue,
+          entity: opts?.entity || null,
+          ticker: opts?.ticker || null,
+          metric: opts?.metric || null,
+          period: opts?.period || null,
+        },
+      ],
+      include_constraints: true,
+    }),
+  });
+  const latencyMs = performance.now() - t0;
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Batch verify failed (${res.status}): ${err}`);
+  }
+
+  const data: BatchVerifyResponse = await res.json();
+  if (!data.results || data.results.length === 0) {
+    throw new Error("Batch verify returned no results");
+  }
+
+  return {
+    result: data.results[0],
+    batchConstraintResult: data.constraint_result,
+    latencyMs,
+  };
 }
 
 export async function checkHealth(): Promise<HealthStatus> {
@@ -307,4 +497,3 @@ export async function clearHistoryRemote(userId: string): Promise<boolean> {
     return false;
   }
 }
-

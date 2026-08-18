@@ -1,6 +1,19 @@
 import { useState } from "react";
-import type { TrustScore, VerifiedClaim } from "@finverify/core";
-import { formatValue, trustIcon, trustLabel, trustPalette } from "@finverify/core";
+import type { TrustScore, VerifiedClaim, ResolvedSemanticState } from "@finverify/core";
+import {
+  formatValue,
+  trustIcon,
+  trustLabel,
+  trustPalette,
+  claimSemanticState,
+  deriveSemanticOverall,
+  formatSemanticSummary,
+  formatClaimSetShareText,
+  semanticExplanation,
+  semanticIcon,
+  semanticLabel,
+  semanticPalette,
+} from "@finverify/core";
 
 interface Props {
   claims: VerifiedClaim[];
@@ -21,9 +34,10 @@ export type OverallStatus =
   | { kind: "trust"; trust: TrustScore; hasOffline: boolean; unavailable: number; total: number };
 
 function worstTrustOf(verified: VerifiedClaim[]): TrustScore | null {
-  if (verified.length === 0) return null;
-  if (verified.some((c) => c.result?.trust_score === "LOW")) return "LOW";
-  if (verified.some((c) => c.result?.trust_score === "MEDIUM")) return "MEDIUM";
+  const corroborated = verified.filter((c) => c.result?.verification_status !== "unverified" && !c.error);
+  if (corroborated.length === 0) return null;
+  if (corroborated.some((c) => c.result?.trust_score === "LOW")) return "LOW";
+  if (corroborated.some((c) => c.result?.trust_score === "MEDIUM")) return "MEDIUM";
   return "HIGH";
 }
 
@@ -62,12 +76,15 @@ export function deriveOverallStatus(claims: VerifiedClaim[]): OverallStatus {
  * recompute, re-verify, or touch anything the engine produced.
  * ------------------------------------------------------------------ */
 
-interface AnalystSummary {
+export interface AnalystSummary {
   total: number;
   verifiedClean: number;
   corrected: number;
   offline: number;
   unavailable: number;
+  corroborated: VerifiedClaim[];
+  contradictedCount: number;
+  uncorroboratedCount: number;
   confidencePercent: number;
 }
 
@@ -83,21 +100,36 @@ function confidenceWord(pct: number): "High" | "Moderate" | "Low" {
   return "Low";
 }
 
-function deriveAnalystSummary(claims: VerifiedClaim[]): AnalystSummary {
+export function deriveAnalystSummary(claims: VerifiedClaim[]): AnalystSummary {
   const verified = claims.filter((c) => c.status === "verified" && c.result);
-  const corrected = verified.filter((c) => !!c.result?.correction_applied).length;
+  const corroborated = verified.filter((c) => c.result?.verification_status !== "unverified" && !c.error);
+  const contradictedCount = corroborated.filter((c) => c.result?.verification_status === "contradicted").length;
+  const uncorroboratedCount = verified.filter((c) => c.result?.verification_status === "unverified").length;
+  const corrected = corroborated.filter((c) => !!c.result?.correction_applied).length;
   const offline = verified.filter((c) => !!c.error).length;
   const unavailable = claims.filter((c) => c.status === "error").length;
-  const confidencePercent = verified.length
-    ? Math.round(verified.reduce((sum, c) => sum + trustWeight(c.result!.trust_score), 0) / verified.length)
+  const confidencePercent = corroborated.length
+    ? Math.round(corroborated.reduce((sum, c) => sum + (c.result!.confidence != null ? c.result!.confidence * 100 : trustWeight(c.result!.trust_score)), 0) / corroborated.length)
     : 0;
+  // "Matched verification exactly" must exclude contradicted claims — a
+  // contradiction is corroborated (independent evidence exists) but is
+  // never a clean match, regardless of whether a correction was also
+  // applied. Derived directly rather than via `corroborated.length -
+  // corrected`, which incorrectly let a contradicted-and-uncorrected
+  // claim count as verifiedClean.
+  const verifiedClean = corroborated.filter(
+    (c) => c.result?.verification_status !== "contradicted" && !c.result?.correction_applied
+  ).length;
 
   return {
     total: claims.length,
-    verifiedClean: verified.length - corrected,
+    verifiedClean,
     corrected,
     offline,
     unavailable,
+    corroborated,
+    contradictedCount,
+    uncorroboratedCount,
     confidencePercent,
   };
 }
@@ -163,16 +195,90 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+/* A small pill for a single claim's semantic finding — the primary,
+ * evidence-first signal, distinct from (and rendered ahead of) the
+ * trust-score detail used elsewhere on the card. */
+function SemanticBadge({ state }: { state: ResolvedSemanticState }) {
+  const palette = semanticPalette(state);
+  return (
+    <span
+      className="fv-inline-flex fv-shrink-0 fv-items-center fv-gap-1 fv-rounded-full fv-px-1.5 fv-py-0.5 fv-text-[9px] fv-font-bold fv-tracking-wide"
+      style={{ background: palette.bg, color: palette.text, border: `1px solid ${palette.border}` }}
+    >
+      {semanticIcon(state)} {semanticLabel(state)}
+    </span>
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Claim breakdown — one row per claim, each with its own independent
+ * VERIFIED / CONTRADICTED / UNVERIFIED / VERIFICATION UNAVAILABLE
+ * finding. This is the card's evidence-first hero section: unrelated
+ * claims are never merged into a single score here.
+ * ------------------------------------------------------------------ */
+
+function ClaimBreakdownRow({ claim }: { claim: VerifiedClaim }) {
+  const state = claimSemanticState(claim);
+
+  if (state === "pending" || state === "cancelled") {
+    return (
+      <li className="fv-flex fv-items-center fv-justify-between fv-gap-2 fv-py-2 fv-text-t-secondary">
+        <span className="fv-truncate fv-text-[11.5px]">{claim.match}</span>
+        {state === "pending" ? (
+          <Ring color="#888888" />
+        ) : (
+          <span aria-hidden="true">⊘</span>
+        )}
+      </li>
+    );
+  }
+
+  if (state === "unavailable") {
+    return (
+      <li className="fv-flex fv-items-center fv-justify-between fv-gap-2 fv-py-2" title={claim.error ?? "Verification failed"}>
+        <span className="fv-truncate fv-text-[11.5px] fv-text-t-primary">{claim.match}</span>
+        <SemanticBadge state="unavailable" />
+      </li>
+    );
+  }
+
+  const result = claim.result!;
+  return (
+    <li className="fv-flex fv-items-center fv-justify-between fv-gap-2 fv-py-2" title={semanticExplanation(state) ?? undefined}>
+      <span className="fv-truncate fv-text-[11.5px] fv-text-t-primary">{claim.match}</span>
+      <div className="fv-flex fv-shrink-0 fv-items-center fv-gap-2">
+        <span className="fv-font-mono fv-text-[10px] fv-tabular-nums fv-text-t-secondary">
+          {formatValue(result.raw_value, result.question)}
+          {/* CONTRADICTED must show the actual primary-source evidence
+              value, never re-echo the claim as if it were independent
+              confirmation. If the backend didn't attach an evidence_value
+              (e.g. it couldn't be positively tied to this claim), fall
+              back to the textual finding instead of inventing a number. */}
+          {state === "contradicted" && result.evidence_value != null && (
+            <>
+              <span aria-hidden="true"> → </span>
+              <span style={{ color: semanticPalette(state).text }}>{formatValue(result.evidence_value, result.question)}</span>
+            </>
+          )}
+        </span>
+        <SemanticBadge state={state} />
+      </div>
+    </li>
+  );
+}
+
 /* ------------------------------------------------------------------ *
  * Main card
  * ------------------------------------------------------------------ */
 
 export function VerificationCard({ claims }: Props) {
   const overall = deriveOverallStatus(claims);
+  const semantic = deriveSemanticOverall(claims);
   const [showRaw, setShowRaw] = useState(false);
   const [showAllMetrics, setShowAllMetrics] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
 
-  if (overall.kind === "empty") {
+  if (semantic.kind === "empty") {
     return (
       <div className="fv-mt-2 fv-w-[560px] fv-max-w-[92vw] fv-rounded-xl fv-border fv-border-t-border fv-bg-t-bg fv-px-4 fv-py-4 fv-font-mono fv-text-xs fv-text-t-secondary">
         No financial claims detected in this response.
@@ -180,12 +286,17 @@ export function VerificationCard({ claims }: Props) {
     );
   }
 
+  // Semantic state (VERIFIED/CONTRADICTED/UNVERIFIED/VERIFICATION
+  // UNAVAILABLE) drives the header, border, and pill — the evidence-first
+  // finding is the headline. Trust-score-derived `overall` is kept only
+  // for the confidence meter, shown further down as secondary detail,
+  // never the centerpiece.
   const palette =
-    overall.kind === "trust"
-      ? trustPalette(overall.trust)
-      : overall.kind === "hard-error"
-        ? trustPalette("LOW")
-        : trustPalette(overall.bestKnown ?? "N/A");
+    semantic.kind === "resolved" && semantic.headline
+      ? semanticPalette(semantic.headline)
+      : semantic.kind === "unavailable"
+        ? semanticPalette("unavailable")
+        : trustPalette(overall.kind === "pending" ? (overall.bestKnown ?? "N/A") : "N/A");
 
   const summary = deriveAnalystSummary(claims);
   const verifiedClaims = claims.filter((c) => c.status === "verified" && c.result);
@@ -194,7 +305,7 @@ export function VerificationCard({ claims }: Props) {
     (c) => c.result?.correction_applied && !isMaterialCorrection(c)
   );
   const flaggedForReview = verifiedClaims.filter(
-    (c) => c.result?.trust_score === "LOW" || isMaterialCorrection(c)
+    (c) => c.result?.verification_status === "contradicted" || isMaterialCorrection(c)
   );
   /* Claims flagged for review purely because the verifier couldn't
    * corroborate them (trust_score === "LOW") *without* a material
@@ -204,18 +315,32 @@ export function VerificationCard({ claims }: Props) {
    * this, a response can show a low overall confidence percentage while
    * the analyst-summary paragraph says nothing about why — see the
    * comment at the summary's trailing sentence below. */
-  const lowConfidenceUncorrected = flaggedForReview.filter((c) => !isMaterialCorrection(c)).length;
+  const lowConfidenceUncorrected = summary.uncorroboratedCount;
   const hardErrorClaims = claims.filter((c) => c.status === "error");
   const METRIC_PREVIEW_COUNT = 6;
   const visibleMetrics = showAllMetrics ? verifiedClaims : verifiedClaims.slice(0, METRIC_PREVIEW_COUNT);
   const remainingMetricsCount = verifiedClaims.length - METRIC_PREVIEW_COUNT;
+
+  async function handleCopy() {
+    const text = formatClaimSetShareText(claims);
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyState("copied");
+    } catch {
+      setCopyState("failed");
+    }
+    setTimeout(() => setCopyState("idle"), 1800);
+  }
 
   return (
     <div
       className="fv-mt-2 fv-w-[560px] fv-max-w-[92vw] fv-overflow-hidden fv-rounded-xl fv-border fv-font-mono fv-text-xs fv-shadow-[0_12px_40px_rgba(0,0,0,0.45)] fv-animate-fade-in motion-reduce:fv-animate-none"
       style={{ borderColor: palette.border, background: "#0a0a0a" }}
     >
-      {/* Header ------------------------------------------------------ */}
+      {/* Header — semantic state (VERIFIED/CONTRADICTED/UNVERIFIED/
+          VERIFICATION UNAVAILABLE) is the authoritative headline; trust
+          score never overrides it here. ---------------------------- */}
       <div className="fv-flex fv-items-center fv-justify-between fv-gap-3 fv-border-b fv-border-t-border fv-px-4 fv-py-3.5">
         <div className="fv-flex fv-min-w-0 fv-items-center fv-gap-3">
           <span
@@ -223,12 +348,12 @@ export function VerificationCard({ claims }: Props) {
             style={{ background: palette.bg, color: palette.text }}
             aria-hidden="true"
           >
-            {overall.kind === "pending" ? (
+            {semantic.kind === "pending" ? (
               <Ring color={palette.text} size="fv-h-3.5 fv-w-3.5" />
-            ) : overall.kind === "hard-error" ? (
+            ) : semantic.kind === "unavailable" ? (
               "!"
             ) : (
-              trustIcon(overall.trust)
+              semanticIcon(semantic.headline!)
             )}
           </span>
           <div className="fv-min-w-0">
@@ -236,9 +361,9 @@ export function VerificationCard({ claims }: Props) {
               FinVerify Analysis
             </div>
             <div className="fv-truncate fv-text-[10.5px] fv-leading-tight fv-text-t-secondary">
-              {overall.kind === "pending"
-                ? `Verifying claim ${overall.done} of ${overall.total}…`
-                : overall.kind === "hard-error"
+              {semantic.kind === "pending"
+                ? `Verifying claim ${semantic.summary.total - semantic.summary.pending} of ${semantic.summary.total}…`
+                : semantic.kind === "unavailable"
                   ? "Verification unavailable"
                   : `${claims.length} claim${claims.length === 1 ? "" : "s"} reviewed`}
             </div>
@@ -248,32 +373,91 @@ export function VerificationCard({ claims }: Props) {
           className="fv-shrink-0 fv-rounded-full fv-px-3 fv-py-1 fv-text-[10px] fv-font-bold fv-tracking-wide"
           style={{ background: palette.bg, color: palette.text }}
         >
-          {overall.kind === "pending"
+          {semantic.kind === "pending"
             ? "IN PROGRESS"
-            : overall.kind === "hard-error"
+            : semantic.kind === "unavailable"
               ? "UNAVAILABLE"
-              : trustLabel(overall.trust)}
+              : semanticLabel(semantic.headline!)}
         </span>
       </div>
 
       {/* Progress bar — only while claims are still resolving -------- */}
-      {overall.kind === "pending" && (
+      {semantic.kind === "pending" && (
         <div className="fv-h-0.5 fv-w-full fv-bg-t-border" aria-hidden="true">
           <div
             className="fv-h-full fv-transition-all fv-duration-300 motion-reduce:fv-transition-none"
             style={{
-              width: `${(overall.done / overall.total) * 100}%`,
-              background: overall.bestKnown ? trustPalette(overall.bestKnown).text : "#888888",
+              width: `${((semantic.summary.total - semantic.summary.pending) / semantic.summary.total) * 100}%`,
+              background: overall.kind === "pending" && overall.bestKnown ? trustPalette(overall.bestKnown).text : "#888888",
             }}
           />
         </div>
       )}
 
-      {/* Hero confidence — the number a person should read within the
-          first five seconds, given top billing above everything else. */}
-      {overall.kind === "trust" && (
+      {/* VERIFICATION UNAVAILABLE — a technical failure (no result at
+          all). Kept visually and textually distinct from UNVERIFIED,
+          which means the check succeeded but found no independent
+          evidence. -------------------------------------------------- */}
+      {semantic.kind === "unavailable" && (
         <div className="fv-border-b fv-border-t-border fv-bg-t-surface fv-px-4 fv-py-3.5">
+          <div className="fv-text-[13px] fv-font-bold" style={{ color: palette.text }}>
+            VERIFICATION UNAVAILABLE
+          </div>
+          <p className="fv-mt-1 fv-text-[11px] fv-leading-relaxed fv-text-t-secondary">
+            {semanticExplanation("unavailable")}
+          </p>
+        </div>
+      )}
+
+      {/* Claim breakdown — the evidence-first hero. Each claim keeps its
+          own independent VERIFIED / CONTRADICTED / UNVERIFIED /
+          VERIFICATION UNAVAILABLE finding; nothing here is blended into
+          a single score. ---------------------------------------------- */}
+      {semantic.kind === "resolved" && (
+        <div className="fv-border-b fv-border-t-border fv-bg-t-surface fv-px-4 fv-py-3.5">
+          {semantic.summary.total > 1 && (
+            <div className="fv-mb-2 fv-text-[10.5px] fv-font-semibold fv-tracking-wide fv-text-t-secondary">
+              {formatSemanticSummary(semantic.summary)}
+            </div>
+          )}
+          <ul className="fv-divide-y fv-divide-t-border">
+            {claims.map((claim) => (
+              <ClaimBreakdownRow key={claim.id} claim={claim} />
+            ))}
+          </ul>
+          {semantic.headline === "unverified" && semantic.summary.contradicted === 0 && (
+            <p className="fv-mt-2 fv-text-[10.5px] fv-leading-relaxed fv-text-t-secondary">
+              {semanticExplanation("unverified")}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Hero confidence — secondary supporting detail underneath the
+          semantic breakdown above, never the primary finding. Only
+          rendered once corroborated evidence actually exists — no
+          confidence is manufactured for claims that were never checked
+          against anything external. */}
+      {overall.kind === "trust" && summary.corroborated.length > 0 && (
+        <div className="fv-border-b fv-border-t-border fv-px-4 fv-py-3">
+          <div className="fv-mb-1.5 fv-text-[9.5px] fv-font-bold fv-uppercase fv-tracking-[0.14em] fv-text-t-muted">
+            Trust score (secondary — not a verification finding)
+          </div>
           <ConfidenceMeter percent={summary.confidencePercent} trust={overall.trust} />
+        </div>
+      )}
+
+      {/* Share / export — an explicit user action, never automatic, and
+          built only from fields the API actually returned. ----------- */}
+      {semantic.kind !== "pending" && (
+        <div className="fv-flex fv-items-center fv-justify-end fv-border-b fv-border-t-border fv-bg-t-surface fv-px-4 fv-py-2">
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="fv-rounded-lg fv-border fv-border-t-border fv-px-2.5 fv-py-1 fv-text-[10px] fv-font-semibold fv-text-t-secondary fv-transition-colors fv-duration-150 hover:fv-border-t-border-accent hover:fv-text-t-primary fv-outline-none focus-visible:fv-ring-2 focus-visible:fv-ring-white/70"
+          >
+            {copyState === "copied" ? "Copied ✓" : copyState === "failed" ? "Copy failed" : "Copy verification"}
+          </button>
         </div>
       )}
 
@@ -307,6 +491,15 @@ export function VerificationCard({ claims }: Props) {
                       exactly.{" "}
                     </>
                   )}
+                  {summary.corroborated.length > 0 && (
+                    <><span className="fv-font-bold">{summary.corroborated.length}</span> independently corroborated. </>
+                  )}
+                  {summary.contradictedCount > 0 && (
+                    <><span className="fv-font-bold">{summary.contradictedCount}</span> contradicted. </>
+                  )}
+                  {summary.uncorroboratedCount > 0 && (
+                    <><span className="fv-font-bold">{summary.corroborated.length} of {summary.total}</span> independently corroborated; <span className="fv-font-bold">{summary.uncorroboratedCount}</span> unverified. No independent evidence available. </>
+                  )}
                   {summary.corrected > 0 && (
                     <>
                       <span className="fv-font-bold">{summary.corrected}</span> required a normalization
@@ -332,7 +525,7 @@ export function VerificationCard({ claims }: Props) {
                       : materialCorrections.length > 0
                         ? `${materialCorrections.length} value${materialCorrections.length === 1 ? "" : "s"} differed materially from what was reported.`
                         : lowConfidenceUncorrected > 0
-                          ? `${lowConfidenceUncorrected} value${lowConfidenceUncorrected === 1 ? "" : "s"} matched the reported figure exactly but couldn't be corroborated against verified evidence — that's why confidence is lower than the match count alone suggests.`
+                          ? `${lowConfidenceUncorrected} value${lowConfidenceUncorrected === 1 ? "" : "s"} could not be independently corroborated.`
                           : "No material discrepancies detected among the claims that could be checked."}
                 </>
               )}
@@ -451,6 +644,13 @@ function MetricRow({ claim }: { claim: VerifiedClaim }) {
   const result = claim.result!;
   const isOffline = !!claim.error;
   const palette = trustPalette(result.trust_score);
+  const state = claimSemanticState(claim);
+  // CONTRADICTED must render the actual primary-source evidence value,
+  // never `verified_value` (which still echoes the claim on a
+  // contradiction). No evidence_value available -> omit the second value
+  // rather than fabricate one.
+  const contradictedWithoutEvidence = state === "contradicted" && result.evidence_value == null;
+  const displayValue = state === "contradicted" ? result.evidence_value : result.verified_value;
 
   const detail = [
     `Confidence: ${trustLabel(result.trust_score)}.`,
@@ -488,12 +688,14 @@ function MetricRow({ claim }: { claim: VerifiedClaim }) {
         <span className="fv-font-mono fv-text-[10.5px] fv-tabular-nums fv-text-t-muted">
           {formatValue(result.raw_value, result.question)}
         </span>
-        <span
-          className="fv-font-mono fv-text-[14px] fv-font-bold fv-tabular-nums"
-          style={{ color: palette.text }}
-        >
-          {formatValue(result.verified_value, result.question)}
-        </span>
+        {!contradictedWithoutEvidence && (
+          <span
+            className="fv-font-mono fv-text-[14px] fv-font-bold fv-tabular-nums"
+            style={{ color: palette.text }}
+          >
+            {formatValue(displayValue, result.question)}
+          </span>
+        )}
       </div>
     </div>
   );
@@ -645,15 +847,18 @@ function ClaimRow({ claim }: { claim: VerifiedClaim }) {
   const result = claim.result;
   const isOffline = !!claim.error;
   const palette = trustPalette(result.trust_score);
-  const hoverTitle = `raw ${result.raw_value} \u2192 verified ${result.verified_value}${
-    result.correction_applied ? ` (${result.correction_applied})` : ""
-  }${isOffline ? " — backend unreachable, showing offline estimate" : ""}`;
+  const state = claimSemanticState(claim);
+  // CONTRADICTED must show the actual primary-source evidence value, not
+  // `verified_value` (which still echoes the claim on a contradiction).
+  const contradictedWithoutEvidence = state === "contradicted" && result.evidence_value == null;
+  const displayValue = state === "contradicted" ? result.evidence_value : result.verified_value;
+  const hoverTitle = `raw ${result.raw_value} \u2192 ${state === "contradicted" ? "evidence" : "verified"} ${displayValue ?? "unavailable"}${result.correction_applied ? ` (${result.correction_applied})` : ""
+    }${isOffline ? " — backend unreachable, showing offline estimate" : ""}`;
 
   return (
     <li
-      className={`fv-flex fv-flex-col fv-gap-0.5 fv-rounded fv-px-1.5 fv-py-1 ${
-        isOffline ? "fv-border fv-border-dashed fv-border-t-border-accent" : ""
-      }`}
+      className={`fv-flex fv-flex-col fv-gap-0.5 fv-rounded fv-px-1.5 fv-py-1 ${isOffline ? "fv-border fv-border-dashed fv-border-t-border-accent" : ""
+        }`}
       title={hoverTitle}
     >
       <div className="fv-flex fv-items-center fv-justify-between fv-gap-2">
@@ -677,8 +882,14 @@ function ClaimRow({ claim }: { claim: VerifiedClaim }) {
       </div>
       <div className="fv-flex fv-items-center fv-justify-between fv-gap-2 fv-text-[10px] fv-text-t-secondary">
         <span className="fv-truncate">
-          raw {formatValue(result.raw_value, result.question)} →{" "}
-          <span style={{ color: palette.text }}>{formatValue(result.verified_value, result.question)}</span>
+          raw {formatValue(result.raw_value, result.question)}
+          {!contradictedWithoutEvidence && (
+            <>
+              {" "}
+              →{" "}
+              <span style={{ color: palette.text }}>{formatValue(displayValue, result.question)}</span>
+            </>
+          )}
         </span>
         {result.correction_applied && (
           <span className="fv-shrink-0 fv-text-t-amber">

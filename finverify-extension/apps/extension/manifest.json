@@ -23,8 +23,7 @@
     {
       "matches": [
         "https://chatgpt.com/*",
-        "https://chat.openai.com/*",
-        "https://claude.ai/*"
+        "https://chat.openai.com/*"
       ],
       "js": [
         "src/content/index.js"

@@ -14,7 +14,7 @@
     "build:extension": "npm run build -w @finverify/extension",
     "typecheck": "npm run typecheck -w @finverify/core && npm run typecheck -w @finverify/extension",
     "lint": "eslint .",
-    "test": "npm run test -w @finverify/core",
+    "test": "npm run test -w @finverify/core && npm run test -w @finverify/extension",
     "test:coverage": "npm run test:coverage -w @finverify/core",
     "dev:core": "npm run dev -w @finverify/core"
   },

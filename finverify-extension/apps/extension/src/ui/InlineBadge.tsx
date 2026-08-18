@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { VerifiedClaim } from "@finverify/core";
-import { trustIcon, trustLabel, trustPalette } from "@finverify/core";
+import { deriveSemanticOverall, formatSemanticSummary, semanticIcon, semanticLabel, semanticPalette } from "@finverify/core";
 import { engine } from "@/engineInstance";
 import { VerificationCard, deriveOverallStatus } from "@/ui/VerificationCard";
 
@@ -152,37 +152,49 @@ export function InlineBadge({ text, modelSource }: Props) {
   }, [expanded]);
 
   const claimList = Array.from(claims.values());
+  // Semantic state (VERIFIED/CONTRADICTED/UNVERIFIED/VERIFICATION UNAVAILABLE)
+  // drives the marker's color, icon, and headline label — this is the
+  // evidentiary finding the productization spec's states map to.
+  // `deriveOverallStatus` (trust-score based) is kept only for the
+  // secondary "confidence" detail folded into the aria-label below and
+  // for offline-estimate detection; it is never the primary signal.
+  const semantic = deriveSemanticOverall(claimList);
   const overall = deriveOverallStatus(claimList);
 
   // One-shot "verification just completed" glow: fires the transition
   // from pending -> resolved, not on every re-render. Purely a display
   // affordance layered on top of state the effects above already produce.
   useEffect(() => {
-    const isPending = overall.kind === "pending";
+    const isPending = semantic.kind === "pending";
     if (wasPendingRef.current && !isPending) {
       setJustCompleted(true);
       const t = setTimeout(() => setJustCompleted(false), 900);
       return () => clearTimeout(t);
     }
     wasPendingRef.current = isPending;
-  }, [overall.kind]);
+  }, [semantic.kind]);
 
-  if (overall.kind === "empty") return null;
+  if (semantic.kind === "empty") return null;
 
   const palette =
-    overall.kind === "trust"
-      ? trustPalette(overall.trust)
-      : overall.kind === "hard-error"
-        ? trustPalette("LOW")
-        : trustPalette(overall.bestKnown ?? "N/A");
+    semantic.kind === "resolved" && semantic.headline
+      ? semanticPalette(semantic.headline)
+      : semantic.kind === "unavailable"
+        ? semanticPalette("unavailable")
+        : { bg: "rgba(136,136,136,0.1)", border: "#888888", text: "#888888" };
 
+  // The trailing "(confidence: high/medium/low)" clause is deliberately
+  // kept even though the headline itself is now the semantic label — it
+  // preserves the trust-score detail as secondary information (never the
+  // centerpiece) rather than dropping it outright.
+  const confidenceSuffix = overall.kind === "trust" ? ` (confidence: ${overall.trust.toLowerCase()})` : "";
   const statusText =
-    overall.kind === "pending"
-      ? `FinVerify: verifying ${overall.done} of ${overall.total} claims`
-      : overall.kind === "hard-error"
-        ? `FinVerify: ${overall.total} claim${overall.total === 1 ? "" : "s"}, verification unavailable`
-        : `FinVerify: ${overall.total} claim${overall.total === 1 ? "" : "s"}, ${overall.trust.toLowerCase()}${overall.hasOffline ? ", includes offline estimate" : ""
-        }${overall.unavailable > 0 ? `, ${overall.unavailable} unavailable` : ""}`;
+    semantic.kind === "pending"
+      ? `FinVerify: verifying ${semantic.summary.total - semantic.summary.pending} of ${semantic.summary.total} claims`
+      : semantic.kind === "unavailable"
+        ? `FinVerify: ${semantic.summary.total} claim${semantic.summary.total === 1 ? "" : "s"}, verification unavailable`
+        : `FinVerify: ${semantic.summary.total} claim${semantic.summary.total === 1 ? "" : "s"}, ${formatSemanticSummary(semantic.summary)}${confidenceSuffix}${overall.kind === "trust" && overall.hasOffline ? ", includes offline estimate" : ""
+        }`;
 
   return (
     <span className="fv-relative fv-inline-flex fv-items-center">
@@ -206,7 +218,7 @@ export function InlineBadge({ text, modelSource }: Props) {
               style={{ background: palette.text, opacity: 0.4 }}
             />
           )}
-          {overall.kind === "pending" ? (
+          {semantic.kind === "pending" ? (
             <span
               className="fv-h-3 fv-w-3 fv-animate-spin fv-rounded-full fv-border-2 motion-reduce:fv-animate-none"
               style={{ borderColor: palette.text, borderTopColor: "transparent" }}
@@ -216,22 +228,24 @@ export function InlineBadge({ text, modelSource }: Props) {
               className="fv-relative fv-flex fv-h-3.5 fv-w-3.5 fv-items-center fv-justify-center fv-rounded-full fv-text-[9px] fv-font-bold"
               style={{ background: palette.bg, color: palette.text }}
             >
-              {overall.kind === "hard-error" ? "!" : trustIcon(overall.trust)}
+              {semantic.kind === "unavailable" ? "!" : semanticIcon(semantic.headline!)}
             </span>
           )}
         </span>
         <span className="fv-text-[10px] fv-font-semibold fv-tracking-wide">
-          {overall.kind === "pending"
-            ? `${overall.done}/${overall.total}`
-            : overall.kind === "hard-error"
-              ? "N/A"
-              : trustLabel(overall.trust)}
+          {semantic.kind === "pending"
+            ? `${semantic.summary.total - semantic.summary.pending}/${semantic.summary.total}`
+            : semantic.kind === "unavailable"
+              ? "UNAVAILABLE"
+              : semantic.summary.total > 1
+                ? formatSemanticSummary(semantic.summary)
+                : semanticLabel(semantic.headline!)}
         </span>
       </button>
 
-      {/* Visually hidden live region — screen readers hear trust-status
-          changes (pending -> verified/flagged/warning/unavailable) without
-          needing the panel expanded, matching what the visible icon
+      {/* Visually hidden live region — screen readers hear verification-status
+          changes (pending -> verified/contradicted/unverified/unavailable)
+          without needing the panel expanded, matching what the visible icon
           already communicates sighted users. */}
       <span role="status" aria-live="polite" className="fv-sr-only">
         {statusText}

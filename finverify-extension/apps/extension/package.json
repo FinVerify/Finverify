@@ -9,6 +9,7 @@
     "build": "tsc --noEmit && rimraf dist && vite build --config vite.content.config.ts && vite build --config vite.background.config.ts && vite build --config vite.popup.config.ts && node scripts/copy-static.mjs",
     "typecheck": "tsc --noEmit",
     "typecheck:e2e": "tsc -p tsconfig.e2e.json",
+    "test": "vitest run",
     "pretest:e2e": "node e2e/setup/prepare-test-extension.mjs",
     "test:e2e": "playwright test"
   },
@@ -29,6 +30,7 @@
     "rimraf": "^5.0.7",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.5.3",
-    "vite": "^5.3.4"
+    "vite": "^5.3.4",
+    "vitest": "^2.1.9"
   }
 }

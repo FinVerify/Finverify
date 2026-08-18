@@ -127,6 +127,15 @@ _SCALE_WORDS = {
 # space to avoid colliding with ordinary word characters
 _SINGLE_LETTER_SCALE = {"t", "b", "m", "k"}
 
+# PHASE 3C.1: public, read-only view of the scale-word -> multiplier table.
+# Exists so that callers outside this module (currently app.parser's
+# context-driven scale-bridge resolver) can look up "what multiplier does
+# CanonicalNumber.scale_applied correspond to" without re-declaring their
+# own copy of this table. This is the "smallest reusable abstraction"
+# referenced in the Phase 3C.1/3D/3E engineering notes: it adds a lookup,
+# not a second implementation of scale parsing.
+SCALE_WORD_MULTIPLIERS: dict[str, Decimal] = dict(_SCALE_WORDS)
+
 _PERCENT_WORDS = {"%", "percent", "pct"}
 _BPS_WORDS = {"bps", "basis point", "basis points"}
 _PP_WORDS = {"pp", "percentage point", "percentage points"}

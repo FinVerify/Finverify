@@ -25,11 +25,28 @@ export { financePlugin } from "./plugins/finance/index.js";
 // Trust display helpers
 export { trustPalette, trustIcon, trustLabel, formatValue, TRUST_COLORS } from "./trust.js";
 
+// Semantic verification states (VERIFIED / CONTRADICTED / UNVERIFIED / VERIFICATION UNAVAILABLE)
+export {
+  claimSemanticState,
+  summarizeSemanticStates,
+  formatSemanticSummary,
+  deriveSemanticOverall,
+  semanticPalette,
+  semanticIcon,
+  semanticLabel,
+  semanticExplanation,
+} from "./semantic.js";
+export type { SemanticState, ResolvedSemanticState, SemanticSummary, SemanticOverall } from "./semantic.js";
+
+// Share / export formatting
+export { formatClaimShareText, formatClaimSetShareText } from "./share.js";
+
 // Shared types
 export type {
   V1VerifyRequest,
   V1VerifyResponse,
   TrustScore,
+  VerificationStatus,
   ExtractedClaim,
   VerifiedClaim,
   HealthStatus,

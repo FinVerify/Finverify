@@ -27,10 +27,13 @@ downstream of canonicalize() is ever a silent guess.
 """
 
 import re
+from dataclasses import dataclass
+from decimal import Decimal
 from typing import Optional
 
 from .dvl import RATIO_KEYWORDS
 from numeric.canonicalizer import (
+    SCALE_WORD_MULTIPLIERS,
     CanonicalizationError,
     CanonicalNumber,
     Unit,
@@ -91,6 +94,114 @@ def extract_canonical(text: str, locale: str = "en_US") -> Optional[CanonicalNum
         except CanonicalizationError:
             continue
     return None
+
+
+# ---------------------------------------------------------------------------
+# PHASE 3C.1: API numeric scale bridge
+# ---------------------------------------------------------------------------
+#
+# Root cause this section fixes: the /v1/verify API accepts a bare
+# `raw_value` (e.g. 109.42) alongside an optional free-text `context_text`
+# (e.g. "Apple reported revenue of $109.42 billion in Q3 FY2026."). Prior to
+# this fix, `raw_value` was placed directly into Claim.raw_value with no
+# awareness that the accompanying prose said "billion" -- nine orders of
+# magnitude were silently discarded, and 109.42 was compared against SEC
+# evidence of ~109.42e9 as if they were the same claim, producing a false
+# CONTRADICTED.
+#
+# This does NOT re-parse context_text for "the" answer (extract_canonical's
+# job, and explicitly out of scope here -- context_text also contains
+# "Q3 FY2026", which itself contains numeric-looking substrings). Instead it
+# asks a much narrower question: "does context_text contain a numeric token
+# whose UNSCALED magnitude equals raw_value, and if so, what scale word/unit/
+# currency did that token carry?" Only the resulting scale multiplier is
+# ever applied to raw_value -- the token's own parsed value is never used to
+# *replace* raw_value, so precision supplied by the caller is preserved
+# exactly.
+#
+# Never guesses: no matching candidate, or more than one candidate carrying
+# conflicting scale/unit/currency information, both fail closed (no
+# multiplier applied) rather than picking one.
+
+
+@dataclass(frozen=True)
+class ScaleBridgeMatch:
+    """A single unambiguous scale/unit/currency resolution for raw_value."""
+
+    multiplier: Decimal
+    scale_word: Optional[str]
+    unit: Unit
+    currency: Optional[str]
+    matched_token: str
+
+
+def resolve_context_scale(
+    raw_value: Optional[float],
+    context_text: Optional[str],
+    locale: str = "en_US",
+) -> Optional[ScaleBridgeMatch]:
+    """
+    Find the numeric token in `context_text` whose unscaled magnitude
+    matches `raw_value`, and return the scale/unit/currency it carries.
+
+    Returns None (fail closed -- caller must not apply any correction) when:
+      - context_text or raw_value is missing,
+      - no candidate token's unscaled magnitude matches raw_value, or
+      - more than one candidate matches but they disagree on scale word,
+        unit, or currency (ambiguous; e.g. "$109.42 billion ... $109.42
+        million" both mention 109.42).
+
+    A candidate that matches raw_value but carries no scale word at all
+    (multiplier == 1) is not informative -- it is skipped rather than
+    counted, since it cannot tell us anything about a *missing* scale.
+    """
+    if raw_value is None or not context_text:
+        return None
+
+    try:
+        target = Decimal(str(raw_value))
+    except (ValueError, ArithmeticError):
+        return None
+
+    matches: dict[tuple[Optional[str], Unit, Optional[str]], ScaleBridgeMatch] = {}
+
+    for token in _find_candidates(context_text):
+        try:
+            canonical = canonicalize(token, locale=locale)
+        except CanonicalizationError:
+            continue
+
+        multiplier = (
+            SCALE_WORD_MULTIPLIERS[canonical.scale_applied]
+            if canonical.scale_applied
+            else Decimal(1)
+        )
+        if multiplier == Decimal(1):
+            # No scale word on this candidate -- nothing to bridge.
+            continue
+
+        unscaled = canonical.value / multiplier
+        if unscaled == 0:
+            continue
+        if abs(abs(unscaled) - abs(target)) / abs(unscaled) > Decimal("1e-9"):
+            continue
+
+        key = (canonical.scale_applied, canonical.unit, canonical.currency)
+        matches[key] = ScaleBridgeMatch(
+            multiplier=multiplier,
+            scale_word=canonical.scale_applied,
+            unit=canonical.unit,
+            currency=canonical.currency,
+            matched_token=token,
+        )
+
+    if len(matches) != 1:
+        # Zero matches: no matching numeric candidate. More than one
+        # distinct (scale, unit, currency) combination: ambiguous. Either
+        # way, no guessing -- fail closed.
+        return None
+
+    return next(iter(matches.values()))
 
 
 def extract_number(text: str) -> Optional[float]:
