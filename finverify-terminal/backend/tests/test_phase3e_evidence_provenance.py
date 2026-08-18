@@ -114,6 +114,7 @@ def test_missing_independent_evidence_cannot_verify():
     assert payload["verification_status"] == "unverified"
     assert payload["trust_score"] == "N/A"
     assert payload["confidence"] is None
+    assert payload["evidence_value"] is None
     assert "No independent evidence available" in payload["reasons"]
 
 
@@ -147,11 +148,13 @@ def test_gate_downgrades_model_tier_verified_to_unverified():
     # (this is the documented, intentional offline-eval behavior).
     assert result.trust_score.status is VerificationStatus.VERIFIED
 
-    gated = _gate_verification_result(result)
+    seeded = result.model_copy(update={"evidence_value": 109.42}) if hasattr(result, "model_copy") else result.copy(update={"evidence_value": 109.42})
+    gated = _gate_verification_result(seeded)
     assert gated.trust_score.status is VerificationStatus.UNVERIFIED
     assert gated.trust_score.label == "N/A"
     assert gated.trust_score.score is None
     assert gated.trust_score.reasons == ["No independent evidence available"]
+    assert gated.evidence_value is None
 
 
 def test_gate_helper_treats_user_tier_the_same_as_model_tier():
@@ -200,7 +203,40 @@ def test_v1_verify_never_returns_verified_for_model_tier(monkeypatch):
     assert payload["verification_status"] == "unverified"
     assert payload["trust_score"] == "N/A"
     assert payload["confidence"] is None
+    assert payload["evidence_value"] is None
     assert payload["reasons"] == ["No independent evidence available"]
+
+
+def test_v1_verify_contradiction_surfaces_primary_evidence_value(monkeypatch):
+    monkeypatch.setattr(
+        main_module,
+        "verify",
+        lambda claim: verify(
+            claim.model_copy(
+                update={
+                    "metric": Metric(name="Revenue", canonical_name="Revenue"),
+                    "entity": Entity(name="ACME", ticker="ACME"),
+                    "period_struct": FinancialPeriod(kind="annual", fiscal_year=2025),
+                }
+            ) if hasattr(claim, "model_copy") else claim.copy(
+                update={
+                    "metric": Metric(name="Revenue", canonical_name="Revenue"),
+                    "entity": Entity(name="ACME", ticker="ACME"),
+                    "period_struct": FinancialPeriod(kind="annual", fiscal_year=2025),
+                }
+            ),
+            evidence_retriever=_FakeRetriever([_primary_evidence(109.42)]),
+        ),
+    )
+    response = client.post(
+        "/v1/verify",
+        json={"question": "What was Revenue for ACME?", "raw_value": 94.04},
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["verification_status"] == "contradicted"
+    assert payload["verified_value"] == 94.04
+    assert payload["evidence_value"] == 109.42
 
 
 def test_v1_verify_batch_never_returns_verified_for_model_tier():

@@ -222,6 +222,7 @@ class MathResult(BaseModel):
 class VerificationResult(BaseModel):
     claim: Claim
     verified_value: Optional[float] = None
+    evidence_value: Optional[float] = None
     correction_log: list[dict[str, Any]] = Field(default_factory=list)
     evidence: list[Evidence] = Field(default_factory=list)
     calculations: list[Calculation] = Field(default_factory=list)

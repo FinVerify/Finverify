@@ -75,6 +75,7 @@ def verify(claim: Claim | dict, *, evidence_retriever: Optional[EvidenceRetrieve
         evidence,
         context=context,
         constraint_result=constraint_result,
+        value_comparison=value_comparison,
     )
 
 

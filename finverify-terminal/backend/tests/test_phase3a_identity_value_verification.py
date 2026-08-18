@@ -81,12 +81,15 @@ def test_matching_claim_value_is_verified():
     result = verify(_claim(100.0), evidence_retriever=_FakePrimaryRetriever([_primary_evidence(100.0)]))
     assert result.trust_score.status is VerificationStatus.VERIFIED
     assert result.trust_score.label == "HIGH"
+    assert result.evidence_value == 100.0
 
 
 def test_contradicting_claim_value_is_contradicted_not_verified():
     result = verify(_claim(75.0), evidence_retriever=_FakePrimaryRetriever([_primary_evidence(100.0)]))
     assert result.trust_score.status is VerificationStatus.CONTRADICTED
     assert result.trust_score.status is not VerificationStatus.VERIFIED
+    assert result.verified_value == 75.0
+    assert result.evidence_value == 100.0
 
 
 def test_same_evidence_diverging_claims_never_both_verified():
@@ -114,6 +117,7 @@ def test_no_evidence_is_unverified():
     result = verify(Claim(question="What was Revenue?", raw_value=100.0), evidence_retriever=_FakePrimaryRetriever([]))
     assert result.trust_score.status is VerificationStatus.UNVERIFIED
     assert result.trust_score.label == "N/A"
+    assert result.evidence_value is None
 
 
 def test_wrong_period_evidence_does_not_verify():

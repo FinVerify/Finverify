@@ -73,3 +73,5 @@ def test_both_unknown_periods_are_not_a_match():
 def test_numeric_mismatch_with_valid_identity_is_not_a_match():
     result = compare_value_to_evidence(101.1, [_match(period=_period())], _period())
     assert result.matched is False
+    assert result.evidence is not None
+    assert result.evidence.value == 100.0

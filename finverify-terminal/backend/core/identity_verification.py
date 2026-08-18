@@ -100,6 +100,7 @@ def compare_value_to_evidence(
 ) -> EvidenceValueComparison:
     """Apply the frozen period compatibility and relative-value tolerance."""
     saw_period_match = False
+    first_period_match: EvidenceIdentityMatch | None = None
     mismatched_periods: list[str] = []
     unresolved_periods: list[str] = []
 
@@ -114,6 +115,8 @@ def compare_value_to_evidence(
             continue
 
         saw_period_match = True
+        if first_period_match is None:
+            first_period_match = evidence_match
         evidence_value = evidence_match.value
         if evidence_value != 0 and abs(value - evidence_value) / abs(evidence_value) <= tolerance:
             return EvidenceValueComparison(
@@ -126,7 +129,7 @@ def compare_value_to_evidence(
 
     return EvidenceValueComparison(
         False,
-        None,
+        first_period_match,
         saw_period_match,
         tuple(mismatched_periods),
         tuple(unresolved_periods),

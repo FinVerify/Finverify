@@ -89,6 +89,7 @@ class V1VerifyResponse(BaseModel):
     question: str
     raw_value: float
     verified_value: float
+    evidence_value: Optional[float] = None
     correction_applied: Optional[str] = None
     trust_score: str  # HIGH | MEDIUM | LOW | N/A
     trust_color: str  # #00ff88 | #fbbf24 | #f87171

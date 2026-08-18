@@ -428,8 +428,8 @@ def _gate_verification_result(result: VerificationResult) -> VerificationResult:
     if gated_trust is result.trust_score:
         return result
     if hasattr(result, "model_copy"):
-        return result.model_copy(update={"trust_score": gated_trust})
-    return result.copy(update={"trust_score": gated_trust})
+        return result.model_copy(update={"trust_score": gated_trust, "evidence_value": None})
+    return result.copy(update={"trust_score": gated_trust, "evidence_value": None})
 
 
 # ---------------------------------------------------------------------------
@@ -497,6 +497,7 @@ async def v1_verify_endpoint(req: V1VerifyRequest, request: Request):
         question=req.question,
         raw_value=req.raw_value,
         verified_value=verified_value,
+        evidence_value=result.evidence_value,
         correction_applied=correction_applied,
         trust_score=trust_label,
         trust_color=trust_color,
