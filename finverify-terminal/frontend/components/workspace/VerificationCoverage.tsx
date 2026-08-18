@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import AccessibleScore from "./AccessibleScore";
 
 /**
  * VerificationCoverage — Table showing per-company verification coverage.
@@ -31,6 +32,12 @@ function getTrustColor(score: number): string {
   return "text-t-red";
 }
 
+function getTrustLevel(score: number): string {
+  if (score >= 97) return "high";
+  if (score >= 93) return "medium";
+  return "low";
+}
+
 export default function VerificationCoverage() {
   return (
     <div className="panel flex flex-col h-full min-h-0">
@@ -41,35 +48,59 @@ export default function VerificationCoverage() {
         <span className="text-[7px] font-mono text-t-muted">TOP COMPANIES</span>
       </div>
 
-      {/* Table header */}
-      <div className="grid grid-cols-[1fr_50px_55px_55px_60px] gap-1 px-2 py-1 text-[7px] font-mono text-t-muted uppercase tracking-wider border-b border-t-border/30">
-        <span>COMPANY</span>
-        <span className="text-right">VERIFIED</span>
-        <span className="text-right">CORRECTED</span>
-        <span className="text-right">CONFLICTS</span>
-        <span className="text-right">TRUST SCORE</span>
-      </div>
-
-      {/* Table body */}
       <div className="flex-1 overflow-y-auto">
-        {DEMO_COVERAGE.map((row) => (
-          <div
-            key={row.company}
-            className="grid grid-cols-[1fr_50px_55px_55px_60px] gap-1 px-2 py-1 text-[9px] font-mono border-b border-t-border/10 last:border-b-0 hover:bg-white/[0.02] transition-colors"
-          >
-            <span className="text-t-secondary truncate">{row.company}</span>
-            <span className="text-right text-t-primary tabular-nums">{row.verified}</span>
-            <span className={`text-right tabular-nums ${row.corrected > 4 ? "text-t-amber" : "text-t-muted"}`}>
-              {row.corrected}
-            </span>
-            <span className={`text-right tabular-nums ${row.conflicts > 0 ? "text-t-red" : "text-t-muted"}`}>
-              {row.conflicts}
-            </span>
-            <span className={`text-right font-bold tabular-nums ${getTrustColor(row.trustScore)}`}>
-              {row.trustScore.toFixed(1)}%
-            </span>
-          </div>
-        ))}
+        <table className="w-full table-fixed text-[9px] font-mono">
+          <caption className="sr-only">Verification coverage and trust scores for top companies</caption>
+          <colgroup>
+            <col />
+            <col className="w-[50px]" />
+            <col className="w-[55px]" />
+            <col className="w-[55px]" />
+            <col className="w-[60px]" />
+          </colgroup>
+          <thead className="text-[7px] text-t-muted uppercase tracking-wider border-b border-t-border/30">
+            <tr>
+              <th scope="col" className="px-2 py-1 text-left font-normal">COMPANY</th>
+              <th scope="col" className="py-1 text-right font-normal">VERIFIED</th>
+              <th scope="col" className="py-1 text-right font-normal">CORRECTED</th>
+              <th scope="col" className="py-1 text-right font-normal">CONFLICTS</th>
+              <th scope="col" className="pr-2 py-1 text-right font-normal">TRUST SCORE</th>
+            </tr>
+          </thead>
+          <tbody>
+            {DEMO_COVERAGE.map((row) => {
+              const trustLevel = getTrustLevel(row.trustScore);
+
+              return (
+                <tr
+                  key={row.company}
+                  className="border-b border-t-border/10 last:border-b-0 hover:bg-white/[0.02] transition-colors"
+                >
+                  <th scope="row" className="px-2 py-1 text-left font-normal text-t-secondary truncate">
+                    {row.company}
+                  </th>
+                  <td className="py-1 text-right text-t-primary tabular-nums">{row.verified}</td>
+                  <td className={`py-1 text-right tabular-nums ${row.corrected > 4 ? "text-t-amber" : "text-t-muted"}`}>
+                    {row.corrected}
+                  </td>
+                  <td className={`py-1 text-right tabular-nums ${row.conflicts > 0 ? "text-t-red" : "text-t-muted"}`}>
+                    {row.conflicts}
+                  </td>
+                  <td className="pr-2 py-1 text-right">
+                    <AccessibleScore
+                      label={`${row.company} trust score`}
+                      value={row.trustScore}
+                      valueText={`${row.trustScore.toFixed(1)} percent, ${trustLevel} confidence`}
+                      className={`inline-block font-bold tabular-nums ${getTrustColor(row.trustScore)}`}
+                    >
+                      {row.trustScore.toFixed(1)}%
+                    </AccessibleScore>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
 
       <div className="px-2 py-1 border-t border-t-border/50 text-center">

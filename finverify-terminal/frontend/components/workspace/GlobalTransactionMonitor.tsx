@@ -104,20 +104,20 @@ export default function GlobalTransactionMonitor({ onSelectSymbol: _onSelectSymb
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 text-[8px] font-mono text-t-muted">
+          <label className="flex items-center gap-1 text-[8px] font-mono text-t-muted">
             <span>FLOW TYPE</span>
             <select className="bg-transparent border border-t-border/50 rounded px-1 py-0.5 text-[8px] text-t-secondary font-mono outline-none">
               <option>All Transactions</option>
             </select>
-          </div>
-          <div className="flex items-center gap-1 text-[8px] font-mono text-t-muted">
+          </label>
+          <label className="flex items-center gap-1 text-[8px] font-mono text-t-muted">
             <span>TIME RANGE</span>
             <select className="bg-transparent border border-t-border/50 rounded px-1 py-0.5 text-[8px] text-t-secondary font-mono outline-none">
               <option>24H</option>
               <option>7D</option>
               <option>30D</option>
             </select>
-          </div>
+          </label>
           <button className="text-[10px] text-t-muted hover:text-t-secondary transition-colors" title="Refresh">⟳</button>
           <button className="text-[10px] text-t-muted hover:text-t-secondary transition-colors" title="Fullscreen">⛶</button>
         </div>
