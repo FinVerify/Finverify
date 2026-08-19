@@ -1,0 +1,44 @@
+name: Extension Test
+on:
+  pull_request:
+      paths:
+      - 'finverify-extension/**'
+  push:
+      branches:
+          - main
+      paths:
+      - 'finverify-extension/**'
+jobs:
+  test-extension:
+    name: Typecheck, Lint, and Test
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: finverify-extension
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+          cache-dependency-path: finverify-extension/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers with Dependencies
+        run: npx playwright install --with-deps
+
+      - name: Run Typecheck
+        run: npm run typecheck
+
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Run Tests
+        run: npm test
