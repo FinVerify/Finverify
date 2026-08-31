@@ -74,6 +74,14 @@ from .market import (
 from core.financial import FinancialDocumentService
 
 load_dotenv()
+
+try:
+    from .logging_config import setup_logging
+except ImportError:
+    from app.logging_config import setup_logging
+
+setup_logging()
+
 logger = logging.getLogger(__name__)
 financial_document_service = FinancialDocumentService()
 
