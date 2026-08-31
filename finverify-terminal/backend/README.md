@@ -41,3 +41,20 @@ Validated on FinQA dev set (n=873) achieving **42.61% accuracy** — a **42× im
 ## Model
 
 [aadi2026/finverify-lora](https://huggingface.co/aadi2026/finverify-lora) — Mistral-7B + QLoRA (4-bit NF4)
+
+## Logging Configuration
+
+Log verbosity and output formatting can be configured via environment variables:
+
+| Variable | Default | Values | Description |
+|----------|---------|--------|-------------|
+| `LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` | Sets logging verbosity level |
+| `LOG_FORMAT` | `text` | `text`, `json` | Sets logging output format |
+| `LOG_FORMAT_JSON` | `false` | `true`, `false` | Enables structured JSON output for log aggregators |
+
+Example running locally with DEBUG verbosity and JSON formatted output:
+
+```bash
+LOG_LEVEL=DEBUG LOG_FORMAT_JSON=true uvicorn app.main:app
+```
+

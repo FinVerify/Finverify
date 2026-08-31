@@ -48,8 +48,13 @@ cd backend
 python -m venv venv
 source venv/bin/activate    # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env        # fill in HF_TOKEN at minimum; other keys are optional
+cp .env.example .env        # fill in HF_TOKEN at minimum; set LOG_LEVEL or LOG_FORMAT_JSON as needed
 uvicorn app.main:app --reload --port 8000
+```
+
+To adjust log verbosity locally or enable structured JSON output:
+```bash
+LOG_LEVEL=DEBUG LOG_FORMAT_JSON=true uvicorn app.main:app
 ```
 
 The backend degrades gracefully if optional services aren't configured — Pinecone (RAG), Supabase (query history), and Finnhub are all optional. `HF_TOKEN` is required for live LLM inference against the fine-tuned model; without it, `/verify` (DVL-only, no LLM call) still works.
