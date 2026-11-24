@@ -64,6 +64,8 @@ from core.models import (
 from .evaluator import build_query_response
 from .financial import handle_financial_reasoning
 from .router import classify_query
+from .middleware import RequestIDMiddleware, install_request_id_logging
+
 from .market import (
     get_quotes,
     get_market_indices,
@@ -75,6 +77,7 @@ from core.financial import FinancialDocumentService
 
 load_dotenv()
 logger = logging.getLogger(__name__)
+install_request_id_logging()
 financial_document_service = FinancialDocumentService()
 
 # ---------------------------------------------------------------------------
@@ -95,7 +98,8 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*", "X-FinVerify-Key"],
+    allow_headers=["*", "X-FinVerify-Key", "X-Request-ID"],
+    expose_headers=["X-Request-ID"],
 )
 
 # Attach rate limiter if available
@@ -116,6 +120,7 @@ if RATE_LIMITING_AVAILABLE and _limiter is not None:
             content={"detail": "Rate limit exceeded — 100 requests/minute. Please slow down."},
         )
 
+app.add_middleware(RequestIDMiddleware)
 # ---------------------------------------------------------------------------
 # LLM Inference — Provider-agnostic (OpenAI-compatible Chat Completions)
 # ---------------------------------------------------------------------------
